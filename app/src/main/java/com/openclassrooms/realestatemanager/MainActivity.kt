@@ -1,34 +1,47 @@
-package com.openclassrooms.realestatemanager;
+package com.openclassrooms.realestatemanager
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.TextView;
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 
-public class MainActivity extends AppCompatActivity {
-
-    private TextView textViewMain;
-    private TextView textViewQuantity;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        this.textViewMain = findViewById(R.id.activity_main_activity_text_view_main);
-        this.textViewQuantity = findViewById(R.id.activity_main_activity_text_view_quantity);
-
-        this.configureTextViewMain();
-        this.configureTextViewQuantity();
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            RealEstateManagerTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Greeting(
+                        name = "Android",
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
+            }
+        }
     }
+}
 
-    private void configureTextViewMain(){
-        this.textViewMain.setTextSize(15);
-        this.textViewMain.setText("Le premier bien immobilier enregistré vaut ");
-    }
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
 
-    private void configureTextViewQuantity(){
-        int quantity = Utils.convertDollarToEuro(100);
-        this.textViewQuantity.setTextSize(20);
-        this.textViewQuantity.setText(String.valueOf(quantity));
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    RealEstateManagerTheme {
+        Greeting("Android")
     }
 }
