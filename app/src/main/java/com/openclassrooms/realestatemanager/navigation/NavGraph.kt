@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.openclassrooms.realestatemanager.RealtyFormScreen
+import com.openclassrooms.realestatemanager.ui.RealtyFormScreen
 
 
 @Composable

@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.composable
+package com.openclassrooms.realestatemanager.ui.composable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

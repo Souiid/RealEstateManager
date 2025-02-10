@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.composable
+package com.openclassrooms.realestatemanager.ui.composable
 
 import android.app.Activity
 import androidx.compose.runtime.Composable
