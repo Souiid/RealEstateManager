@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,7 +43,10 @@ class MainActivity : ComponentActivity() {
                         ),
                         title = { Text(text = "Real Estate") },
                         actions = {
-                            IconButton(onClick = {}) {
+                            IconButton(onClick = {
+                                val intent = Intent(this@MainActivity, FormActivity::class.java)
+                                startActivity(intent)
+                            }) {
                                 Icon(
                                     imageVector = Icons.Filled.Add,
                                     contentDescription = null,
