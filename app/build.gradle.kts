@@ -59,6 +59,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,6 +71,21 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("androidx.activity:activity-ktx:1.9.0")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    //Navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.ui.ktx)
+
+    //Koin
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.core)
+
+    implementation(libs.androidx.material)
+
+    implementation(libs.kotlin.reflect)
+    implementation(libs.androidx.appcompat)
+
+    implementation(libs.coil.compose)
+    implementation(libs.places)
+    implementation(libs.play.services.maps)
+    runtimeOnly(libs.androidx.material.icons.extended)
 }
