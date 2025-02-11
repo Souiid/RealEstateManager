@@ -7,7 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.openclassrooms.realestatemanager.ui.RealtyFormScreen
-
+import com.openclassrooms.realestatemanager.ui.SetRealtyPictureScreen
 
 @Composable
 fun NavGraph(
@@ -20,9 +20,20 @@ fun NavGraph(
         composable(NavigationScreen.RealtyForm.route) {
             RealtyFormScreen().Screen(
                 params = RealtyFormScreen.Params(
-                    onNext = {  }
+                    onNext = { navController.navigate(NavigationScreen.SetRealtyPicture.route) }
                 ),
                 navigationScreen = NavigationScreen.RealtyForm,
+                activity = activity
+            )
+        }
+
+        composable(NavigationScreen.SetRealtyPicture.route) {
+            SetRealtyPictureScreen().Screen(
+                params = SetRealtyPictureScreen.Params(
+                    onBack = { navController.popBackStack() },
+                    onNext = { }
+                ),
+                navigationScreen = NavigationScreen.SetRealtyPicture,
                 activity = activity
             )
         }
