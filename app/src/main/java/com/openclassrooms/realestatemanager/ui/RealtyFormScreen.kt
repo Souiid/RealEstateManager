@@ -41,19 +41,22 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPlace
+import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.ui.composable.BaseScreen
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
+import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
+import org.koin.androidx.compose.koinViewModel
 
-class RealtyFormScreen : BaseScreen<RealtyFormScreen.Params>() {
 
-    private var onNext: () -> Unit = {}
+class RealtyFormScreen() : BaseScreen<RealtyFormScreen.Params>() {
 
-    data class Params(
-        val onNext: () -> Unit
-    )
+    var onNext: () -> Unit = {}
+    lateinit var viewModel: RealtyFormViewModel
+
+    data class Params(val onNext: () -> Unit)
 
     override fun setParameters(params: Params) {
         params.let {
@@ -63,28 +66,34 @@ class RealtyFormScreen : BaseScreen<RealtyFormScreen.Params>() {
 
     @Composable
     override fun InitViewModel() {
-
+        viewModel = koinViewModel()
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun ScreenInternal() {
-        Text("Realty Form Screen")
 
         val surfaceValue = remember { mutableStateOf("") }
         val priceValue = remember { mutableStateOf("") }
         val numberOfRoomsValue = remember { mutableStateOf("") }
         val descriptionValue = remember { mutableStateOf("") }
-        val realtyPlaceValue = remember { mutableStateOf<RealtyPlace?>(null) }
+        var realtyPlaceValue = remember { mutableStateOf<RealtyPlace?>(null) }
         var displayDialog by remember { mutableStateOf(false) }
-
 
         val options =
             RealtyType.entries.map { it -> it.name.lowercase().replaceFirstChar { it.uppercase() } }
         var expanded by remember { mutableStateOf(false) }
-        var selectedOption by remember {
-            mutableStateOf(options[0])
+        var selectedOption by remember { mutableStateOf(options[0]) }
+
+        val realtyPrimaryInfo = viewModel.getPrimaryInfo()
+        if (realtyPrimaryInfo != null) {
+            surfaceValue.value = realtyPrimaryInfo.surface.toString()
+            priceValue.value = realtyPrimaryInfo.price.toString()
+            numberOfRoomsValue.value = realtyPrimaryInfo.rooms.toString()
+            descriptionValue.value = realtyPrimaryInfo.description
+            realtyPlaceValue.value = realtyPrimaryInfo.realtyPlace
         }
+
 
         Scaffold(modifier = Modifier
             .fillMaxSize()
@@ -93,7 +102,27 @@ class RealtyFormScreen : BaseScreen<RealtyFormScreen.Params>() {
             bottomBar = {
                 ThemeButton(
                     onClick = {
-                        onNext()
+                        if (viewModel.isFormValid(
+                                surface = surfaceValue.value,
+                                price = priceValue.value,
+                                rooms = numberOfRoomsValue.value,
+                                description = descriptionValue.value,
+                                realtyPlace = realtyPlaceValue.value
+                            )
+                        ) {
+                            viewModel.setPrimaryInfo(
+                                RealtyPrimaryInfo(
+                                    realtyType = RealtyType.valueOf(selectedOption.uppercase()),
+                                    surface = surfaceValue.value.toDouble(),
+                                    price = priceValue.value.toDouble(),
+                                    rooms = numberOfRoomsValue.value.toInt(),
+                                    description = descriptionValue.value,
+                                    realtyPlace = realtyPlaceValue.value!!)
+                            )
+                            onNext()
+                        } else {
+                            displayDialog = true
+                        }
                     },
                     text = "Next step",
                     modifier = Modifier
@@ -185,33 +214,16 @@ class RealtyFormScreen : BaseScreen<RealtyFormScreen.Params>() {
                     realtyPlaceValue.value = place
                 })
 
+                if (displayDialog) {
+                    ThemeDialog(
+                        title = "Dialog",
+                        description = "Please fill all fields",
+                        primaryButtonTitle = "Ok",
+                        onPrimaryButtonClick = { displayDialog = false },
+                        onDismissRequest = {})
+                }
             }
         }
-    }
-
-    private fun searchPlaces(
-        placesClient: PlacesClient,
-        query: String,
-        onResults: (List<AutocompletePrediction>) -> Unit
-    ) {
-        if (query.isEmpty()) {
-            onResults(emptyList())
-            return
-        }
-
-        val request = FindAutocompletePredictionsRequest.builder()
-            .setQuery(query)
-            .build()
-
-        placesClient.findAutocompletePredictions(request)
-            .addOnSuccessListener { response ->
-                val predictions = response.autocompletePredictions
-                onResults(predictions)
-            }
-            .addOnFailureListener { exception ->
-                exception.printStackTrace()
-                onResults(emptyList())
-            }
     }
 
     @Composable
@@ -277,5 +289,33 @@ class RealtyFormScreen : BaseScreen<RealtyFormScreen.Params>() {
         }
     }
 
-    override fun screenLifeCycle(lifecycleOwner: LifecycleOwner, event: Lifecycle.Event) {}
+    private fun searchPlaces(
+        placesClient: PlacesClient,
+        query: String,
+        onResults: (List<AutocompletePrediction>) -> Unit
+    ) {
+        if (query.isEmpty()) {
+            onResults(emptyList())
+            return
+        }
+
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setQuery(query)
+            .build()
+
+        placesClient.findAutocompletePredictions(request)
+            .addOnSuccessListener { response ->
+                val predictions = response.autocompletePredictions
+                onResults(predictions)
+            }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+                onResults(emptyList())
+            }
+    }
+
+    override fun screenLifeCycle(lifecycleOwner: LifecycleOwner, event: Lifecycle.Event) {
+        //
+    }
+
 }
