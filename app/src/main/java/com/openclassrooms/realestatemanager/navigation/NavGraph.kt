@@ -8,34 +8,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.openclassrooms.realestatemanager.ui.RealtyFormScreen
 import com.openclassrooms.realestatemanager.ui.SetRealtyPictureScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
     modifier: Modifier,
-    activity: Activity
 ) {
     NavHost(navController, NavigationScreen.RealtyForm.route, modifier) {
 
         composable(NavigationScreen.RealtyForm.route) {
-            RealtyFormScreen().Screen(
-                params = RealtyFormScreen.Params(
-                    onNext = { navController.navigate(NavigationScreen.SetRealtyPicture.route) }
-                ),
-                navigationScreen = NavigationScreen.RealtyForm,
-                activity = activity
-            )
+            RealtyFormScreen(koinViewModel(), onNext = {
+                navController.navigate(NavigationScreen.SetRealtyPicture.route)
+            })
         }
 
         composable(NavigationScreen.SetRealtyPicture.route) {
-            SetRealtyPictureScreen().Screen(
-                params = SetRealtyPictureScreen.Params(
-                    onBack = { navController.popBackStack() },
-                    onNext = { }
-                ),
-                navigationScreen = NavigationScreen.SetRealtyPicture,
-                activity = activity
-            )
+            SetRealtyPictureScreen(onBack = {
+                navController.popBackStack()
+            })
+
         }
     }
 }
