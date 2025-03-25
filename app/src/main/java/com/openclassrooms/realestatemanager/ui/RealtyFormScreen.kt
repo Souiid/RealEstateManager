@@ -50,13 +50,11 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 @Composable
 fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
 
-
-
-    val surfaceValue = remember { mutableStateOf("") }
-    val priceValue = remember { mutableStateOf("") }
-    val numberOfRoomsValue = remember { mutableStateOf("") }
-    val descriptionValue = remember { mutableStateOf("") }
-    var realtyPlaceValue = remember { mutableStateOf<RealtyPlace?>(null) }
+    var surfaceValue by remember { mutableStateOf("") }
+    var priceValue by remember { mutableStateOf("") }
+    var numberOfRoomsValue by remember { mutableStateOf("") }
+    var descriptionValue by remember { mutableStateOf("") }
+    var realtyPlaceValue by remember { mutableStateOf<RealtyPlace?>(null) }
     var displayDialog by remember { mutableStateOf(false) }
 
     val options =
@@ -66,11 +64,11 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
 
     val realtyPrimaryInfo = viewModel.getPrimaryInfo()
     if (realtyPrimaryInfo != null) {
-        surfaceValue.value = realtyPrimaryInfo.surface.toString()
-        priceValue.value = realtyPrimaryInfo.price.toString()
-        numberOfRoomsValue.value = realtyPrimaryInfo.rooms.toString()
-        descriptionValue.value = realtyPrimaryInfo.description
-        realtyPlaceValue.value = realtyPrimaryInfo.realtyPlace
+        surfaceValue = realtyPrimaryInfo.surface.toString()
+        priceValue = realtyPrimaryInfo.price.toString()
+        numberOfRoomsValue = realtyPrimaryInfo.rooms.toString()
+        descriptionValue = realtyPrimaryInfo.description
+        realtyPlaceValue = realtyPrimaryInfo.realtyPlace
     }
 
 
@@ -83,21 +81,21 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
             ThemeButton(
                 onClick = {
                     if (viewModel.isFormValid(
-                            surface = surfaceValue.value,
-                            price = priceValue.value,
-                            rooms = numberOfRoomsValue.value,
-                            description = descriptionValue.value,
-                            realtyPlace = realtyPlaceValue.value
+                            surface = surfaceValue,
+                            price = priceValue,
+                            rooms = numberOfRoomsValue,
+                            description = descriptionValue,
+                            realtyPlace = realtyPlaceValue
                         )
                     ) {
                         viewModel.setPrimaryInfo(
                             RealtyPrimaryInfo(
                                 realtyType = RealtyType.valueOf(selectedOption.uppercase()),
-                                surface = surfaceValue.value.toDouble(),
-                                price = priceValue.value.toDouble(),
-                                rooms = numberOfRoomsValue.value.toInt(),
-                                description = descriptionValue.value,
-                                realtyPlace = realtyPlaceValue.value!!
+                                surface = surfaceValue.toDouble(),
+                                price = priceValue.toDouble(),
+                                rooms = numberOfRoomsValue.toInt(),
+                                description = descriptionValue,
+                                realtyPlace = realtyPlaceValue!!
                             )
                         )
                         onNext()
@@ -163,27 +161,31 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
             }
 
             ThemeOutlinedTextField(
-                textFieldValue = surfaceValue,
+                value = surfaceValue,
+                onValueChanged = { surfaceValue = it },
                 labelID = R.string.surface,
                 imeAction = ImeAction.Next,
                 iconText = "m²",
                 keyboardType = KeyboardType.Number
             )
             ThemeOutlinedTextField(
-                textFieldValue = priceValue,
+                value = priceValue,
+                onValueChanged = { priceValue = it },
                 labelID = R.string.price,
                 imeAction = ImeAction.Next,
                 iconText = "€",
                 keyboardType = KeyboardType.Number
             )
             ThemeOutlinedTextField(
-                textFieldValue = numberOfRoomsValue,
+                value = numberOfRoomsValue,
+                onValueChanged = { numberOfRoomsValue = it },
                 labelID = R.string.number_of_rooms,
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number
             )
             ThemeOutlinedTextField(
-                textFieldValue = descriptionValue,
+                value = descriptionValue,
+                onValueChanged = { descriptionValue = it },
                 labelID = R.string.description_of_realty,
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Text,
@@ -192,7 +194,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
             )
 
             PlaceAutocompleteTest(callback = { place ->
-                realtyPlaceValue.value = place
+                realtyPlaceValue = place
             })
 
             if (displayDialog) {

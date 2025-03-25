@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ThemeOutlinedTextField(
-    textFieldValue: MutableState<String>,
+    onValueChanged: (String) -> Unit,
+    value: String,
     labelID: Int,
     imeAction: ImeAction,
     iconText: String? = null,
@@ -34,9 +35,9 @@ fun ThemeOutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .height(height),
-        value = textFieldValue.value,
+        value = value,
         onValueChange = { newValue ->
-            textFieldValue.value = newValue
+            onValueChanged(newValue)
         },
         label = {
             Text(
