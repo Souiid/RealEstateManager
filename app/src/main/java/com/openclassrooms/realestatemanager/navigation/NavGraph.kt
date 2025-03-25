@@ -24,7 +24,11 @@ fun NavGraph(
         }
 
         composable(NavigationScreen.SetRealtyPicture.route) {
-            SetRealtyPictureScreen(onBack = {
+            SetRealtyPictureScreen(
+
+                onNext = {},
+
+                onBack = {
                 navController.popBackStack()
             })
 
