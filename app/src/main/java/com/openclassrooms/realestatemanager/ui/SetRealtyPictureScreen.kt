@@ -38,6 +38,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -64,16 +65,20 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 
 @Composable
-fun SetRealtyPictureScreen(onNext: () -> Unit, onBack: () -> Unit) {
+fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> Unit, onBack: () -> Unit) {
 
+    val context = LocalContext.current
 
     val photos = remember { mutableStateListOf<RealtyPicture>() }
-    val context = LocalContext.current
     var enabled by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     var selectedImage = remember { mutableStateOf<Bitmap?>(null) }
     var cameraUri by remember { mutableStateOf<Uri?>(null) }
     var showFabMenu by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        photos.addAll(viewModel.getRealtyPictures() ?: emptyList())
+    }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -122,7 +127,10 @@ fun SetRealtyPictureScreen(onNext: () -> Unit, onBack: () -> Unit) {
                     .padding(horizontal = 12.dp),
                 text = "Next",
                 enabled = !photos.isEmpty(),
-                onClick = { onNext() }
+                onClick = {
+                    viewModel.setRealtyPictures(photos)
+                    onNext()
+                }
             )
         },
         floatingActionButton = {
