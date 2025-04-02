@@ -1,7 +1,7 @@
 [versions]
-agp = "8.5.2"
+agp = "8.9.0"
 coilCompose = "2.4.0"
-kotlin = "1.9.0"
+kotlin = "1.9.22"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -19,7 +19,9 @@ koinAndroidxComposeVersion = "3.4.0"
 koinCore = "3.4.0"
 kotlinReflect = "1.9.22"
 appcompat = "1.7.0"
-
+room = "2.6.1"
+ksp = "1.9.22-1.0.18"
+composeCompiler = "1.5.10"
 
 
 [libraries]
@@ -40,6 +42,9 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxComposeVersion" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 
 # UI-related Compose libraries
@@ -59,4 +64,7 @@ play-services-maps = { module = "com.google.android.gms:play-services-maps", ver
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+
 

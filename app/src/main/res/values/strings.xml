@@ -6,4 +6,5 @@
     <string name="surface">Surface</string>
     <string name="description">description</string>
     <string name="description_of_realty">Description of realty</string>
+    <string name="agent_name">Agent name</string>
 </resources>
