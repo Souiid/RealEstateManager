@@ -95,7 +95,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
                                 price = priceValue.toDouble(),
                                 rooms = numberOfRoomsValue.toInt(),
                                 description = descriptionValue,
-                                realtyPlace = realtyPlaceValue!!
+                                realtyPlace = realtyPlaceValue ?: return@ThemeButton
                             )
                         )
                         onNext()
@@ -193,7 +193,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
                 height = 150.dp
             )
 
-            PlaceAutocompleteTest(callback = { place ->
+            PlaceAutocompleteTest(viewModel, callback = { place ->
                 realtyPlaceValue = place
             })
 
@@ -210,7 +210,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
 }
 
 @Composable
-fun PlaceAutocompleteTest(callback: (RealtyPlace) -> Unit) {
+fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace) -> Unit) {
     var query by remember { mutableStateOf("") }
     var predictions by remember { mutableStateOf<List<AutocompletePrediction>>(emptyList()) }
     val context = LocalContext.current
@@ -235,7 +235,7 @@ fun PlaceAutocompleteTest(callback: (RealtyPlace) -> Unit) {
                 query = newQuery
                 Log.d("aaa", "Query : $query")
                 if (newQuery.isNotEmpty()) {
-                    searchPlaces(placesClient, newQuery) { results ->
+                    viewModel.searchPlaces(placesClient, newQuery) { results ->
                         predictions = results
 
                     }
@@ -272,27 +272,3 @@ fun PlaceAutocompleteTest(callback: (RealtyPlace) -> Unit) {
     }
 }
 
-fun searchPlaces(
-    placesClient: PlacesClient,
-    query: String,
-    onResults: (List<AutocompletePrediction>) -> Unit
-) {
-    if (query.isEmpty()) {
-        onResults(emptyList())
-        return
-    }
-
-    val request = FindAutocompletePredictionsRequest.builder()
-        .setQuery(query)
-        .build()
-
-    placesClient.findAutocompletePredictions(request)
-        .addOnSuccessListener { response ->
-            val predictions = response.autocompletePredictions
-            onResults(predictions)
-        }
-        .addOnFailureListener { exception ->
-            exception.printStackTrace()
-            onResults(emptyList())
-        }
-}

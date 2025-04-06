@@ -84,7 +84,7 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            selectedImage.value = getBitmapFromUri(context, it)
+            selectedImage.value = viewModel.getBitmapFromUri(context, it)
             showDialog = true
         }
     }
@@ -94,7 +94,7 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
     ) { success: Boolean ->
         if (success) {
             cameraUri?.let {
-                selectedImage.value = getBitmapFromUri(context, it)
+                selectedImage.value = viewModel.getBitmapFromUri(context, it)
                 showDialog = true
             }
         } else {
@@ -106,7 +106,7 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            cameraUri = createImageUri(context)
+            cameraUri = viewModel.createImageUri(context)
             cameraUri?.let { cameraLauncher.launch(it) }
         } else {
             Log.e("PhotoGalleryScreen", "Camera permission denied")
@@ -201,7 +201,7 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
                         Manifest.permission.CAMERA
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
-                    cameraUri = createImageUri(context)
+                    cameraUri = viewModel.createImageUri(context)
                     cameraUri?.let {
                         cameraLauncher.launch(it)
                     }
@@ -333,37 +333,4 @@ fun CameraGalleryDialog(
             }
         }
     }
-}
-
-fun getBitmapFromUri(context: Context, uri: Uri): Bitmap? {
-    return try {
-        val inputStream = context.contentResolver.openInputStream(uri)
-        BitmapFactory.decodeStream(inputStream)
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
-    }
-}
-
-fun createImageUri(context: Context): Uri? {
-    val contentResolver = context.contentResolver
-    val contentValues = android.content.ContentValues().apply {
-        put(
-            android.provider.MediaStore.MediaColumns.DISPLAY_NAME,
-            "captured_image_${System.currentTimeMillis()}.jpg"
-        )
-        put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-    }
-
-    val uri = contentResolver.insert(
-        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-        contentValues
-    )
-    if (uri == null) {
-        Log.e("createImageUri", "Failed to create image URI")
-    } else {
-        Log.d("createImageUri", "Generated Uri: $uri")
-    }
-
-    return uri
 }
