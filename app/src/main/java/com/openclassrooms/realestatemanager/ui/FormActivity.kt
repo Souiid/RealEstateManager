@@ -24,6 +24,7 @@ class FormActivity : ComponentActivity() {
                     NavGraph(
                         navController = navController,
                         modifier = Modifier,
+                        activity = this
                     )
                 }
             }

@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit) {
+fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFinish: ()->Unit) {
 
     val lifecycleOwner = LocalLifecycleOwner.current
     var expanded by remember { mutableStateOf(false) }
@@ -55,14 +55,10 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit) {
     var agentName by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val agents by viewModel.agentsFlow.collectAsState(initial = emptyList())
-    var selectedAgent by remember { mutableStateOf<RealtyAgent?>(agents.first()) }
+    var selectedAgent by remember { mutableStateOf<RealtyAgent?>(null) }
     val realtyPrimaryInfo = viewModel.getRealtyPrimaryInfo()
     val realtyPictures = viewModel.getImages()
 
-
-
-    Log.d("aaa", "Agents: $agents")
-    Log.d("aaa", "Selected Agent = $selectedAgent")
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -83,7 +79,9 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit) {
                         pictures = realtyPictures!!)
                     scope.launch {
                         viewModel.insertRealty(realty)
+                        onFinish()
                     }
+
                 }
             )
         },

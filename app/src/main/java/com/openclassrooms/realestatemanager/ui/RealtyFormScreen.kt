@@ -49,7 +49,7 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
+fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack: ()-> Unit) {
 
     var surfaceValue by remember { mutableStateOf("") }
     var priceValue by remember { mutableStateOf("") }
@@ -78,7 +78,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding(),
-        topBar = { ThemeTopBar(title = "Realty form", onBackClick = { }) },
+        topBar = { ThemeTopBar(title = "Realty form", onBackClick = { onBack() }) },
         bottomBar = {
             ThemeButton(
                 onClick = {
