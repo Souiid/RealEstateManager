@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.di
 
+import com.openclassrooms.realestatemanager.data.AgentRepository
+import com.openclassrooms.realestatemanager.data.IAgentRepository
 import com.openclassrooms.realestatemanager.data.INewRealtyRepository
 import com.openclassrooms.realestatemanager.data.NewRealtyRepository
 import com.openclassrooms.realestatemanager.ui.RealtyFormViewModel
@@ -12,7 +14,8 @@ import org.koin.dsl.module
 val appModule = module {
     viewModel { RealtyFormViewModel(get()) }
     viewModel { SetRealtyPictureViewModel(get()) }
-    viewModel { SelectAgentViewModel(get()) }
+    viewModel { SelectAgentViewModel(get(), get()) }
 
     single<INewRealtyRepository> { NewRealtyRepository(androidContext()) }
+    single<IAgentRepository> { AgentRepository(androidContext()) }
 }

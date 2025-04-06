@@ -1,9 +1,8 @@
 package com.openclassrooms.realestatemanager.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openclassrooms.realestatemanager.data.IAgentRepository
 import com.openclassrooms.realestatemanager.data.INewRealtyRepository
 import com.openclassrooms.realestatemanager.data.RealtyAgent
 import com.openclassrooms.realestatemanager.data.RealtyPicture
@@ -12,22 +11,23 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class SelectAgentViewModel(
-    private val repository: INewRealtyRepository
+    private val newRealtyRepository: INewRealtyRepository,
+    private val agentRepository: IAgentRepository
 ) : ViewModel() {
 
-    val agentsFlow: Flow<List<RealtyAgent>> = repository.getAllAgents()
+    val agentsFlow: Flow<List<RealtyAgent>> = agentRepository.getAllAgents()
 
     fun getRealtyPrimaryInfo(): RealtyPrimaryInfo? {
-        return repository.realtyPrimaryInfo
+        return newRealtyRepository.realtyPrimaryInfo
     }
 
     fun getImages(): List<RealtyPicture>? {
-        return repository.images
+        return newRealtyRepository.images
     }
 
     fun insertAgent(name: String) {
         viewModelScope.launch {
-            repository.insertAgent(name)
+            agentRepository.insertAgent(name)
         }
     }
 }
