@@ -35,6 +35,7 @@ fun NavGraph(
 
         composable(NavigationScreen.SelectAgentScreen.route) {
             SelectAgentScreen(
+                koinViewModel(),
                 onBack = {
                     navController.popBackStack()
                 })

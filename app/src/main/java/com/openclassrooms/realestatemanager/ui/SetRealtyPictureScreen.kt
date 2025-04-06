@@ -169,7 +169,7 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
                                 }
                             ) {
                                 Image(
-                                    painter = rememberImagePainter(realtyPicture.bitmap),
+                                    painter = rememberAsyncImagePainter(realtyPicture.bitmap),
                                     contentDescription = null,
                                     contentScale = ContentScale.Fit,
                                     modifier = Modifier
@@ -202,7 +202,9 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
                     cameraUri = createImageUri(context)
-                    cameraLauncher.launch(cameraUri!!)
+                    cameraUri?.let {
+                        cameraLauncher.launch(it)
+                    }
                 } else {
                     cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                 }

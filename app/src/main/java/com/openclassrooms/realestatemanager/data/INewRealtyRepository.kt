@@ -1,10 +1,10 @@
 package com.openclassrooms.realestatemanager.data
 
+import kotlinx.coroutines.flow.Flow
+
 interface INewRealtyRepository {
     var realtyPrimaryInfo: RealtyPrimaryInfo?
     var images: List<RealtyPicture>?
-    var db: AppDatabase
-    var dao: RealtyAgentDao
-    suspend fun insertAgent(id: Int, name: String)
-    suspend fun getAllAgents(): List<RealtyAgent>
+    suspend fun insertAgent(name: String)
+    fun getAllAgents(): Flow<List<RealtyAgent>>
 }
