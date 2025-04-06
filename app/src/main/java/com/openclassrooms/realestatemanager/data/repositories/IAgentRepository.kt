@@ -1,5 +1,6 @@
-package com.openclassrooms.realestatemanager.data
+package com.openclassrooms.realestatemanager.data.repositories
 
+import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import kotlinx.coroutines.flow.Flow
 
 interface IAgentRepository {

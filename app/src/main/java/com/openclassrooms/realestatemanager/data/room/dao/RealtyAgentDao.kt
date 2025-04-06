@@ -1,10 +1,10 @@
-package com.openclassrooms.realestatemanager.data
+package com.openclassrooms.realestatemanager.data.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface RealtyAgentDao {

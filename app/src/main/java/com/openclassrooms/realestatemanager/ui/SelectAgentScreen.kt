@@ -38,6 +38,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.data.room.entities.Realty
+import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
@@ -49,13 +51,18 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit) {
 
     val lifecycleOwner = LocalLifecycleOwner.current
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf<String?>(null) }
     var displayTF by remember { mutableStateOf(false) }
     var agentName by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val agents by viewModel.agentsFlow.collectAsState(initial = emptyList())
+    var selectedAgent by remember { mutableStateOf<RealtyAgent?>(agents.first()) }
+    val realtyPrimaryInfo = viewModel.getRealtyPrimaryInfo()
+    val realtyPictures = viewModel.getImages()
+
+
 
     Log.d("aaa", "Agents: $agents")
+    Log.d("aaa", "Selected Agent = $selectedAgent")
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -70,7 +77,14 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit) {
                     .padding(horizontal = 12.dp),
                 text = "Next",
                 enabled = true,
-                onClick = { }
+                onClick = {
+                    val realty = Realty(agentId = selectedAgent!!.id,
+                        primaryInfo = realtyPrimaryInfo!!,
+                        pictures = realtyPictures!!)
+                    scope.launch {
+                        viewModel.insertRealty(realty)
+                    }
+                }
             )
         },
 
@@ -91,7 +105,7 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit) {
                             onExpandedChange = { expanded = !expanded }
                         ) {
                             OutlinedTextField(
-                                value = selectedOption ?: agents.first().name,
+                                value = selectedAgent?.name ?: agents.first().name,
                                 onValueChange = {},
                                 label = {
                                     Text(text = "Agent")
@@ -118,11 +132,11 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit) {
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false }
                             ) {
-                                agents.forEach { option ->
+                                agents.forEach { agent ->
                                     DropdownMenuItem(
-                                        text = { Text(option.name) },
+                                        text = { Text(agent.name) },
                                         onClick = {
-                                            selectedOption = option.name
+                                            selectedAgent = agent
                                             expanded = false
                                         }
                                     )

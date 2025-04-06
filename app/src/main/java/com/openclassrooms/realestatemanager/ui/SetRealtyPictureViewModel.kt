@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.openclassrooms.realestatemanager.data.INewRealtyRepository
+import com.openclassrooms.realestatemanager.data.repositories.INewRealtyRepository
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 
 class SetRealtyPictureViewModel(val repository: INewRealtyRepository): ViewModel() {

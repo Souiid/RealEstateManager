@@ -65,7 +65,11 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 
 @Composable
-fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> Unit, onBack: () -> Unit) {
+fun SetRealtyPictureScreen(
+    viewModel: SetRealtyPictureViewModel,
+    onNext: () -> Unit,
+    onBack: () -> Unit
+) {
 
     val context = LocalContext.current
 
@@ -73,6 +77,7 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
     var enabled by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     var selectedImage = remember { mutableStateOf<Bitmap?>(null) }
+    var selectedUri = remember { mutableStateOf<String?>(null) }
     var cameraUri by remember { mutableStateOf<Uri?>(null) }
     var showFabMenu by remember { mutableStateOf(false) }
 
@@ -85,6 +90,7 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
     ) { uri: Uri? ->
         uri?.let {
             selectedImage.value = viewModel.getBitmapFromUri(context, it)
+            selectedUri.value = uri.toString()
             showDialog = true
         }
     }
@@ -95,6 +101,7 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
         if (success) {
             cameraUri?.let {
                 selectedImage.value = viewModel.getBitmapFromUri(context, it)
+                selectedUri.value = cameraUri.toString()
                 showDialog = true
             }
         } else {
@@ -224,7 +231,10 @@ fun SetRealtyPictureScreen(viewModel: SetRealtyPictureViewModel, onNext: () -> U
             image = rememberAsyncImagePainter(selectedImage.value),
             onDismissRequest = { showDialog = false },
             onAddClick = { description ->
-                val realtyPicture = RealtyPicture(selectedImage.value, description)
+                val realtyPicture =
+                    RealtyPicture(selectedImage.value,
+                        description,
+                        selectedUri.value ?: "")
                 photos.add(realtyPicture)
                 showDialog = false
             }

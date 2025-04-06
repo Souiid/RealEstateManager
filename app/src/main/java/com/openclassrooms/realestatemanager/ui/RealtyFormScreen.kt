@@ -20,6 +20,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +64,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit) {
     var selectedOption by remember { mutableStateOf(options[0]) }
 
     val realtyPrimaryInfo = viewModel.getPrimaryInfo()
+
     if (realtyPrimaryInfo != null) {
         surfaceValue = realtyPrimaryInfo.surface.toString()
         priceValue = realtyPrimaryInfo.price.toString()
