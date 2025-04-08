@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui
+package com.openclassrooms.realestatemanager.ui.screens.form
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.openclassrooms.realestatemanager.navigation.NavGraph
+import com.openclassrooms.realestatemanager.navigation.FormNavGraph
 import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 
 class FormActivity : ComponentActivity() {
@@ -21,7 +21,7 @@ class FormActivity : ComponentActivity() {
             RealEstateManagerTheme  {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
                     val navController = rememberNavController()
-                    NavGraph(
+                    FormNavGraph(
                         navController = navController,
                         modifier = Modifier,
                         activity = this

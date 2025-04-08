@@ -1,10 +1,9 @@
-package com.openclassrooms.realestatemanager.ui
+package com.openclassrooms.realestatemanager.ui.screens
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -39,12 +38,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
+import com.openclassrooms.realestatemanager.ui.screens.form.FormActivity
 import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 import org.koin.androidx.compose.koinViewModel
 

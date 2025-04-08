@@ -4,16 +4,15 @@ import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.activity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.openclassrooms.realestatemanager.ui.RealtyFormScreen
-import com.openclassrooms.realestatemanager.ui.SelectAgentScreen
-import com.openclassrooms.realestatemanager.ui.SetRealtyPictureScreen
+import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormScreen
+import com.openclassrooms.realestatemanager.ui.screens.form.selectagent.SelectAgentScreen
+import com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture.SetRealtyPictureScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun NavGraph(
+fun FormNavGraph(
     navController: NavHostController,
     modifier: Modifier,
     activity: Activity

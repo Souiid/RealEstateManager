@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui
+package com.openclassrooms.realestatemanager.ui.screens.form.selectagent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

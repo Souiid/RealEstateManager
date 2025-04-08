@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui
+package com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture
 
 import android.content.Context
 import android.graphics.Bitmap

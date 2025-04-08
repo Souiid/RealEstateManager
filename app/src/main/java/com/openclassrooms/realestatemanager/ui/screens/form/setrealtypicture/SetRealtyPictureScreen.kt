@@ -1,11 +1,9 @@
-package com.openclassrooms.realestatemanager.ui
+package com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -58,7 +56,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
@@ -87,9 +84,16 @@ fun SetRealtyPictureScreen(
     }
 
     val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract =  ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         uri?.let {
+            val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            try {
+                context.contentResolver.takePersistableUriPermission(it, flags)
+            } catch (e: SecurityException) {
+                Log.e("Picker", "Cannot persist permission for uri: $it", e)
+            }
+
             selectedImage.value = viewModel.getBitmapFromUri(context, it)
             selectedUri.value = uri.toString()
             showDialog = true
@@ -226,7 +230,7 @@ fun SetRealtyPictureScreen(
                 showFabMenu = false
             },
             onSelectGallery = {
-                galleryLauncher.launch("image/*")
+                galleryLauncher.launch(arrayOf("image/*"))
                 showFabMenu = false
             }
         )
