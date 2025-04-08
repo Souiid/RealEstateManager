@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -99,8 +100,15 @@ fun SetRealtyPictureScreen(
         contract = ActivityResultContracts.TakePicture()
     ) { success: Boolean ->
         if (success) {
-            cameraUri?.let {
-                selectedImage.value = viewModel.getBitmapFromUri(context, it)
+            cameraUri?.let { uri ->
+                val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                try {
+                    context.contentResolver.takePersistableUriPermission(uri, flags)
+                } catch (e: SecurityException) {
+                    Log.e("PhotoGalleryScreen", "Failed to persist URI permission", e)
+                }
+
+                selectedImage.value = viewModel.getBitmapFromUri(context, uri)
                 selectedUri.value = cameraUri.toString()
                 showDialog = true
             }
