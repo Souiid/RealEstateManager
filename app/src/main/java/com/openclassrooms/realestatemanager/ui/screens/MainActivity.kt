@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,111 +43,32 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
+import com.openclassrooms.realestatemanager.navigation.MainNavGraph
 import com.openclassrooms.realestatemanager.ui.screens.form.FormActivity
 import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var viewModel: MainViewModel
-
-    @OptIn(ExperimentalMaterial3Api::class)
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            viewModel = koinViewModel()
-
-            val realties by viewModel.realties.collectAsState(initial = emptyList())
+            val navController = rememberNavController()
 
             RealEstateManagerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-                    TopAppBar(
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Gray,
-                            navigationIconContentColor = Color.White,
-                            titleContentColor = Color.White,
-                            actionIconContentColor = Color.White
-                        ),
-                        title = { Text(text = "Real Estate") },
-                        actions = {
-                            IconButton(onClick = {
-                                val intent = Intent(this@MainActivity, FormActivity::class.java)
-                                startActivity(intent)
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
-                            }
-                            IconButton(onClick = {}) {
-                                Icon(
-                                    imageVector = Icons.Filled.Create,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
-                            }
-                            IconButton(onClick = {}) {
-                                Icon(
-                                    imageVector = Icons.Filled.Search,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
-                            }
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = {}) {
-                                Icon(
-                                    imageVector = Icons.Filled.Menu,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
-                            }
-                        }
+                Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
+                    MainNavGraph(
+                        navController = navController,
+                        modifier = Modifier,
+                        activity = this@MainActivity
                     )
-                }) { innerPadding ->
-                    if (realties.isNotEmpty()) {
-                        Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-                            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                                items(realties.size) { index ->
-                                    RealtyItem(
-                                        realty = realties[index],
-                                        viewModel = viewModel,
-                                        context = this@MainActivity
-                                    )
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun RealtyItem(realty: Realty, viewModel: MainViewModel, context: Context) {
-    val uri = Uri.parse(realty.pictures.first().uriString)
-    val bitmap = viewModel.uriToBitmapLegacy(context, uri) ?: return
-    Column(modifier = Modifier.fillMaxWidth().height(100.dp), verticalArrangement = Arrangement.Center) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                bitmap = bitmap.asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier.size(90.dp)
-            )
-            Spacer(modifier = Modifier.size(10.dp))
-
-            Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
-                Text(text = realty.primaryInfo.realtyType.name, color = Color.Black, fontWeight = FontWeight.Bold)
-                Text(text = realty.primaryInfo.realtyPlace.name, color = Color.Gray)
-                Text(text = realty.primaryInfo.price.toString() + "$", color = Color.Red, fontWeight = FontWeight.Bold)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 

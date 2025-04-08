@@ -9,6 +9,7 @@ class RealtyRepository(context: Context): IRealtyRepository {
 
     private val db = DatabaseProvider.getDatabase(context)
     private val dao = db.realtyDao()
+    override var selectedRealty: Realty? = null
 
     override suspend fun insertRealty(realty: Realty) {
         dao.insertRealty(realty)

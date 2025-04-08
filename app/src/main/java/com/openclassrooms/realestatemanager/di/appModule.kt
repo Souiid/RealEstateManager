@@ -6,7 +6,8 @@ import com.openclassrooms.realestatemanager.data.repositories.INewRealtyReposito
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.NewRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.RealtyRepository
-import com.openclassrooms.realestatemanager.ui.screens.MainViewModel
+import com.openclassrooms.realestatemanager.ui.screens.RealtiesViewModel
+import com.openclassrooms.realestatemanager.ui.screens.RealtyDescriptionViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.selectagent.SelectAgentViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture.SetRealtyPictureViewModel
@@ -18,7 +19,9 @@ val appModule = module {
     viewModel { RealtyFormViewModel(get()) }
     viewModel { SetRealtyPictureViewModel(get()) }
     viewModel { SelectAgentViewModel(get(), get(), get()) }
-    viewModel { MainViewModel(get()) }
+    viewModel { RealtiesViewModel(get()) }
+    viewModel { RealtyDescriptionViewModel(get()) }
+
 
     single<INewRealtyRepository> { NewRealtyRepository(androidContext()) }
     single<IAgentRepository> { AgentRepository(androidContext()) }
