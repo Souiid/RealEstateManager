@@ -18,4 +18,9 @@ class AgentRepository(context: Context): IAgentRepository {
         return dao.getAllAgents()
     }
 
+    override suspend fun getAgentByID(agentId: Int): RealtyAgent? {
+        return dao.getAgentById(agentId)
+    }
+
+
 }

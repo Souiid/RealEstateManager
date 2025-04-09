@@ -13,4 +13,8 @@ interface RealtyAgentDao {
 
     @Query("SELECT * FROM agents")
     fun getAllAgents(): Flow<List<RealtyAgent>>
+
+    @Query("SELECT * FROM agents WHERE id = :agentId LIMIT 1")
+    suspend fun getAgentById(agentId: Int): RealtyAgent?
+
 }

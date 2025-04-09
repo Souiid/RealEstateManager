@@ -20,7 +20,7 @@ val appModule = module {
     viewModel { SetRealtyPictureViewModel(get()) }
     viewModel { SelectAgentViewModel(get(), get(), get()) }
     viewModel { RealtiesViewModel(get()) }
-    viewModel { RealtyDescriptionViewModel(get()) }
+    viewModel { RealtyDescriptionViewModel(get(), get()) }
 
 
     single<INewRealtyRepository> { NewRealtyRepository(androidContext()) }

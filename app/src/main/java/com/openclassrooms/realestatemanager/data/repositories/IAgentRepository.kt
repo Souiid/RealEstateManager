@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface IAgentRepository {
     suspend fun insertAgent(name: String)
     fun getAllAgents(): Flow<List<RealtyAgent>>
+    suspend fun getAgentByID(agentId: Int): RealtyAgent?
 }
