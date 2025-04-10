@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyType
+import java.util.Date
 
 class Converters {
     @TypeConverter
@@ -30,5 +31,15 @@ class Converters {
     fun toRealtyPlace(value: String): RealtyPlace {
         val type = object : TypeToken<RealtyPlace>() {}.type
         return Gson().fromJson(value, type)
+    }
+
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time
     }
 }

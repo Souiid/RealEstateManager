@@ -43,6 +43,7 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 import kotlinx.coroutines.launch
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,9 +74,11 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFin
                 text = "Next",
                 enabled = true,
                 onClick = {
-                    val realty = Realty(agentId = selectedAgent!!.id,
+                    val realty = Realty(
+                        agentId = selectedAgent!!.id,
                         primaryInfo = realtyPrimaryInfo!!,
-                        pictures = realtyPictures!!)
+                        pictures = realtyPictures!!
+                    )
                     scope.launch {
                         viewModel.insertRealty(realty)
                         onFinish()

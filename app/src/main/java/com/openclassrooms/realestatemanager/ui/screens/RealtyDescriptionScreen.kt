@@ -186,7 +186,6 @@ fun LiteModeMapView(modifier: Modifier = Modifier, viewModel: RealtyDescriptionV
                         googleMap.addMarker(
                             MarkerOptions()
                                 .position(LatLng(latitude, longitude))
-                                .title("Marqueur Exemple")
                         )
                         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), 15f))
                     }
