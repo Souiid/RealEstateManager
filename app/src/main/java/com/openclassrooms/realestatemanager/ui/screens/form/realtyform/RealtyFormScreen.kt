@@ -224,7 +224,6 @@ fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace
         Modifier
             .padding(16.dp)
             .clickable {
-                // Dismiss predictions when clicking outside
                 predictions = emptyList()
             }
     ) {
@@ -239,14 +238,13 @@ fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace
 
                     }
                 } else {
-                    predictions = emptyList() // Hide suggestions when query is empty
+                    predictions = emptyList()
                 }
             },
             label = { Text("Search Places") },
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    // Dismiss predictions when clicking outside
                     predictions = emptyList()
                 }
         )
@@ -262,7 +260,7 @@ fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace
                                 .getFullText(null)
                                 .toString()
                             callback(RealtyPlace(prediction.placeId, query))
-                            predictions = emptyList() // Hide the list after selection
+                            predictions = emptyList()
                         }
                         .padding(8.dp)
                 )
