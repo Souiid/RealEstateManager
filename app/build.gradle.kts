@@ -96,4 +96,6 @@ dependencies {
 
     implementation(libs.android.lottie.compose)
 
+    implementation(libs.material3)
+
 }
