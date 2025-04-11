@@ -49,7 +49,8 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 @Composable
 fun RealtyDescriptionScreen(
     viewModel: RealtyDescriptionViewModel,
-    onBack: () -> Unit) {
+    onBack: () -> Unit
+) {
 
     val realty = viewModel.getSelectedRealty()
     var realtyAgent by remember { mutableStateOf<RealtyAgent?>(null) }
@@ -58,84 +59,79 @@ fun RealtyDescriptionScreen(
         realtyAgent = viewModel.getAgentRepository(realty?.agentId ?: 0)
     }
 
-
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 40.dp)) { innerPadding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)) {
-            if (realty != null) {
-                DetailScreen(realty, viewModel)
-            }
-        }
+    if (realty != null) {
+        DetailScreen(realty, viewModel)
     }
+
+
 }
 
 @Composable
 fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
-   Scaffold(modifier = Modifier.fillMaxSize(),
-        topBar = { ThemeTopBar(title = "Real Estate", onBackClick = {}) }) { paddingValues ->
-        Column(modifier = Modifier
+    Column(
+        modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues)) {
-            Text("Media")
-            LazyRow(modifier = Modifier.fillMaxWidth()) {
-                items(realty.pictures.size) { index ->
-                    Spacer(modifier = Modifier.size(5.dp))
-                    RealtyPictureUI(realty.pictures[index], viewModel)
-                }
+    ) {
+        Text("Media")
+        LazyRow(modifier = Modifier.fillMaxWidth()) {
+            items(realty.pictures.size) { index ->
+                Spacer(modifier = Modifier.size(5.dp))
+                RealtyPictureUI(realty.pictures[index], viewModel)
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
-            HorizontalDivider(Modifier
-                .fillMaxWidth()
-                .height(1.dp), color = Color.Gray)
-            Spacer(modifier = Modifier.height(10.dp))
-
-           Text("Description")
-            Text(realty.primaryInfo.description)
-
-            Spacer(modifier = Modifier.height(10.dp))
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Row {
-                Column {
-                    RealtyPropertie(Aspect_ratio, "Surface", "${realty.primaryInfo.surface} m2")
-                    RealtyPropertie(Icons.Filled.Home, "Number of rooms", "${realty.primaryInfo.rooms}")
-                    RealtyPropertie(Bathtub, "Number of bathrooms", "2")
-                    RealtyPropertie(Bed, "Number of bedrooms", "4")
-                }
-
-                RealtyPropertie(
-                    Icons.Filled.Place,
-                    "Location",
-                    realty.primaryInfo.realtyPlace.name
-                )
-            }
-
-            LiteModeMapView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                viewModel = viewModel,
-                realty = realty
-            )
-
-
         }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        HorizontalDivider(
+            Modifier
+                .fillMaxWidth()
+                .height(1.dp), color = Color.Gray
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text("Description")
+        Text(realty.primaryInfo.description)
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Row {
+            Column {
+                RealtyPropertie(Aspect_ratio, "Surface", "${realty.primaryInfo.surface} m2")
+                RealtyPropertie(Icons.Filled.Home, "Number of rooms", "${realty.primaryInfo.rooms}")
+                RealtyPropertie(Bathtub, "Number of bathrooms", "2")
+                RealtyPropertie(Bed, "Number of bedrooms", "4")
+            }
+
+            RealtyPropertie(
+                Icons.Filled.Place,
+                "Location",
+                realty.primaryInfo.realtyPlace.name
+            )
+        }
+
+        LiteModeMapView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            viewModel = viewModel,
+            realty = realty
+        )
+
+
     }
 }
 
+
 @Composable
 fun RealtyPictureUI(realtyPicture: RealtyPicture, viewModel: RealtyDescriptionViewModel) {
-   val context = LocalContext.current
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .size(150.dp)
     ) {
         Image(
-            bitmap = viewModel.uriToBitmapLegacy(context, Uri.parse(realtyPicture.uriString))?.asImageBitmap() ?: return,
+            bitmap = viewModel.uriToBitmapLegacy(context, Uri.parse(realtyPicture.uriString))
+                ?.asImageBitmap() ?: return,
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
@@ -161,14 +157,18 @@ fun RealtyPropertie(imageVector: ImageVector, title: String, value: String) {
         Image(imageVector = imageVector, contentDescription = null)
         Column {
             Text(title)
-           Text(value)
+            Text(value)
         }
 
     }
 }
 
 @Composable
-fun LiteModeMapView(modifier: Modifier = Modifier, viewModel: RealtyDescriptionViewModel, realty: Realty) {
+fun LiteModeMapView(
+    modifier: Modifier = Modifier,
+    viewModel: RealtyDescriptionViewModel,
+    realty: Realty
+) {
     var location by remember { mutableStateOf<LatLng?>(null) }
     LaunchedEffect(Unit) {
         location = viewModel.fetchPlaceLatLng(realty.primaryInfo.realtyPlace.id)
@@ -187,7 +187,14 @@ fun LiteModeMapView(modifier: Modifier = Modifier, viewModel: RealtyDescriptionV
                             MarkerOptions()
                                 .position(LatLng(latitude, longitude))
                         )
-                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), 15f))
+                        googleMap.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                LatLng(
+                                    latitude,
+                                    longitude
+                                ), 15f
+                            )
+                        )
                     }
                 }
             },

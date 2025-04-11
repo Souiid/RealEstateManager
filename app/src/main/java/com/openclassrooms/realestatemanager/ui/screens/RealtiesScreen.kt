@@ -47,79 +47,39 @@ import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 fun RealtiesScreen(viewModel: RealtiesViewModel, onNext: () -> Unit, activity: MainActivity) {
     val context = LocalContext.current
     val realties by viewModel.realties.collectAsState(initial = emptyList())
-        RealEstateManagerTheme {
-            Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-                TopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Gray,
-                        navigationIconContentColor = Color.White,
-                        titleContentColor = Color.White,
-                        actionIconContentColor = Color.White
-                    ),
-                    title = { Text(text = "Real Estate") },
-                    actions = {
-                        IconButton(onClick = {
-                            val intent = Intent(activity, FormActivity::class.java)
-                            activity.startActivity(intent)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
-                        IconButton(onClick = {}) {
-                            Icon(
-                                imageVector = Icons.Filled.Create,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
-                        IconButton(onClick = {}) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {}) {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
-                    }
-                )
-            }) { innerPadding ->
-                if (realties.isNotEmpty()) {
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)) {
-                        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                            items(realties.size) { index ->
-                                val realty = realties[index]
-                                RealtyItem(
-                                    realty = realty,
-                                    viewModel = viewModel,
-                                    context = context,
-                                    onClick = {
-                                        viewModel.setSelectedRealty(realty)
-                                        onNext()
-                                    }
-                                )
+    RealEstateManagerTheme {
+        if (realties.isNotEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    items(realties.size) { index ->
+                        val realty = realties[index]
+                        RealtyItem(
+                            realty = realty,
+                            viewModel = viewModel,
+                            context = context,
+                            onClick = {
+                                viewModel.setSelectedRealty(realty)
+                                onNext()
                             }
-                        }
+                        )
                     }
                 }
             }
         }
+    }
 }
 
+
 @Composable
-fun RealtyItem(realty: Realty, viewModel: RealtiesViewModel, context: Context, onClick: ()->Unit) {
+fun RealtyItem(
+    realty: Realty,
+    viewModel: RealtiesViewModel,
+    context: Context,
+    onClick: () -> Unit
+) {
     val uri = Uri.parse(realty.pictures.first().uriString)
     val bitmap = viewModel.uriToBitmapLegacy(context, uri) ?: return
     Column(

@@ -60,13 +60,12 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             RealEstateManagerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
                     MainNavGraph(
                         navController = navController,
                         modifier = Modifier,
                         activity = this@MainActivity
                     )
-                }
+
             }
         }
     }
