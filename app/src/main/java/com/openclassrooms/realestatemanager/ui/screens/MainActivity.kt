@@ -44,6 +44,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.navigation.MainNavGraph
 import com.openclassrooms.realestatemanager.ui.screens.form.FormActivity
@@ -58,19 +64,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-
             RealEstateManagerTheme {
-                    MainNavGraph(
-                        navController = navController,
-                        modifier = Modifier,
-                        activity = this@MainActivity
-                    )
-
+                MainNavGraph(
+                    navController = navController,
+                    modifier = Modifier,
+                    activity = this@MainActivity
+                )
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

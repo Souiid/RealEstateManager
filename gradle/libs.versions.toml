@@ -9,6 +9,7 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.5"
 activityCompose = "1.9.1"
 composeBom = "2024.04.01"
+lottieComposeVersion = "6.1.0"
 materialIconsExtended = "1.7.7"
 navigationCompose = "2.7.7"
 places = "4.1.0"
@@ -25,6 +26,7 @@ composeCompiler = "1.5.10"
 
 
 [libraries]
+android-lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieComposeVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
