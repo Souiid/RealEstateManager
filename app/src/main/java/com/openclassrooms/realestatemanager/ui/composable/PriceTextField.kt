@@ -4,11 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
@@ -20,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -31,7 +27,8 @@ fun PriceTextField(
     onValueChange: (String) -> Unit,
     labelID: Int,
     currency: String,
-    onCurrencyChange: (String) -> Unit
+    onCurrencyChange: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val currencies = listOf("€", "$")
 
@@ -41,6 +38,7 @@ fun PriceTextField(
         labelID = labelID,
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Number,
+        modifier = modifier,
         trailingIcon = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 VerticalDivider()
@@ -53,26 +51,6 @@ fun PriceTextField(
             }
         }
     )
-
-  //  OutlinedTextField(
-  //      value = value,
-  //      onValueChange = onValueChange,
-  //      placeholder = { Text(hint) },
-  //      trailingIcon = {
-  //          Row(verticalAlignment = Alignment.CenterVertically) {
-  //              VerticalDivider()
-  //              Spacer(modifier = Modifier.width(8.dp))
-  //              DropdownMenuBox(
-  //                  selectedText = currency,
-  //                  options = currencies,
-  //                  onOptionSelected = onCurrencyChange
-  //              )
-  //          }
-  //      },
-  //      modifier = Modifier
-  //          .height(56.dp)
-  //          .clip(RoundedCornerShape(16.dp))
-  //  )
 }
 
 @Composable

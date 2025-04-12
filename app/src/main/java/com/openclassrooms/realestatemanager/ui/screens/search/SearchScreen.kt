@@ -1,10 +1,13 @@
 package com.openclassrooms.realestatemanager.ui.screens.search
 
+import android.icu.util.Currency
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.ui.composable.PriceTextField
@@ -32,9 +36,12 @@ import com.openclassrooms.realestatemanager.ui.composable.PriceTextField
 fun SearchScreen() {
     var selectedList by remember { mutableStateOf(emptyList<RealtyType>()) }
     var selectedStatus by remember { mutableStateOf<Boolean?>(null) }
+    var minPriceValue by remember { mutableStateOf<Int?>(null) }
     var maxPriceValue by remember { mutableStateOf<Int?>(null) }
     var currency by remember { mutableStateOf("$") }
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    LazyColumn(modifier = Modifier
+        .fillMaxWidth()
+        .padding(15.dp)) {
         item {
             StatusSegmentedButton(
                 selectedStatus = selectedStatus,
@@ -51,23 +58,56 @@ fun SearchScreen() {
         }
 
         item {
-            PriceTextField(
-                value = maxPriceValue.toString(),
-                onValueChange = { maxPriceValue = it.toIntOrNull() },
-                currency = currency,
-                labelID = R.string.min_price,
-                onCurrencyChange = {
-                    currency = if (currency == "$") {
-                        "€"
-                    }else {
-                        "$"
-                    }
-                }
+            SetPriceFilterTextFields(
+                minPriceValue = minPriceValue,
+                maxPriceValue = maxPriceValue,
+                onMinPriceChange = { minPriceValue = it},
+                onMaxPriceChange = { maxPriceValue = it },
+                currencyP = currency
             )
         }
 
     }
 
+}
+
+@Composable
+fun SetPriceFilterTextFields(minPriceValue: Int?,
+                             maxPriceValue: Int?,
+                             onMinPriceChange: (Int?) -> Unit,
+                             onMaxPriceChange: (Int?) -> Unit,
+                             currencyP: String) {
+
+    var currency by remember { mutableStateOf(currencyP) }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        PriceTextField(
+            value = minPriceValue.toString(),
+            onValueChange = { onMinPriceChange(it.toIntOrNull()) },
+            currency = currency,
+            labelID = R.string.min_price,
+            onCurrencyChange = {
+                currency = it
+            },
+            modifier = Modifier.weight(1f)
+        )
+
+        PriceTextField(
+            value = maxPriceValue.toString(),
+            onValueChange = { onMaxPriceChange(it.toIntOrNull()) },
+            currency = currency,
+            labelID = R.string.max_price,
+            onCurrencyChange = {
+               currency = it
+            },
+            modifier = Modifier.weight(1f)
+        )
+
+    }
 }
 
 @Composable

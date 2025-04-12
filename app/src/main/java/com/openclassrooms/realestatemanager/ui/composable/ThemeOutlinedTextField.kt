@@ -31,11 +31,10 @@ fun ThemeOutlinedTextField(
     singleLine: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null,
     height: Dp = 56.dp,
+    modifier: Modifier =  Modifier.fillMaxWidth().height(height),
 ) {
     OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height),
+        modifier = modifier,
         value = value,
         onValueChange = { newValue ->
             onValueChanged(newValue)
