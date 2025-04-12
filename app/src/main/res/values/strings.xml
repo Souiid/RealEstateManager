@@ -4,6 +4,10 @@
     <string name="price">Price</string>
     <string name="max_price">Max price</string>
     <string name="min_price">Min price</string>
+    <string name="min_surface">Min surface</string>
+    <string name="max_surface">Max surface</string>
+
+
     <string name="number_of_rooms">Number of rooms</string>
     <string name="surface">Surface</string>
     <string name="description">description</string>

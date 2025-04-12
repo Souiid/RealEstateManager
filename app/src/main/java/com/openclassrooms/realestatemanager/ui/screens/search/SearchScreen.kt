@@ -26,11 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.ui.composable.PriceTextField
+import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 
 @Composable
 fun SearchScreen() {
@@ -38,10 +40,16 @@ fun SearchScreen() {
     var selectedStatus by remember { mutableStateOf<Boolean?>(null) }
     var minPriceValue by remember { mutableStateOf<Int?>(null) }
     var maxPriceValue by remember { mutableStateOf<Int?>(null) }
-    var currency by remember { mutableStateOf("$") }
+    val currency = "$"
+
+    var minSurfaceValue by remember { mutableStateOf<Int?>(null) }
+    var maxSurfaceValue by remember { mutableStateOf<Int?>(null) }
+
     LazyColumn(modifier = Modifier
         .fillMaxWidth()
-        .padding(15.dp)) {
+        .padding(15.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
         item {
             StatusSegmentedButton(
                 selectedStatus = selectedStatus,
@@ -65,10 +73,54 @@ fun SearchScreen() {
                 onMaxPriceChange = { maxPriceValue = it },
                 currencyP = currency
             )
+            HorizontalDivider()
+        }
+
+        item {
+            SetSurfaceFilterTextFields(
+                minSurfaceValue = minSurfaceValue,
+                maxSurfaceValue = maxSurfaceValue,
+                onMinSurfaceChange = { minSurfaceValue = it },
+                onMaxSurfaceChange = { maxSurfaceValue = it }
+            )
+            HorizontalDivider()
         }
 
     }
 
+}
+
+@Composable
+fun SetSurfaceFilterTextFields(minSurfaceValue: Int?,
+                             maxSurfaceValue: Int?,
+                             onMinSurfaceChange: (Int?) -> Unit,
+                             onMaxSurfaceChange: (Int?) -> Unit) {
+
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        ThemeOutlinedTextField(
+            value = minSurfaceValue.toString(),
+            onValueChanged = { onMinSurfaceChange(it.toIntOrNull()) },
+            labelID = R.string.min_surface,
+            imeAction = ImeAction.Next,
+            keyboardType = KeyboardType.Number,
+            modifier = Modifier.weight(1f)
+        )
+
+        ThemeOutlinedTextField(
+            value = maxSurfaceValue.toString(),
+            onValueChanged = { onMaxSurfaceChange(it.toIntOrNull()) },
+            labelID = R.string.max_surface,
+            imeAction = ImeAction.Done,
+            keyboardType = KeyboardType.Number,
+            modifier = Modifier.weight(1f)
+        )
+
+    }
 }
 
 @Composable
