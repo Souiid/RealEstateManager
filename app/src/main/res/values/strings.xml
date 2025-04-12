@@ -2,6 +2,8 @@
     <string name="app_name">RealEstateManager</string>
     <string name="google_maps_key">AIzaSyCit_zuYTP-RYPaqAxRLjcEd0-Ju5aAS2M</string>
     <string name="price">Price</string>
+    <string name="max_price">Max price</string>
+    <string name="min_price">Min price</string>
     <string name="number_of_rooms">Number of rooms</string>
     <string name="surface">Surface</string>
     <string name="description">description</string>

@@ -29,6 +29,7 @@ fun ThemeOutlinedTextField(
     iconText: String? = null,
     keyboardType: KeyboardType,
     singleLine: Boolean = true,
+    trailingIcon: @Composable (() -> Unit)? = null,
     height: Dp = 56.dp,
 ) {
     OutlinedTextField(
@@ -52,6 +53,9 @@ fun ThemeOutlinedTextField(
         trailingIcon = {
             if (iconText != null) {
                 Text(text = iconText)
+            }else {
+                trailingIcon?.invoke()
+
             }
         },
         keyboardOptions = KeyboardOptions(

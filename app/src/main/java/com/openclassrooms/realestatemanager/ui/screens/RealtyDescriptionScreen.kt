@@ -30,6 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -44,7 +47,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
-import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 
 @Composable
 fun RealtyDescriptionScreen(
@@ -62,8 +64,6 @@ fun RealtyDescriptionScreen(
     if (realty != null) {
         DetailScreen(realty, viewModel)
     }
-
-
 }
 
 @Composable
@@ -149,6 +149,8 @@ fun RealtyPictureUI(realtyPicture: RealtyPicture, viewModel: RealtyDescriptionVi
         }
     }
 }
+
+
 
 @Composable
 fun RealtyPropertie(imageVector: ImageVector, title: String, value: String) {

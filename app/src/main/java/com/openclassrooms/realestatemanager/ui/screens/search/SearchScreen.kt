@@ -16,6 +16,7 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,13 +24,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyType
+import com.openclassrooms.realestatemanager.ui.composable.PriceTextField
 
 @Composable
 fun SearchScreen() {
     var selectedList by remember { mutableStateOf(emptyList<RealtyType>()) }
     var selectedStatus by remember { mutableStateOf<Boolean?>(null) }
-
+    var maxPriceValue by remember { mutableStateOf<Int?>(null) }
+    var currency by remember { mutableStateOf("$") }
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
         item {
             StatusSegmentedButton(
@@ -44,6 +48,22 @@ fun SearchScreen() {
                 onSelectionChanged = { selectedList = it }
             )
             HorizontalDivider()
+        }
+
+        item {
+            PriceTextField(
+                value = maxPriceValue.toString(),
+                onValueChange = { maxPriceValue = it.toIntOrNull() },
+                currency = currency,
+                labelID = R.string.min_price,
+                onCurrencyChange = {
+                    currency = if (currency == "$") {
+                        "€"
+                    }else {
+                        "$"
+                    }
+                }
+            )
         }
 
     }
@@ -123,3 +143,4 @@ fun RealtyTypeItem(realtyTypeName: String, isChecked: Boolean, onCheckedChange: 
         )
     }
 }
+
