@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -30,9 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -97,9 +93,9 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
         Row {
             Column {
                 RealtyPropertie(Aspect_ratio, "Surface", "${realty.primaryInfo.surface} m2")
-                RealtyPropertie(Icons.Filled.Home, "Number of rooms", "${realty.primaryInfo.rooms}")
-                RealtyPropertie(Bathtub, "Number of bathrooms", "2")
-                RealtyPropertie(Bed, "Number of bedrooms", "4")
+                RealtyPropertie(Icons.Filled.Home, "Number of rooms", "${realty.primaryInfo.roomsNbr}")
+                RealtyPropertie(Bathtub, "Number of bathrooms", "${realty.primaryInfo.bathroomsNbr}")
+                RealtyPropertie(Bed, "Number of bedrooms", "${realty.primaryInfo.bedroomsNbr}")
             }
 
             RealtyPropertie(

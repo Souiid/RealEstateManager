@@ -50,7 +50,9 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
 
     var surfaceValue by remember { mutableStateOf("") }
     var priceValue by remember { mutableStateOf("") }
-    var numberOfRoomsValue by remember { mutableStateOf("") }
+    var roomsNbrValue by remember { mutableStateOf("") }
+    var bedRoomNbrValue by remember { mutableStateOf("") }
+    var bathRoomNbrValue by remember { mutableStateOf("") }
     var descriptionValue by remember { mutableStateOf("") }
     var realtyPlaceValue by remember { mutableStateOf<RealtyPlace?>(null) }
     var displayDialog by remember { mutableStateOf(false) }
@@ -65,8 +67,11 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
     if (realtyPrimaryInfo != null) {
         surfaceValue = realtyPrimaryInfo.surface.toString()
         priceValue = realtyPrimaryInfo.price.toString()
-        numberOfRoomsValue = realtyPrimaryInfo.rooms.toString()
+        roomsNbrValue = realtyPrimaryInfo.roomsNbr.toString()
         descriptionValue = realtyPrimaryInfo.description
+        realtyPlaceValue = realtyPrimaryInfo.realtyPlace
+        bedRoomNbrValue = realtyPrimaryInfo.bedroomsNbr.toString()
+        bathRoomNbrValue = realtyPrimaryInfo.bathroomsNbr.toString()
         realtyPlaceValue = realtyPrimaryInfo.realtyPlace
     }
 
@@ -82,7 +87,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                     if (viewModel.isFormValid(
                             surface = surfaceValue,
                             price = priceValue,
-                            rooms = numberOfRoomsValue,
+                            rooms = roomsNbrValue,
                             description = descriptionValue,
                             realtyPlace = realtyPlaceValue
                         )
@@ -92,7 +97,9 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                                 realtyType = RealtyType.valueOf(selectedOption.uppercase()),
                                 surface = surfaceValue.toDouble(),
                                 price = priceValue.toDouble(),
-                                rooms = numberOfRoomsValue.toInt(),
+                                roomsNbr = roomsNbrValue.toInt(),
+                                bathroomsNbr = bathRoomNbrValue.toInt(),
+                                bedroomsNbr = bedRoomNbrValue.toInt(),
                                 description = descriptionValue,
                                 realtyPlace = realtyPlaceValue ?: return@ThemeButton
                             )
@@ -176,9 +183,25 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                 keyboardType = KeyboardType.Number
             )
             ThemeOutlinedTextField(
-                value = numberOfRoomsValue,
-                onValueChanged = { numberOfRoomsValue = it },
+                value = roomsNbrValue,
+                onValueChanged = { roomsNbrValue = it },
                 labelID = R.string.number_of_rooms,
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Number
+            )
+
+            ThemeOutlinedTextField(
+                value = bedRoomNbrValue,
+                onValueChanged = { bedRoomNbrValue = it },
+                labelID = R.string.number_of_bedrooms,
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Number
+            )
+
+            ThemeOutlinedTextField(
+                value = bathRoomNbrValue,
+                onValueChanged = { bathRoomNbrValue = it },
+                labelID = R.string.number_of_bathrooms,
                 imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Number
             )
