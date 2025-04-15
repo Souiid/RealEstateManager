@@ -59,6 +59,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
+import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 
@@ -323,36 +324,15 @@ fun CameraGalleryDialog(
     onSelectCamera: () -> Unit,
     onSelectGallery: () -> Unit
 ) {
-    Dialog(onDismissRequest = { onDismissRequest() }) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.background,
-            modifier = Modifier.width(IntrinsicSize.Min)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .width(IntrinsicSize.Min)
-            ) {
-                Text(text = "Choisissez une option")
-                Spacer(modifier = Modifier.height(8.dp))
 
-                Button(onClick = { onSelectCamera() }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Prendre une photo")
-                }
+    ThemeDialog(
+        title = "Insérer une photo",
+        description = "Choisissez une option",
+        primaryButtonTitle = "Choisir dans la gallerie",
+        onPrimaryButtonClick = { onSelectGallery() },
+        secondaryButtonTitle = "Prendre une photo",
+        onSecondaryButtonClick = { onSelectCamera() },
+        onDismissRequest = { onDismissRequest() }
+    )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Button(onClick = { onSelectGallery() }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Choisir depuis la galerie")
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextButton(onClick = { onDismissRequest() }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Annuler")
-                }
-            }
-        }
-    }
 }

@@ -13,6 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
@@ -64,4 +65,18 @@ fun ThemeDialog(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewThemeDialog() {
+    ThemeDialog(
+        title = "Title",
+        description = "Description",
+        primaryButtonTitle = "Choisir dans la gallerie",
+        onPrimaryButtonClick = {},
+        secondaryButtonTitle = "Prendre une photo",
+        onSecondaryButtonClick = {},
+        onDismissRequest = {}
+    )
 }

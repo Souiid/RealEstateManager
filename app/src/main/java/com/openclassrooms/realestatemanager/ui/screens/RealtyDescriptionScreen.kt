@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,7 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.famoco.projet9.Aspect_ratio
 import com.famoco.projet9.Bathtub
@@ -67,8 +69,15 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(horizontal = 15.dp)
     ) {
-        Text("Media")
+        Text(
+            text = "Media",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth(),
+        )
         LazyRow(modifier = Modifier.fillMaxWidth()) {
             items(realty.pictures.size) { index ->
                 Spacer(modifier = Modifier.size(5.dp))
@@ -84,21 +93,26 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
         )
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text("Description")
-        Text(realty.primaryInfo.description)
+        Text(text = "Description",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth(),)
+        Text(text = realty.primaryInfo.description, fontSize = 16.sp,
+            fontWeight = FontWeight.W400)
 
         Spacer(modifier = Modifier.height(10.dp))
         Spacer(modifier = Modifier.height(10.dp))
 
         Row {
             Column {
-                RealtyPropertie(Aspect_ratio, "Surface", "${realty.primaryInfo.surface} m2")
-                RealtyPropertie(Icons.Filled.Home, "Number of rooms", "${realty.primaryInfo.roomsNbr}")
-                RealtyPropertie(Bathtub, "Number of bathrooms", "${realty.primaryInfo.bathroomsNbr}")
-                RealtyPropertie(Bed, "Number of bedrooms", "${realty.primaryInfo.bedroomsNbr}")
+                RealtyProperty(Aspect_ratio, "Surface", "${realty.primaryInfo.surface} m²")
+                RealtyProperty(Icons.Filled.Home, "Number of rooms", "${realty.primaryInfo.roomsNbr}")
+                RealtyProperty(Bathtub, "Number of bathrooms", "${realty.primaryInfo.bathroomsNbr}")
+                RealtyProperty(Bed, "Number of bedrooms", "${realty.primaryInfo.bedroomsNbr}")
             }
 
-            RealtyPropertie(
+            RealtyProperty(
                 Icons.Filled.Place,
                 "Location",
                 realty.primaryInfo.realtyPlace.name
@@ -149,13 +163,14 @@ fun RealtyPictureUI(realtyPicture: RealtyPicture, viewModel: RealtyDescriptionVi
 
 
 @Composable
-fun RealtyPropertie(imageVector: ImageVector, title: String, value: String) {
+fun RealtyProperty(imageVector: ImageVector, title: String, value: String) {
 
     Row {
         Image(imageVector = imageVector, contentDescription = null)
+        Spacer(modifier = Modifier.size(5.dp))
         Column {
-            Text(title)
-            Text(value)
+            Text(title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text(value, fontSize = 16.sp, fontWeight = FontWeight.W400)
         }
 
     }
