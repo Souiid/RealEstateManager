@@ -89,6 +89,8 @@ dependencies {
     implementation(libs.places)
     implementation(libs.play.services.maps)
     runtimeOnly(libs.androidx.material.icons.extended)
+    implementation(libs.maps.compose)
+
 
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
@@ -97,5 +99,7 @@ dependencies {
     implementation(libs.android.lottie.compose)
 
     implementation(libs.material3)
+
+
 
 }

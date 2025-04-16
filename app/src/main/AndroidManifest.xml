@@ -41,7 +41,6 @@
         <activity android:name=".ui.screens.form.FormActivity"
             android:exported="true"
             android:theme="@style/Theme.RealEstateManager">
-
         </activity>
     </application>
 
