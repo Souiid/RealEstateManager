@@ -42,28 +42,6 @@ class RealtyDescriptionViewModel(
         return agentRepository.getAgentByID(agentId)
     }
 
-    suspend fun fetchPlaceLatLng(
-        placeId: String
-    ): LatLng? = suspendCancellableCoroutine { continuation ->
-
-        val request = FetchPlaceRequest.builder(
-            placeId,
-            listOf(Place.Field.LOCATION)
-        ).build()
-
-        placesClient.fetchPlace(request)
-            .addOnSuccessListener { response ->
-                val latitude = response.place.location?.latitude ?: return@addOnSuccessListener
-                val longitude = response.place.location?.longitude ?: return@addOnSuccessListener
-                val latLng = LatLng(latitude, longitude)
-                continuation.resume(latLng)
-            }
-            .addOnFailureListener { exception ->
-                exception.printStackTrace()
-                continuation.resume(null)
-            }
-    }
-
     fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
         return try {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->

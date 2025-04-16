@@ -1,12 +1,17 @@
 package com.openclassrooms.realestatemanager.ui.screens.form.realtyform
 
 import androidx.lifecycle.ViewModel
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.data.repositories.INewRealtyRepository
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 class RealtyFormViewModel(
     private val repository: INewRealtyRepository
@@ -54,6 +59,29 @@ class RealtyFormViewModel(
             .addOnFailureListener { exception ->
                 exception.printStackTrace()
                 onResults(emptyList())
+            }
+    }
+
+    suspend fun fetchPlaceLatLng(
+        placesClient: PlacesClient,
+        placeId: String
+    ): LatLng? = suspendCancellableCoroutine { continuation ->
+
+        val request = FetchPlaceRequest.builder(
+            placeId,
+            listOf(Place.Field.LOCATION)
+        ).build()
+
+        placesClient.fetchPlace(request)
+            .addOnSuccessListener { response ->
+                val latitude = response.place.location?.latitude ?: return@addOnSuccessListener
+                val longitude = response.place.location?.longitude ?: return@addOnSuccessListener
+                val latLng = LatLng(latitude, longitude)
+                continuation.resume(latLng)
+            }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+                continuation.resume(null)
             }
     }
 

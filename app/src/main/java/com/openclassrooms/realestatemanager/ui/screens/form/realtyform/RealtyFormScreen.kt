@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.openclassrooms.realestatemanager.R
@@ -43,6 +45,7 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -236,6 +239,7 @@ fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace
     var query by remember { mutableStateOf("") }
     var predictions by remember { mutableStateOf<List<AutocompletePrediction>>(emptyList()) }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val apiKey = context.getString(R.string.google_maps_key)
     if (!Places.isInitialized()) {
         Places.initialize(context.applicationContext, apiKey)
@@ -279,11 +283,18 @@ fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            query = prediction
-                                .getFullText(null)
-                                .toString()
-                            callback(RealtyPlace(prediction.placeId, query))
-                            predictions = emptyList()
+                            scope.launch {
+                                query = prediction
+                                    .getFullText(null)
+                                    .toString()
+                                val position = viewModel.fetchPlaceLatLng(
+                                    placesClient,
+                                    prediction.placeId
+                                ) ?: LatLng(0.0, 0.0)
+                                callback(RealtyPlace(prediction.placeId, query, position))
+                                predictions = emptyList()
+                            }
+
                         }
                         .padding(8.dp)
                 )

@@ -93,13 +93,17 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
         )
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(text = "Description",
+        Text(
+            text = "Description",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .fillMaxWidth(),)
-        Text(text = realty.primaryInfo.description, fontSize = 16.sp,
-            fontWeight = FontWeight.W400)
+                .fillMaxWidth(),
+        )
+        Text(
+            text = realty.primaryInfo.description, fontSize = 16.sp,
+            fontWeight = FontWeight.W400
+        )
 
         Spacer(modifier = Modifier.height(10.dp))
         Spacer(modifier = Modifier.height(10.dp))
@@ -107,7 +111,11 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
         Row {
             Column {
                 RealtyProperty(Aspect_ratio, "Surface", "${realty.primaryInfo.surface} m²")
-                RealtyProperty(Icons.Filled.Home, "Number of rooms", "${realty.primaryInfo.roomsNbr}")
+                RealtyProperty(
+                    Icons.Filled.Home,
+                    "Number of rooms",
+                    "${realty.primaryInfo.roomsNbr}"
+                )
                 RealtyProperty(Bathtub, "Number of bathrooms", "${realty.primaryInfo.bathroomsNbr}")
                 RealtyProperty(Bed, "Number of bedrooms", "${realty.primaryInfo.bedroomsNbr}")
             }
@@ -123,7 +131,6 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp),
-            viewModel = viewModel,
             realty = realty
         )
 
@@ -161,7 +168,6 @@ fun RealtyPictureUI(realtyPicture: RealtyPicture, viewModel: RealtyDescriptionVi
 }
 
 
-
 @Composable
 fun RealtyProperty(imageVector: ImageVector, title: String, value: String) {
 
@@ -179,42 +185,38 @@ fun RealtyProperty(imageVector: ImageVector, title: String, value: String) {
 @Composable
 fun LiteModeMapView(
     modifier: Modifier = Modifier,
-    viewModel: RealtyDescriptionViewModel,
     realty: Realty
 ) {
-    var location by remember { mutableStateOf<LatLng?>(null) }
-    LaunchedEffect(Unit) {
-        location = viewModel.fetchPlaceLatLng(realty.primaryInfo.realtyPlace.id)
-    }
-    if (location != null) {
-        AndroidView(
-            modifier = modifier,
-            factory = { ctx ->
-                val options = GoogleMapOptions().liteMode(true)
-                MapView(ctx, options).apply {
-                    onCreate(null)
-                    getMapAsync { googleMap ->
-                        val latitude = location?.latitude ?: return@getMapAsync
-                        val longitude = location?.longitude ?: return@getMapAsync
-                        googleMap.addMarker(
-                            MarkerOptions()
-                                .position(LatLng(latitude, longitude))
+    val location = realty.primaryInfo.realtyPlace.positionLatLng
+
+    AndroidView(
+        modifier = modifier,
+        factory = { ctx ->
+            val options = GoogleMapOptions().liteMode(true)
+            MapView(ctx, options).apply {
+                onCreate(null)
+                getMapAsync { googleMap ->
+                    val latitude = location?.latitude ?: return@getMapAsync
+                    val longitude = location?.longitude ?: return@getMapAsync
+                    googleMap.addMarker(
+                        MarkerOptions()
+                            .position(LatLng(latitude, longitude))
+                    )
+                    googleMap.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(
+                                latitude,
+                                longitude
+                            ), 15f
                         )
-                        googleMap.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                LatLng(
-                                    latitude,
-                                    longitude
-                                ), 15f
-                            )
-                        )
-                    }
+                    )
                 }
-            },
-            update = { mapView ->
-                mapView.onResume()
             }
-        )
-    }
+        },
+        update = { mapView ->
+            mapView.onResume()
+        }
+    )
+
 
 }

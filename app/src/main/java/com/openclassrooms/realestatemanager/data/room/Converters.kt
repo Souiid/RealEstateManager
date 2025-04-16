@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.data.room
 
 import androidx.room.TypeConverter
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.openclassrooms.realestatemanager.data.RealtyPicture
@@ -30,6 +31,15 @@ class Converters {
     @TypeConverter
     fun toRealtyPlace(value: String): RealtyPlace {
         val type = object : TypeToken<RealtyPlace>() {}.type
+        return Gson().fromJson(value, type)
+    }
+
+    @TypeConverter
+    fun fromLatLng(position: LatLng): String = Gson().toJson(position)
+
+    @TypeConverter
+    fun toLatLng(value: String): LatLng {
+        val type = object : TypeToken<LatLng>() {}.type
         return Gson().fromJson(value, type)
     }
 
