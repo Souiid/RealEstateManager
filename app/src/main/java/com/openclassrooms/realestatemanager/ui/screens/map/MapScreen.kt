@@ -22,10 +22,12 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberMarkerState
 
 
 @Composable
-fun MapScreen() {
+fun MapScreen(viewModel: MapViewModel) {
     val context = LocalContext.current
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
@@ -46,6 +48,10 @@ fun MapScreen() {
             }
         }
     }
+
+    val realities = viewModel.getSortedRealities()
+
+
 
     LaunchedEffect(Unit) {
         permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -72,7 +78,15 @@ fun MapScreen() {
         properties = MapProperties(
             isMyLocationEnabled = userLocation != null
         )
-    )
+    ) {
+        realities?.forEach {
+            val latitude = it.primaryInfo.realtyPlace.positionLatLng.latitude
+            val longitude = it.primaryInfo.realtyPlace.positionLatLng.longitude
+            Marker(
+                state = rememberMarkerState(position = LatLng(latitude, longitude)),
+            )
+        }
+    }
 }
 
 private fun getLastKnownLocation(

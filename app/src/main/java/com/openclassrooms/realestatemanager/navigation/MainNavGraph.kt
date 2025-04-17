@@ -33,7 +33,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.openclassrooms.realestatemanager.ui.screens.MainActivity
 import com.openclassrooms.realestatemanager.ui.screens.map.MapScreen
-import com.openclassrooms.realestatemanager.ui.screens.RealtiesScreen
+import com.openclassrooms.realestatemanager.ui.screens.RealitiesScreen
 import com.openclassrooms.realestatemanager.ui.screens.RealtyDescriptionScreen
 import com.openclassrooms.realestatemanager.ui.screens.form.FormActivity
 import com.openclassrooms.realestatemanager.ui.screens.search.SearchScreen
@@ -134,7 +134,7 @@ fun MainNavGraph(
         NavHost(navController, NavigationScreen.Realties.route, modifier.padding(innerPadding)) {
 
             composable(NavigationScreen.Realties.route) {
-                RealtiesScreen(
+                RealitiesScreen(
                     koinViewModel(),
                     onNext = { navController.navigate(NavigationScreen.RealtyDescription.route) },
                     activity = activity
@@ -149,7 +149,7 @@ fun MainNavGraph(
             }
 
             composable(NavigationScreen.Map.route) {
-                MapScreen()
+                MapScreen(koinViewModel())
             }
         }
 

@@ -6,11 +6,12 @@ import com.openclassrooms.realestatemanager.data.repositories.INewRealtyReposito
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.NewRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.RealtyRepository
-import com.openclassrooms.realestatemanager.ui.screens.RealtiesViewModel
+import com.openclassrooms.realestatemanager.ui.screens.RealitiesViewModel
 import com.openclassrooms.realestatemanager.ui.screens.RealtyDescriptionViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.selectagent.SelectAgentViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture.SetRealtyPictureViewModel
+import com.openclassrooms.realestatemanager.ui.screens.map.MapViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -19,8 +20,9 @@ val appModule = module {
     viewModel { RealtyFormViewModel(get()) }
     viewModel { SetRealtyPictureViewModel(get()) }
     viewModel { SelectAgentViewModel(get(), get(), get()) }
-    viewModel { RealtiesViewModel(get()) }
+    viewModel { RealitiesViewModel(get()) }
     viewModel { RealtyDescriptionViewModel(androidContext(), get(), get()) }
+    viewModel { MapViewModel(androidContext(), get()) }
 
 
     single<INewRealtyRepository> { NewRealtyRepository(androidContext()) }

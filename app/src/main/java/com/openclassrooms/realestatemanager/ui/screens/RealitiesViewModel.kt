@@ -9,14 +9,18 @@ import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import kotlinx.coroutines.flow.Flow
 
-class RealtiesViewModel(
+class RealitiesViewModel(
     private val realtyRepository: IRealtyRepository
 ): ViewModel() {
 
-    val realties: Flow<List<Realty>> = realtyRepository.getAllRealties()
+    val realities: Flow<List<Realty>> = realtyRepository.getAllRealties()
 
     fun setSelectedRealty(realty: Realty) {
         realtyRepository.selectedRealty = realty
+    }
+
+    fun setSortedRealities(realities: List<Realty>) {
+        realtyRepository.sortedRealities = realities
     }
 
     fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {

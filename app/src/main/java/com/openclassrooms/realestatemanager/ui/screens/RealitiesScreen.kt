@@ -31,14 +31,16 @@ import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RealtiesScreen(
-    viewModel: RealtiesViewModel,
+fun RealitiesScreen(
+    viewModel: RealitiesViewModel,
     onNext: () -> Unit,
     activity: MainActivity) {
     val context = LocalContext.current
-    val realities by viewModel.realties.collectAsState(initial = emptyList())
+    val realities by viewModel.realities.collectAsState(initial = emptyList())
+
     RealEstateManagerTheme {
         if (realities.isNotEmpty()) {
+            viewModel.setSortedRealities(realities)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -66,7 +68,7 @@ fun RealtiesScreen(
 @Composable
 fun RealtyItem(
     realty: Realty,
-    viewModel: RealtiesViewModel,
+    viewModel: RealitiesViewModel,
     context: Context,
     onClick: () -> Unit
 ) {

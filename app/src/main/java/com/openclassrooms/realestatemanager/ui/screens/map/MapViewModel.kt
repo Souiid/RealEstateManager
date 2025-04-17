@@ -6,6 +6,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
+import com.openclassrooms.realestatemanager.data.room.entities.Realty
 
 class MapViewModel(
     context: Context,
@@ -19,11 +20,7 @@ class MapViewModel(
         placesClient = Places.createClient(context)
     }
 
-    //fun getSortedRealities(): List<Realty>? {
-      //  return realtyRepository.sortedRealities
-    //}
-
-    //suspend fun fetchPlaceLatLng(realty: Realty): LatLng? {
-       // return Utils().fetchPlaceLatLng(placesClient, realty.primaryInfo.realtyPlace.id)
-    //}
+    fun getSortedRealities(): List<Realty>? {
+        return realtyRepository.sortedRealities
+    }
 }

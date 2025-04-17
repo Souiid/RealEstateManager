@@ -196,8 +196,8 @@ fun LiteModeMapView(
             MapView(ctx, options).apply {
                 onCreate(null)
                 getMapAsync { googleMap ->
-                    val latitude = location?.latitude ?: return@getMapAsync
-                    val longitude = location?.longitude ?: return@getMapAsync
+                    val latitude = location.latitude
+                    val longitude = location.longitude
                     googleMap.addMarker(
                         MarkerOptions()
                             .position(LatLng(latitude, longitude))
