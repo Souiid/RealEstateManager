@@ -133,8 +133,6 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
                 .height(200.dp),
             realty = realty
         )
-
-
     }
 }
 

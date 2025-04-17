@@ -26,6 +26,18 @@ class Converters {
     fun toRealtyType(value: String): RealtyType = RealtyType.valueOf(value)
 
     @TypeConverter
+    fun fromAmenityList(amenities: List<Amenity>): String {
+        return Gson().toJson(amenities.map { it.name })
+    }
+
+    @TypeConverter
+    fun toAmenityList(data: String): List<Amenity> {
+        val type = object : TypeToken<List<String>>() {}.type
+        val list = Gson().fromJson<List<String>>(data, type)
+        return list.map { Amenity.valueOf(it) }
+    }
+
+    @TypeConverter
     fun fromRealtyPlace(value: RealtyPlace): String = Gson().toJson(value)
 
     @TypeConverter
