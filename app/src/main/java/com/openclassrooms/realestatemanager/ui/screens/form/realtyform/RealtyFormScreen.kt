@@ -71,8 +71,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
     var realtyPlaceValue by remember { mutableStateOf<RealtyPlace?>(null) }
     var displayDialog by remember { mutableStateOf(false) }
 
-    val options =
-        RealtyType.entries.map { it -> it.name.lowercase().replaceFirstChar { it.uppercase() } }
+    val options = RealtyType.entries
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(options[0]) }
     val amenityList = Amenity.entries
@@ -110,7 +109,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                     ) {
                         viewModel.setPrimaryInfo(
                             RealtyPrimaryInfo(
-                                realtyType = RealtyType.valueOf(selectedOption.uppercase()),
+                                realtyType = selectedOption,
                                 surface = surfaceValue.toDouble(),
                                 price = priceValue.toDouble(),
                                 roomsNbr = roomsNbrValue.toInt(),
@@ -155,7 +154,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                     onExpandedChange = { expanded = !expanded }
                 ) {
                     OutlinedTextField(
-                        value = selectedOption,
+                        value = stringResource(selectedOption.labelResId),
                         onValueChange = {},
                         label = {
                             Text(text = stringResource(R.string.type))
@@ -184,7 +183,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                     ) {
                         options.forEach { option ->
                             DropdownMenuItem(
-                                text = { Text(option) },
+                                text = { Text(stringResource(option.labelResId)) },
                                 onClick = {
                                     selectedOption = option
                                     expanded = false

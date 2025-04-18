@@ -59,4 +59,10 @@
     <string name="post_office">Post office</string>
     <string name="bakery">Bakery</string>
     <string name="metro">Metro</string>
+    <string name="flat">Flat</string>
+    <string name="loft">Loft</string>
+    <string name="manor">Manor</string>
+    <string name="house">House</string>
+    <string name="duplex">Duplex</string>
+    <string name="penthouse">Penthouse</string>
 </resources>

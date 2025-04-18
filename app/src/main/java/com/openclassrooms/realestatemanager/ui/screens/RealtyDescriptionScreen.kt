@@ -128,7 +128,8 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
         )
 
         Text(
-            text = realty.primaryInfo.description, fontSize = 16.sp,
+            text = amenitiesText,
+            fontSize = 16.sp,
             fontWeight = FontWeight.W400
         )
 
@@ -158,12 +159,6 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
                 .fillMaxWidth()
                 .height(200.dp),
             realty = realty
-        )
-
-        Text(
-            text = amenitiesText,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.W400
         )
     }
 }
