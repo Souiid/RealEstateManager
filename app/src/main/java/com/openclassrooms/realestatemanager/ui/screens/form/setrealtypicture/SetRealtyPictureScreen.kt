@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -138,14 +139,14 @@ fun SetRealtyPictureScreen(
             .fillMaxSize()
             .systemBarsPadding(),
         topBar = {
-            ThemeTopBar(title = "Realty pictures", onBackClick = { onBack() })
+            ThemeTopBar(title = stringResource(R.string.realty_pictures), onBackClick = { onBack() })
         },
         bottomBar = {
             ThemeButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp),
-                text = "Next",
+                text = stringResource(R.string.next),
                 enabled = !photos.isEmpty(),
                 onClick = {
                     viewModel.setRealtyPictures(photos)
@@ -169,7 +170,7 @@ fun SetRealtyPictureScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (photos.isEmpty()) {
-                    Text(text = "No photos selected, Add a photo by clicking button +")
+                    Text(text = stringResource(R.string.no_photo))
                     enabled = false
                 } else {
                     LazyVerticalGrid(
@@ -304,13 +305,13 @@ fun ImageDescriptionDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = { onDismissRequest() }) {
-                        Text("Annuler")
+                        Text(stringResource(R.string.cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = { onAddClick(description) }
                     ) {
-                        Text("Ajouter")
+                        Text( stringResource(R.string.add))
                     }
                 }
             }
@@ -326,11 +327,11 @@ fun CameraGalleryDialog(
 ) {
 
     ThemeDialog(
-        title = "Insérer une photo",
-        description = "Choisissez une option",
-        primaryButtonTitle = "Choisir dans la gallerie",
+        title = stringResource(R.string.insert_a_picture),
+        description = stringResource(R.string.choose_option),
+        primaryButtonTitle = stringResource(R.string.choose_from_gallery),
         onPrimaryButtonClick = { onSelectGallery() },
-        secondaryButtonTitle = "Prendre une photo",
+        secondaryButtonTitle = stringResource(R.string.take_a_picture),
         onSecondaryButtonClick = { onSelectCamera() },
         onDismissRequest = { onDismissRequest() }
     )

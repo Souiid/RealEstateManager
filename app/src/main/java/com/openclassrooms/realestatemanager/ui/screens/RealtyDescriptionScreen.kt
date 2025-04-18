@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Place
@@ -30,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +45,7 @@ import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
@@ -66,13 +70,15 @@ fun RealtyDescriptionScreen(
 
 @Composable
 fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
+    var text = realty.primaryInfo.amenities.joinTo(separator = "\n")
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 15.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "Media",
+            text = stringResource(R.string.media),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -94,7 +100,7 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(
-            text = "Description",
+            text = stringResource(R.string.description),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -106,23 +112,37 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
         )
 
         Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            text = stringResource(R.string.amenities),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth(),
+        )
+
+        Text(
+            text = realty.primaryInfo.description, fontSize = 16.sp,
+            fontWeight = FontWeight.W400
+        )
+
         Spacer(modifier = Modifier.height(10.dp))
 
         Row {
             Column {
-                RealtyProperty(Aspect_ratio, "Surface", "${realty.primaryInfo.surface} m²")
+                RealtyProperty(Aspect_ratio, stringResource(R.string.surface), "${realty.primaryInfo.surface} m²")
                 RealtyProperty(
                     Icons.Filled.Home,
-                    "Number of rooms",
+                    stringResource(R.string.number_of_rooms),
                     "${realty.primaryInfo.roomsNbr}"
                 )
-                RealtyProperty(Bathtub, "Number of bathrooms", "${realty.primaryInfo.bathroomsNbr}")
-                RealtyProperty(Bed, "Number of bedrooms", "${realty.primaryInfo.bedroomsNbr}")
+                RealtyProperty(Bathtub, stringResource(R.string.number_of_bathrooms), "${realty.primaryInfo.bathroomsNbr}")
+                RealtyProperty(Bed, stringResource(R.string.number_of_bedrooms), "${realty.primaryInfo.bedroomsNbr}")
             }
 
             RealtyProperty(
                 Icons.Filled.Place,
-                "Location",
+                stringResource(R.string.location),
                 realty.primaryInfo.realtyPlace.name
             )
         }

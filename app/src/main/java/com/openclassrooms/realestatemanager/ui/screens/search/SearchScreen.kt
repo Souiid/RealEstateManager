@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -149,7 +150,7 @@ fun DatePickerTextFieldCompose(
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text("Annuler")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         ) {
@@ -250,14 +251,14 @@ fun StatusSegmentedButton(
     onStatusSelected: (Boolean?) -> Unit
 ) {
     val statusList = listOf(
-        "Tous" to null,
-        "Disponible" to true,
-        "En vente" to false
+        stringResource(R.string.all) to null,
+        stringResource(R.string.available) to true,
+        stringResource(R.string.for_sale) to false
     )
 
     val selectedIndex = statusList.indexOfFirst { it.second == selectedStatus }
 
-    Text("Statut du bien")
+    Text(stringResource(R.string.realty_status))
 
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
         statusList.forEachIndexed { index, label ->
@@ -287,7 +288,7 @@ fun RealtyTypeSelection(
             .heightIn(max = 200.dp) // hauteur max auto-adaptée
             .verticalScroll(rememberScrollState())
     ) {
-        Text("Type de bien")
+        Text(stringResource(R.string.realty_type))
         RealtyType.entries.forEachIndexed { index, realtyType ->
             RealtyTypeItem(
                 realtyTypeName = realtyType.name,

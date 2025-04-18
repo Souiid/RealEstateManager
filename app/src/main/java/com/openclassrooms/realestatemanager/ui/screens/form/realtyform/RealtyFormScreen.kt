@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -97,7 +98,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding(),
-        topBar = { ThemeTopBar(title = "Realty form", onBackClick = { onBack() }) },
+        topBar = { ThemeTopBar(title = stringResource(R.string.realty_form), onBackClick = { onBack() }) },
         bottomBar = {
             ThemeButton(
                 onClick = {
@@ -127,7 +128,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                         displayDialog = true
                     }
                 },
-                text = "Next step",
+                text = stringResource(R.string.next_step),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -136,9 +137,9 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
 
         if (displayDialog) {
             ThemeDialog(
-                title = "Dialog",
-                description = "Please fill all fields",
-                primaryButtonTitle = "Ok",
+                title = stringResource(R.string.error),
+                description = stringResource(R.string.fill_all_fields),
+                primaryButtonTitle = stringResource(R.string.ok),
                 onPrimaryButtonClick = { displayDialog = false },
                 onDismissRequest = {})
         }
@@ -159,7 +160,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                         value = selectedOption,
                         onValueChange = {},
                         label = {
-                            Text(text = "Type")
+                            Text(text = stringResource(R.string.type))
                         },
                         singleLine = true,
                         textStyle = TextStyle(
@@ -311,7 +312,7 @@ fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace
                     predictions = emptyList()
                 }
             },
-            label = { Text("Search Places") },
+            label = { Text(stringResource(R.string.search_place)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {

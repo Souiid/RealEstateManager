@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -75,7 +76,7 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFin
             .fillMaxSize()
             .systemBarsPadding(),
         topBar = {
-            ThemeTopBar(title = "Select agent", onBackClick = { onBack() })
+            ThemeTopBar(title = stringResource(R.string.select_agent), onBackClick = { onBack() })
         },
         bottomBar = {
             if (!isFinish) {
@@ -83,7 +84,7 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFin
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp),
-                    text = "Next",
+                    text = stringResource(R.string.complete),
                     enabled = true,
                     onClick = {
                         val realty = Realty(
@@ -114,7 +115,7 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFin
                 if (isFinish) {
                     CheckAnimation()
                     Spacer(Modifier.height(20.dp))
-                    Text(text = "Realty added successfully")
+                    Text(text = stringResource(R.string.realty_added))
                 }else {
                     if (!displayTF) {
                         if (agents.isNotEmpty()) {
@@ -126,7 +127,7 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFin
                                     value = selectedAgent?.name ?: agents.first().name,
                                     onValueChange = {},
                                     label = {
-                                        Text(text = "Agent")
+                                        Text(text = stringResource(R.string.agent))
                                     },
                                     singleLine = true,
                                     textStyle = TextStyle(
@@ -162,13 +163,13 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFin
                                 }
                             }
                         } else {
-                            Text("You have no agent yet, please add one")
+                            Text(stringResource(R.string.no_agent))
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
                         ThemeButton(
                             modifier = Modifier.fillMaxWidth(),
-                            text = if (agents.isNotEmpty()) "Or add agent" else "Add agent",
+                            text = if (agents.isNotEmpty()) stringResource(R.string.or_add_agent) else stringResource(R.string.add_agent),
                             enabled = true,
                             onClick = { displayTF = true }
                         )
@@ -187,14 +188,14 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFin
                         Row(modifier = Modifier.fillMaxWidth()) {
                             ThemeButton(
                                 modifier = Modifier.weight(1f),
-                                text = "Cancel",
+                                text = stringResource(R.string.cancel),
                                 enabled = true,
                                 onClick = { displayTF = false }
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             ThemeButton(
                                 modifier = Modifier.weight(1f),
-                                text = "Add",
+                                text = stringResource(R.string.add),
                                 enabled = true,
                                 onClick = {
                                     scope.launch {
