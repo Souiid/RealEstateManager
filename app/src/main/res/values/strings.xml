@@ -46,5 +46,17 @@
     <string name="choose_option">Choose an option</string>
     <string name="take_a_picture">Take a picture</string>
     <string name="choose_from_gallery">Choose from gallery</string>
-        stringResource(R.string.select_agent)
+    <string name="school">School</string>
+    <string name="hospital">Hospital</string>
+    <string name="supermarket">Supermarket</string>
+    <string name="park">Park</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="pharmacy">Pharmacy</string>
+    <string name="bus_stop">Bus stop</string>
+    <string name="train_station">Train station</string>
+    <string name="gym">Gym</string>
+    <string name="bank">Bank</string>
+    <string name="post_office">Post office</string>
+    <string name="bakery">Bakery</string>
+    <string name="metro">Metro</string>
 </resources>

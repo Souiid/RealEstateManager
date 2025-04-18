@@ -75,10 +75,8 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
         RealtyType.entries.map { it -> it.name.lowercase().replaceFirstChar { it.uppercase() } }
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(options[0]) }
-    val amenity =
-        Amenity.entries.map { it -> it.name.lowercase().replaceFirstChar { it.uppercase() } }
-
-    var selectedAmenities by remember { mutableStateOf(emptyList<String>()) }
+    val amenityList = Amenity.entries
+    var selectedAmenities by remember { mutableStateOf(emptyList<Amenity>()) }
 
     val realtyPrimaryInfo = viewModel.getPrimaryInfo()
 
@@ -120,7 +118,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                                 bedroomsNbr = bedRoomNbrValue.toInt(),
                                 description = descriptionValue,
                                 realtyPlace = realtyPlaceValue ?: return@ThemeButton,
-                                amenities = selectedAmenities.map { Amenity.valueOf(it.uppercase()) }
+                                amenities = selectedAmenities
                             )
                         )
                         onNext()
@@ -269,7 +267,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
 
             item {
                 SelectableChipsGroup(
-                    options = amenity,
+                    options = amenityList.map { it to stringResource(it.labelResId) },
                     selectedOptions = selectedAmenities,
                     onSelectionChanged = { selectedAmenities = it }
                 )
@@ -352,9 +350,9 @@ fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace
 
 @Composable
 fun SelectableChipsGroup(
-    options: List<String>,
-    selectedOptions: List<String>,
-    onSelectionChanged: (List<String>) -> Unit
+    options: List<Pair<Amenity, String>>,
+    selectedOptions: List<Amenity>,
+    onSelectionChanged: (List<Amenity>) -> Unit
 ) {
     FlowRow(
         modifier = Modifier
@@ -363,16 +361,16 @@ fun SelectableChipsGroup(
         mainAxisSpacing = 8.dp,
         crossAxisSpacing = 8.dp
     ) {
-        options.forEach { option ->
-            val isSelected = option in selectedOptions
+        options.forEach { (amenity, label) ->
+            val isSelected = amenity in selectedOptions
             Chip(
-                label = option,
+                label = label,
                 selected = isSelected,
                 onClick = {
                     val updated = if (isSelected) {
-                        selectedOptions - option
+                        selectedOptions - amenity
                     } else {
-                        selectedOptions + option
+                        selectedOptions + amenity
                     }
                     onSelectionChanged(updated)
                 }

@@ -70,7 +70,13 @@ fun RealtyDescriptionScreen(
 
 @Composable
 fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
-    var text = realty.primaryInfo.amenities.joinTo(separator = "\n")
+
+    val amenitiesLabels = realty.primaryInfo.amenities.map { amenity ->
+        stringResource(id = amenity.labelResId)
+    }
+
+    val amenitiesText = amenitiesLabels.joinToString("\n")
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -152,6 +158,12 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
                 .fillMaxWidth()
                 .height(200.dp),
             realty = realty
+        )
+
+        Text(
+            text = amenitiesText,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.W400
         )
     }
 }
@@ -235,6 +247,4 @@ fun LiteModeMapView(
             mapView.onResume()
         }
     )
-
-
 }
