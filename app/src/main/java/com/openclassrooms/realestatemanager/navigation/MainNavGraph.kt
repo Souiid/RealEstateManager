@@ -90,7 +90,11 @@ fun MainNavGraph(
                         )
                     }
                 } else {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        val intent = Intent(activity, FormActivity::class.java)
+                        intent.putExtra("isEditing", true)
+                        activity.startActivity(intent)
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.Create,
                             contentDescription = null,

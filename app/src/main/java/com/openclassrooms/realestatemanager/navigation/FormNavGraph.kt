@@ -15,7 +15,8 @@ import org.koin.androidx.compose.koinViewModel
 fun FormNavGraph(
     navController: NavHostController,
     modifier: Modifier,
-    activity: Activity
+    activity: Activity,
+    isEditing: Boolean = false
 ) {
     NavHost(navController, NavigationScreen.RealtyForm.route, modifier) {
 
@@ -30,7 +31,13 @@ fun FormNavGraph(
         composable(NavigationScreen.SetRealtyPicture.route) {
             SetRealtyPictureScreen(
                 koinViewModel(),
-                onNext = { navController.navigate(NavigationScreen.SelectAgentScreen.route) },
+                onNext = {
+                    if (!isEditing) {
+                        navController.navigate(NavigationScreen.SelectAgentScreen.route)
+                    }else {
+                        activity.finish()
+                    }
+                },
                 onBack = {
                     navController.popBackStack()
                 })

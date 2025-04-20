@@ -1,6 +1,9 @@
 package com.openclassrooms.realestatemanager.data
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.net.wifi.WifiManager
 import androidx.compose.ui.unit.dp
 import java.text.DateFormat
@@ -26,5 +29,16 @@ class Utils {
     companion object {
         val TITLE_SIZE = 30.dp
         val DESCRIPTION_SIZE = 20.dp
+    }
+
+    fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
+        return try {
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                BitmapFactory.decodeStream(inputStream)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }

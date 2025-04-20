@@ -26,6 +26,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -90,6 +91,32 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
         realtyPlaceValue = realtyPrimaryInfo.realtyPlace
     }
 
+    val updatedRealty = viewModel.getRealtyFromRealtyRepository()
+    Log.d("aaa", "Updated Realty : $updatedRealty")
+    LaunchedEffect(updatedRealty) {
+        updatedRealty?.let {
+            val surface = it.primaryInfo.surface
+            val price = it.primaryInfo.price
+            val roomsNbr = it.primaryInfo.roomsNbr
+            val description = it.primaryInfo.description
+            val realtyPlace = it.primaryInfo.realtyPlace
+            val bedRoomNbr = it.primaryInfo.bedroomsNbr
+            val bathRoomNbr = it.primaryInfo.bathroomsNbr
+            val type = it.primaryInfo.realtyType
+            val amenities = it.primaryInfo.amenities
+
+            surfaceValue = surface.toString()
+            priceValue = price.toString()
+            roomsNbrValue = roomsNbr.toString()
+            descriptionValue = description
+            realtyPlaceValue = realtyPlace
+            bedRoomNbrValue = bedRoomNbr.toString()
+            bathRoomNbrValue = bathRoomNbr.toString()
+            selectedOption = type
+            selectedAmenities = amenities
+        }
+    }
+
 
     Scaffold(
         modifier = Modifier
@@ -108,7 +135,8 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                         )
                     ) {
                         viewModel.setPrimaryInfo(
-                            RealtyPrimaryInfo(
+                            updatedRealty = updatedRealty,
+                            realtyPrimaryInfo = RealtyPrimaryInfo(
                                 realtyType = selectedOption,
                                 surface = surfaceValue.toDouble(),
                                 price = priceValue.toDouble(),
@@ -258,10 +286,12 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                 )
             }
 
-            item {
-                PlaceAutocompleteTest(viewModel, callback = { place ->
-                    realtyPlaceValue = place
-                })
+            if (updatedRealty == null) {
+                item {
+                    PlaceAutocomplete(viewModel, callback = { place ->
+                        realtyPlaceValue = place
+                    })
+                }
             }
 
             item {
@@ -276,7 +306,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
 }
 
 @Composable
-fun PlaceAutocompleteTest(viewModel: RealtyFormViewModel, callback: (RealtyPlace) -> Unit) {
+fun PlaceAutocomplete(viewModel: RealtyFormViewModel, callback: (RealtyPlace) -> Unit) {
     var query by remember { mutableStateOf("") }
     var predictions by remember { mutableStateOf<List<AutocompletePrediction>>(emptyList()) }
     val context = LocalContext.current

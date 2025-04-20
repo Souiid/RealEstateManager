@@ -17,8 +17,8 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModel { RealtyFormViewModel(get()) }
-    viewModel { SetRealtyPictureViewModel(get()) }
+    viewModel { RealtyFormViewModel(get(), get()) }
+    viewModel { SetRealtyPictureViewModel(get(), get()) }
     viewModel { SelectAgentViewModel(get(), get(), get()) }
     viewModel { RealitiesViewModel(get()) }
     viewModel { RealtyDescriptionViewModel(androidContext(), get(), get()) }

@@ -13,10 +13,12 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.repositories.IAgentRepository
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
@@ -28,29 +30,18 @@ class RealtyDescriptionViewModel(
 
     private var placesClient: PlacesClient
 
+    val selectedRealty: StateFlow<Realty?> = realtyRepository.selectedRealtyFlow
+
     init {
         Places.initialize(context, context.getString(R.string.google_maps_key))
          placesClient = Places.createClient(context)
     }
 
-
-    fun getSelectedRealty(): Realty? {
-        return realtyRepository.selectedRealty
-    }
-
     suspend fun getAgentRepository(agentId: Int): RealtyAgent? {
         return agentRepository.getAgentByID(agentId)
     }
-
     fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
-        return try {
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                BitmapFactory.decodeStream(inputStream)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+       return Utils().uriToBitmapLegacy(context, uri)
     }
 
 }

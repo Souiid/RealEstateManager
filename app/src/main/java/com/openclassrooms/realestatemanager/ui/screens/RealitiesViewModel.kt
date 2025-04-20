@@ -15,8 +15,13 @@ class RealitiesViewModel(
 
     val realities: Flow<List<Realty>> = realtyRepository.getAllRealties()
 
+    fun initRealtyRepository() {
+        realtyRepository.setSelectedRealty(null)
+        realtyRepository.updatedRealty = null
+    }
+
     fun setSelectedRealty(realty: Realty) {
-        realtyRepository.selectedRealty = realty
+        realtyRepository.setSelectedRealty(realty)
     }
 
     fun setSortedRealities(realities: List<Realty>) {

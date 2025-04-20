@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens.form.realtyform
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
@@ -10,17 +11,27 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.data.repositories.INewRealtyRepository
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
+import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
+import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class RealtyFormViewModel(
-    private val repository: INewRealtyRepository
-) : ViewModel() {
+    private val newRealtyRepository: INewRealtyRepository,
+    private val realtyRepository: IRealtyRepository
+    ) : ViewModel() {
 
     fun setPrimaryInfo(
-       realtyPrimaryInfo: RealtyPrimaryInfo
+       realtyPrimaryInfo: RealtyPrimaryInfo,
+       updatedRealty: Realty? = null,
     ) {
-        repository.realtyPrimaryInfo = realtyPrimaryInfo
+        if (updatedRealty == null) {
+            newRealtyRepository.realtyPrimaryInfo = realtyPrimaryInfo
+        }else {
+            updatedRealty.primaryInfo = realtyPrimaryInfo
+            Log.d("aaa", "Updated Realty : $updatedRealty")
+            realtyRepository.updatedRealty = updatedRealty
+        }
     }
 
     fun isFormValid(
@@ -34,7 +45,12 @@ class RealtyFormViewModel(
     }
 
     fun getPrimaryInfo(): RealtyPrimaryInfo? {
-        return repository.realtyPrimaryInfo
+        return newRealtyRepository.realtyPrimaryInfo
+    }
+
+    fun getRealtyFromRealtyRepository(): Realty? {
+        return realtyRepository.updatedRealty ?: realtyRepository.selectedRealtyFlow.value
+
     }
 
     fun searchPlaces(

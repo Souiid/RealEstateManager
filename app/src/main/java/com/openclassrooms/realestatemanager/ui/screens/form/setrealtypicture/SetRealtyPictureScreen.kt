@@ -76,13 +76,24 @@ fun SetRealtyPictureScreen(
     val photos = remember { mutableStateListOf<RealtyPicture>() }
     var enabled by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
-    var selectedImage = remember { mutableStateOf<Bitmap?>(null) }
-    var selectedUri = remember { mutableStateOf<String?>(null) }
+    val selectedImage = remember { mutableStateOf<Bitmap?>(null) }
+    val selectedUri = remember { mutableStateOf<String?>(null) }
     var cameraUri by remember { mutableStateOf<Uri?>(null) }
     var showFabMenu by remember { mutableStateOf(false) }
 
+    val updatedRealty = viewModel.getUpdatedRealty()
+
+
     LaunchedEffect(Unit) {
-        photos.addAll(viewModel.getRealtyPictures() ?: emptyList())
+        if (updatedRealty != null) {
+            for (picture in updatedRealty.pictures) {
+               val bitmap = viewModel.getBitmapFromUri(context, Uri.parse(picture.uriString))
+                val newRealtyPicture = RealtyPicture(bitmap, picture.description, picture.uriString)
+                photos.add(newRealtyPicture)
+            }
+        }else {
+            photos.addAll(viewModel.getRealtyPictures() ?: emptyList())
+        }
     }
 
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -146,11 +157,13 @@ fun SetRealtyPictureScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp),
-                text = stringResource(R.string.next),
+                text = if(updatedRealty == null) stringResource(R.string.next) else stringResource(R.string.update),
                 enabled = !photos.isEmpty(),
                 onClick = {
-                    viewModel.setRealtyPictures(photos)
-                    onNext()
+                    viewModel.setRealtyPictures(
+                        realtyPictures = photos,
+                        updatedRealty = updatedRealty) { onNext() }
+
                 }
             )
         },

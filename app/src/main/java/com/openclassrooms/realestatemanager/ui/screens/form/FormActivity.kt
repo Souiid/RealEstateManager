@@ -16,6 +16,7 @@ class FormActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val isEditing = intent.getBooleanExtra("isEditing", false)
         enableEdgeToEdge()
         setContent {
             RealEstateManagerTheme  {
@@ -24,7 +25,8 @@ class FormActivity : ComponentActivity() {
                     FormNavGraph(
                         navController = navController,
                         modifier = Modifier,
-                        activity = this
+                        activity = this,
+                        isEditing = true
                     )
                 }
             }

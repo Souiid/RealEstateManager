@@ -6,17 +6,40 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.openclassrooms.realestatemanager.data.repositories.INewRealtyRepository
+import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.RealtyPicture
+import com.openclassrooms.realestatemanager.data.Utils
+import com.openclassrooms.realestatemanager.data.repositories.INewRealtyRepository
+import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
+import com.openclassrooms.realestatemanager.data.room.entities.Realty
+import kotlinx.coroutines.launch
 
-class SetRealtyPictureViewModel(val repository: INewRealtyRepository): ViewModel() {
+class SetRealtyPictureViewModel(
+    private val newRealtyRepository: INewRealtyRepository,
+    private val realtyRepository: IRealtyRepository
+): ViewModel() {
 
-    fun setRealtyPictures(realtyPictures: List<RealtyPicture>) {
-        repository.images = realtyPictures
+    fun setRealtyPictures(realtyPictures: List<RealtyPicture>, updatedRealty: Realty? = null, completion: ()->Unit) {
+        if (updatedRealty == null) {
+            newRealtyRepository.images = realtyPictures
+            completion()
+        }else {
+            viewModelScope.launch {
+                val freshRealty = updatedRealty.copy(pictures = realtyPictures)
+                realtyRepository.setSelectedRealty(freshRealty)
+                realtyRepository.updateRealty(realty = freshRealty)
+                realtyRepository.updatedRealty = null
+                completion()
+            }
+        }
+    }
+
+    fun getUpdatedRealty(): Realty? {
+        return realtyRepository.updatedRealty
     }
 
     fun getRealtyPictures(): List<RealtyPicture>? {
-        return repository.images
+        return newRealtyRepository.images
     }
 
     fun getBitmapFromUri(context: Context, uri: Uri): Bitmap? {
@@ -50,5 +73,9 @@ class SetRealtyPictureViewModel(val repository: INewRealtyRepository): ViewModel
         }
 
         return uri
+    }
+
+    fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
+        return Utils().uriToBitmapLegacy(context, uri)
     }
 }

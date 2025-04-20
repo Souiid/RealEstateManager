@@ -31,8 +31,8 @@ data class Realty(
     val isAvailable: Boolean = true,
 
     @Embedded
-    val primaryInfo: RealtyPrimaryInfo,
+    var primaryInfo: RealtyPrimaryInfo,
 
     @ColumnInfo(name = "pictures")
-    val pictures: List<RealtyPicture>
+    var pictures: List<RealtyPicture>
 )
