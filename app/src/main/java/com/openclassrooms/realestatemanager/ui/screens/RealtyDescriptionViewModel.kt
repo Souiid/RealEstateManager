@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -19,7 +21,9 @@ import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.Date
 import kotlin.coroutines.resume
 
 class RealtyDescriptionViewModel(
@@ -42,6 +46,18 @@ class RealtyDescriptionViewModel(
     }
     fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
        return Utils().uriToBitmapLegacy(context, uri)
+    }
+
+    fun getTodayDate(date: Date): String {
+        return Utils().getFormattedDate(date)
+    }
+
+    fun updateRealtyStatus(realty: Realty) {
+        viewModelScope.launch {
+            realty.isAvailable
+            realty.saleDate = Date()
+            realtyRepository.updateRealty(realty)
+        }
     }
 
 }

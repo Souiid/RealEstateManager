@@ -26,7 +26,7 @@ class FormActivity : ComponentActivity() {
                         navController = navController,
                         modifier = Modifier,
                         activity = this,
-                        isEditing = true
+                        isEditing = isEditing
                     )
                 }
             }

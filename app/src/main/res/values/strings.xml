@@ -66,4 +66,11 @@
     <string name="duplex">Duplex</string>
     <string name="penthouse">Penthouse</string>
     <string name="update">Update</string>
+    <string name="specification">Specification</string>
+    <string name="status">Status</string>
+    <string name="sold">Sold</string>
+    <string name="sold_on">Sold on:</string>
+    <string name="listed_on">Listed on:</string>
+    <string name="agent_colon">Agent:</string>
+    <string name="price_colon">Price:</string>
 </resources>

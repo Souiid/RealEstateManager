@@ -27,8 +27,8 @@ data class Realty(
     val id: Int = 0,
     val agentId: Int,
     val entryDate: Date = Date(),
-    val saleDate: Date? = null,
-    val isAvailable: Boolean = true,
+    var saleDate: Date? = null,
+    var isAvailable: Boolean = true,
 
     @Embedded
     var primaryInfo: RealtyPrimaryInfo,

@@ -74,7 +74,7 @@ fun MainNavGraph(
                         )
                     }
 
-                    IconButton(onClick = {showSheet = true}) {
+                    IconButton(onClick = { showSheet = true }) {
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = null,
@@ -127,7 +127,9 @@ fun MainNavGraph(
 
         if (showSheet) {
             ModalBottomSheet(
-                modifier = modifier.fillMaxSize().padding(top = 200.dp),
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(top = 200.dp),
                 onDismissRequest = { showSheet = false },
                 sheetState = sheetState
             ) {
@@ -148,7 +150,6 @@ fun MainNavGraph(
             composable(NavigationScreen.RealtyDescription.route) {
                 RealtyDescriptionScreen(
                     koinViewModel(),
-                    onBack = { navController.popBackStack() }
                 )
             }
 
