@@ -20,6 +20,7 @@ import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.Date
 import kotlin.coroutines.resume
 
 class RealtyDescriptionViewModel(
@@ -43,5 +44,11 @@ class RealtyDescriptionViewModel(
     fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
        return Utils().uriToBitmapLegacy(context, uri)
     }
+
+    fun getTodayDate(date: Date): String {
+        return Utils().getFormattedDate(date)
+    }
+
+
 
 }

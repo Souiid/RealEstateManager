@@ -17,8 +17,13 @@ class Utils {
     }
 
     fun getTodayDate(): String {
-        val dateFormat: DateFormat = SimpleDateFormat("yyyy/MM/dd")
+        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
         return dateFormat.format(Date())
+    }
+
+    fun getFormattedDate(date: Date): String {
+        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+        return dateFormat.format(date)
     }
 
     fun isInternetAvailable(context: Context): Boolean {

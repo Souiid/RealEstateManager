@@ -1,10 +1,14 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,13 +21,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.famoco.projet9.Aspect_ratio
 import com.famoco.projet9.Bathtub
 import com.famoco.projet9.Bed
@@ -51,11 +60,11 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
+import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 
 @Composable
 fun RealtyDescriptionScreen(
-    viewModel: RealtyDescriptionViewModel,
-    onBack: () -> Unit
+    viewModel: RealtyDescriptionViewModel
 ) {
 
     val realty by viewModel.selectedRealty.collectAsState()
@@ -66,19 +75,23 @@ fun RealtyDescriptionScreen(
     }
 
     if (realty != null) {
-        DetailScreen(realty!!, viewModel)
+        DetailScreen(realty!!, realtyAgent, viewModel)
     }
 }
 
 
 @Composable
-fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
+fun DetailScreen(realty: Realty, realtyAgent: RealtyAgent?, viewModel: RealtyDescriptionViewModel) {
 
     val amenitiesLabels = realty.primaryInfo.amenities.map { amenity ->
         stringResource(id = amenity.labelResId)
     }
 
-    val amenitiesText = amenitiesLabels.joinToString("\n")
+    val amenitiesText = if (amenitiesLabels.size <= 1) {
+        amenitiesLabels.joinToString("")
+    } else {
+        amenitiesLabels.dropLast(1).joinToString(", ") + ", " + amenitiesLabels.last()
+    }
 
     Column(
         modifier = Modifier
@@ -86,6 +99,7 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
             .padding(horizontal = 15.dp)
             .verticalScroll(rememberScrollState())
     ) {
+
         Text(
             text = stringResource(R.string.media),
             fontSize = 20.sp,
@@ -108,36 +122,104 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
         )
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(
-            text = stringResource(R.string.description),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+        StatusSection(realty, realtyAgent, viewModel)
+        DescriptionSection(realty)
+        AmenitiesSection(amenitiesText)
+        SpecificationSection(realty)
+        MapSection(realty)
+
+    }
+}
+
+@Composable
+fun StatusSection(realty: Realty, agent: RealtyAgent?, viewModel: RealtyDescriptionViewModel) {
+    val isAvailable = realty.isAvailable
+    val statusText = if (!isAvailable) stringResource(R.string.sold) else stringResource(R.string.for_sale)
+    val statusColor = if (!isAvailable) Color.Red else Color(0xFF4CAF50)
+    val statusDateLabel = if (!isAvailable) stringResource(R.string.sold_on) else stringResource(R.string.listed_on)
+    val statusDate = if (!isAvailable) viewModel.getTodayDate(realty.saleDate ?: return) else viewModel.getTodayDate(
+        realty.entryDate
+    )
+
+    var isShowDialog by remember { mutableStateOf(false) }
+
+    if (isShowDialog) {
+        ThemeDialog(
+            title = "Do you want to put this realty on sale ?",
+            description = "",
+            primaryButtonTitle = "Yes",
+            secondaryButtonTitle = "Cancel",
+
+            onPrimaryButtonClick =  {
+
+            },
+            onSecondaryButtonClick = {
+                isShowDialog = false
+            },
+
+            onDismissRequest = {
+                isShowDialog = false
+            }
+        )
+    }
+
+    ExpandableSection(title = stringResource(R.string.status), expandedP = true) {
+        Column {
+            Button(
+                onClick = { isShowDialog = true },
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = statusColor),
+                shape = MaterialTheme.shapes.small,
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                elevation = null
+            ) {
+                Text(
+                    text = statusText,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(R.string.price_colon) + " ${realty.primaryInfo.price} €",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.W400
+            )
+
+            agent?.let {
+                Text(
+                    text = stringResource(R.string.agent_colon) + " ${it.name}",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.W400
+                )
+            }
+
+            Text(
+                text = "$statusDateLabel $statusDate",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.W400
+            )
+        }
+    }
+}
+
+@Composable
+fun MapSection(realty: Realty) {
+    ExpandableSection(title = stringResource(R.string.location)) {
+        LiteModeMapView(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .height(200.dp),
+            realty = realty
         )
-        Text(
-            text = realty.primaryInfo.description, fontSize = 16.sp,
-            fontWeight = FontWeight.W400
-        )
+    }
+}
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        Text(
-            text = stringResource(R.string.amenities),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth(),
-        )
-
-        Text(
-            text = amenitiesText,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.W400
-        )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
+@Composable
+fun SpecificationSection(realty: Realty) {
+    ExpandableSection(title = stringResource(R.string.specification)) {
         Row {
             Column {
                 RealtyProperty(Aspect_ratio, stringResource(R.string.surface), "${realty.primaryInfo.surface} m²")
@@ -156,13 +238,61 @@ fun DetailScreen(realty: Realty, viewModel: RealtyDescriptionViewModel) {
                 realty.primaryInfo.realtyPlace.name
             )
         }
+    }
+}
 
-        LiteModeMapView(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp),
-            realty = realty
+@Composable
+fun AmenitiesSection(amenitiesText: String) {
+    ExpandableSection(title = stringResource(R.string.amenities)) {
+        Text(
+            text = amenitiesText,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.W400
         )
+    }
+}
+
+@Composable
+fun DescriptionSection(realty: Realty) {
+    ExpandableSection(title = stringResource(R.string.description)) {
+        Text(
+            text = realty.primaryInfo.description, fontSize = 16.sp,
+            fontWeight = FontWeight.W400
+        )
+    }
+}
+
+@Composable
+fun ExpandableSection(
+    title: String,
+    expandedP: Boolean = false,
+    content: @Composable () -> Unit,
+
+) {
+    var expanded by remember { mutableStateOf(expandedP) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { expanded = !expanded }
+            .padding(8.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                contentDescription = null
+            )
+        }
+
+        AnimatedVisibility(visible = expanded) {
+            Column(modifier = Modifier.padding(top = 8.dp)) {
+                content()
+            }
+        }
     }
 }
 
@@ -194,6 +324,8 @@ fun RealtyPictureUI(realtyPicture: RealtyPicture, viewModel: RealtyDescriptionVi
         }
     }
 }
+
+
 
 
 @Composable
