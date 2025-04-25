@@ -27,7 +27,7 @@ import com.google.maps.android.compose.rememberMarkerState
 
 
 @Composable
-fun MapScreen(viewModel: MapViewModel) {
+fun MapScreen(viewModel: MapViewModel, onMarkerClick: ()->Unit) {
     val context = LocalContext.current
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
@@ -79,11 +79,16 @@ fun MapScreen(viewModel: MapViewModel) {
             isMyLocationEnabled = userLocation != null
         )
     ) {
-        realities?.forEach {
-            val latitude = it.primaryInfo.realtyPlace.positionLatLng.latitude
-            val longitude = it.primaryInfo.realtyPlace.positionLatLng.longitude
+        realities?.forEach {realty->
+            val latitude = realty.primaryInfo.realtyPlace.positionLatLng.latitude
+            val longitude = realty.primaryInfo.realtyPlace.positionLatLng.longitude
             Marker(
                 state = rememberMarkerState(position = LatLng(latitude, longitude)),
+                onClick = { _ ->
+                    viewModel.setSelectedRealty(realty)
+                    onMarkerClick()
+                    true
+                }
             )
         }
     }

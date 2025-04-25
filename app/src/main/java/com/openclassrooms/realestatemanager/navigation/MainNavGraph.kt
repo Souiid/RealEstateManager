@@ -154,7 +154,11 @@ fun MainNavGraph(
             }
 
             composable(NavigationScreen.Map.route) {
-                MapScreen(koinViewModel())
+                MapScreen(koinViewModel(),
+                    onMarkerClick = {
+                        navController.navigate(NavigationScreen.RealtyDescription.route)
+                    }
+                )
             }
         }
 
