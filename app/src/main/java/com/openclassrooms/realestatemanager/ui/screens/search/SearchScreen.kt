@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.screens.search
 
-import android.icu.util.Currency
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SegmentedButton
@@ -26,8 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -36,23 +33,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyType
+import com.openclassrooms.realestatemanager.data.room.Amenity
 import com.openclassrooms.realestatemanager.ui.composable.PriceTextField
+import com.openclassrooms.realestatemanager.ui.composable.SelectableChipsGroup
+import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
+import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTFForDPD
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
+import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.ZoneId
-import java.util.Calendar
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen() {
+fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
     var selectedList by remember { mutableStateOf(emptyList<RealtyType>()) }
     var selectedStatus by remember { mutableStateOf<Boolean?>(null) }
     var minPriceValue by remember { mutableStateOf<Int?>(null) }
@@ -63,12 +63,18 @@ fun SearchScreen() {
     var maxSurfaceValue by remember { mutableStateOf<Int?>(null) }
 
     val datePickerState = rememberDatePickerState()
-    var dateValue by remember { mutableStateOf("") }
+    var entryDateValue by remember { mutableStateOf<Date?>(null) }
+    var soldDateValue by remember { mutableStateOf<Date?>(null) }
+    var selectedAmenities by remember { mutableStateOf(emptyList<Amenity>()) }
 
-    LazyColumn(modifier = Modifier
-        .fillMaxWidth()
-        .padding(15.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    var numberOfRooms by remember { mutableIntStateOf(0) }
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(15.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
         item {
             StatusSegmentedButton(
                 selectedStatus = selectedStatus,
@@ -88,7 +94,7 @@ fun SearchScreen() {
             SetPriceFilterTextFields(
                 minPriceValue = minPriceValue,
                 maxPriceValue = maxPriceValue,
-                onMinPriceChange = { minPriceValue = it},
+                onMinPriceChange = { minPriceValue = it },
                 onMaxPriceChange = { maxPriceValue = it },
                 currencyP = currency
             )
@@ -107,50 +113,113 @@ fun SearchScreen() {
 
 
         item {
-            DatePickerTextFieldCompose(
-                value = dateValue,
-                onValueChange = { dateValue = it },
-                labelID = R.string.entry_date
+            DatePickerDialog(
+                labelID = R.string.entry_date,
+                datePickerState = datePickerState,
+                onDateSelected = {
+                    entryDateValue = it
+                }
             )
+            Spacer(modifier = Modifier.height(5.dp))
+
+            DatePickerDialog(
+                labelID = R.string.sold_on,
+                datePickerState = datePickerState,
+                onDateSelected = {
+                    soldDateValue = it
+                }
+            )
+        }
+
+        item {
+            Text(stringResource(R.string.amenities))
+            SelectableChipsGroup(
+                selectedOptions = selectedAmenities,
+                onSelectionChanged = { selectedAmenities = it }
+            )
+        }
+
+        item {
+            NumberOfRooms(value = numberOfRooms.toString()) {
+                numberOfRooms = it.toIntOrNull() ?: 0
+            }
+        }
+
+        item {
+            ThemeButton(
+                onClick = {
+                    viewModel.performSearch(
+                    isAvailable = selectedStatus,
+                    minPrice = minPriceValue?.toDouble(),
+                    maxPrice = maxPriceValue?.toDouble(),
+                    minSurface = minSurfaceValue?.toDouble(),
+                    maxSurface = maxSurfaceValue?.toDouble(),
+                    minRooms = numberOfRooms,
+                    entryDate = entryDateValue,
+                    soldDate = soldDateValue,
+                    realtyTypes = selectedList.map { it.name },
+                    amenity = selectedAmenities.firstOrNull()?.name
+                )},
+                text = stringResource(R.string.apply),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                )
+        }
+
+        item {
         }
 
     }
 
 }
 
+@Composable
+fun NumberOfRooms(value: String, onValueChanged: (String) -> Unit) {
+
+    Text("Number of rooms")
+    ThemeOutlinedTextField(
+        value = value,
+        onValueChanged = {onValueChanged(it)},
+        imeAction = ImeAction.Done,
+        keyboardType = KeyboardType.Number,
+        labelID = R.string.number_of_rooms,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerTextFieldCompose(
-    value: String,
-    onValueChange: (String) -> Unit,
-    labelID: Int
+fun DatePickerDialog(
+    labelID: Int,
+    datePickerState: DatePickerState,
+    onDateSelected: (Date) -> Unit
 ) {
-    var showDatePicker by remember { mutableStateOf(false) }
-
-    if (showDatePicker) {
-        val datePickerState = rememberDatePickerState()
-
+    var showDialog by remember { mutableStateOf(false) }
+    var selectedDateText by remember { mutableStateOf("") }
+    if (showDialog) {
         DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false
-            ),
+            onDismissRequest = { showDialog = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
                         val localDate = Instant.ofEpochMilli(it)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
-                        onValueChange("${localDate.dayOfMonth}/${localDate.monthValue}/${localDate.year}")
+                        selectedDateText =
+                            "${localDate.dayOfMonth}/${localDate.monthValue}/${localDate.year}"
+                        onDateSelected(Date(it))
                     }
-                    showDatePicker = false
+                    showDialog = false
                 }) {
                     Text("OK")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text(stringResource(R.string.cancel))
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Annuler")
                 }
             }
         ) {
@@ -158,24 +227,23 @@ fun DatePickerTextFieldCompose(
         }
     }
 
-    ThemeOutlinedTextField(
-        onValueChanged = {},
-        value = value,
+    ThemeOutlinedTFForDPD(
+        value = selectedDateText,
         labelID = labelID,
-        imeAction = ImeAction.Done,
-        keyboardType = KeyboardType.Number,
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            .clickable { showDatePicker = true }
+            .clickable { showDialog = true }
     )
 }
 
 @Composable
-fun SetSurfaceFilterTextFields(minSurfaceValue: Int?,
-                             maxSurfaceValue: Int?,
-                             onMinSurfaceChange: (Int?) -> Unit,
-                             onMaxSurfaceChange: (Int?) -> Unit) {
+fun SetSurfaceFilterTextFields(
+    minSurfaceValue: Int?,
+    maxSurfaceValue: Int?,
+    onMinSurfaceChange: (Int?) -> Unit,
+    onMaxSurfaceChange: (Int?) -> Unit
+) {
 
 
     Row(
@@ -207,11 +275,13 @@ fun SetSurfaceFilterTextFields(minSurfaceValue: Int?,
 }
 
 @Composable
-fun SetPriceFilterTextFields(minPriceValue: Int?,
-                             maxPriceValue: Int?,
-                             onMinPriceChange: (Int?) -> Unit,
-                             onMaxPriceChange: (Int?) -> Unit,
-                             currencyP: String) {
+fun SetPriceFilterTextFields(
+    minPriceValue: Int?,
+    maxPriceValue: Int?,
+    onMinPriceChange: (Int?) -> Unit,
+    onMaxPriceChange: (Int?) -> Unit,
+    currencyP: String
+) {
 
     var currency by remember { mutableStateOf(currencyP) }
 
@@ -237,7 +307,7 @@ fun SetPriceFilterTextFields(minPriceValue: Int?,
             currency = currency,
             labelID = R.string.max_price,
             onCurrencyChange = {
-               currency = it
+                currency = it
             },
             modifier = Modifier.weight(1f)
         )

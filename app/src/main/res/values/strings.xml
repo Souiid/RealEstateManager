@@ -73,4 +73,5 @@
     <string name="listed_on">Listed on:</string>
     <string name="agent_colon">Agent:</string>
     <string name="price_colon">Price:</string>
+    <string name="apply">Apply</string>
 </resources>

@@ -127,9 +127,6 @@ fun MainNavGraph(
 
         if (showSheet) {
             ModalBottomSheet(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(top = 200.dp),
                 onDismissRequest = { showSheet = false },
                 sheetState = sheetState
             ) {

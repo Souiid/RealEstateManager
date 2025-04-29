@@ -14,6 +14,7 @@ class RealitiesViewModel(
 ): ViewModel() {
 
     val realities: Flow<List<Realty>> = realtyRepository.getAllRealties()
+    val sortedRealities: Flow<List<Realty>> = realtyRepository.sortedRealities
 
     fun initRealtyRepository() {
         realtyRepository.setSelectedRealty(null)
@@ -25,7 +26,7 @@ class RealitiesViewModel(
     }
 
     fun setSortedRealities(realities: List<Realty>) {
-        realtyRepository.sortedRealities = realities
+        realtyRepository.allRealties = realities
     }
 
     fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {

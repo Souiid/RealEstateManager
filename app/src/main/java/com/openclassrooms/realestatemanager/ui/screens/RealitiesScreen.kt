@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,15 @@ fun RealitiesScreen(
     activity: MainActivity) {
     val context = LocalContext.current
     val realities by viewModel.realities.collectAsState(initial = emptyList())
+
+    val sortedRealities by viewModel.sortedRealities.collectAsState(initial = emptyList())
+
+    LaunchedEffect(sortedRealities) {
+        sortedRealities.forEach {
+            Log.d("sortedRealities", "SORTED REALTY: ${it.id}")
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.initRealtyRepository()
     }
