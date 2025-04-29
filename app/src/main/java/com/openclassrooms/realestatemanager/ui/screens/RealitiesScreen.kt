@@ -38,19 +38,29 @@ fun RealitiesScreen(
     activity: MainActivity) {
     val context = LocalContext.current
     val realities by viewModel.realities.collectAsState(initial = emptyList())
+
+    val sortedRealities by viewModel.sortedRealities.collectAsState(initial = emptyList())
+
     LaunchedEffect(Unit) {
         viewModel.initRealtyRepository()
     }
     RealEstateManagerTheme {
+
+        val realitiesToUse: List<Realty> = if (sortedRealities.isNotEmpty()) {
+            sortedRealities
+        } else {
+            realities
+        }
+
         if (realities.isNotEmpty()) {
-            viewModel.setSortedRealities(realities)
+            viewModel.setAllRealities(realitiesToUse)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(realities.size) { index ->
-                        val realty = realities[index]
+                    items(realitiesToUse.size) { index ->
+                        val realty = realitiesToUse[index]
                         RealtyItem(
                             realty = realty,
                             viewModel = viewModel,

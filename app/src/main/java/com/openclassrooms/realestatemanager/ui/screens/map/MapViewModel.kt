@@ -21,7 +21,7 @@ class MapViewModel(
     }
 
     fun getSortedRealities(): List<Realty>? {
-        return realtyRepository.sortedRealities
+        return realtyRepository.allRealties
     }
 
     fun setSelectedRealty(realty: Realty) {

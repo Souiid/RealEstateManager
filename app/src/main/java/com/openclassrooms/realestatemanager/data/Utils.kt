@@ -16,6 +16,10 @@ class Utils {
         return Math.round(dollars * 0.812).toInt()
     }
 
+    fun convertEuroToDollar(euros: Int): Int {
+        return Math.round(euros * 1.15).toInt()
+    }
+
     fun getTodayDate(): String {
         val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
         return dateFormat.format(Date())

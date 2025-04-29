@@ -61,6 +61,8 @@ import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.data.room.Amenity
+import com.openclassrooms.realestatemanager.ui.composable.PlaceAutocomplete
+import com.openclassrooms.realestatemanager.ui.composable.SelectableChipsGroup
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
@@ -83,7 +85,6 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
     val options = RealtyType.entries
     var expanded by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(options[0]) }
-    val amenityList = Amenity.entries
     var selectedAmenities by remember { mutableStateOf(emptyList<Amenity>()) }
 
     val realtyPrimaryInfo = viewModel.getPrimaryInfo()
@@ -296,150 +297,26 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
 
             if (updatedRealty == null) {
                 item {
-                    PlaceAutocomplete(viewModel, callback = { place ->
-                        realtyPlaceValue = place
-                    })
+                   PlaceAutocomplete(
+                        onSearchPlaces = { placesClient, query, callback ->
+                            viewModel.searchPlaces(placesClient, query, callback)
+                        },
+                        onFetchLatLng = { placesClient, placeId ->
+                            viewModel.fetchPlaceLatLng(placesClient, placeId)
+                        },
+                        callback = { selectedPlace ->
+                            realtyPlaceValue = selectedPlace
+                        }
+                    )
                 }
             }
 
             item {
                 SelectableChipsGroup(
-                    options = amenityList.map { it to stringResource(it.labelResId) },
                     selectedOptions = selectedAmenities,
                     onSelectionChanged = { selectedAmenities = it }
                 )
             }
         }
-    }
-}
-
-@Composable
-fun PlaceAutocomplete(viewModel: RealtyFormViewModel, callback: (RealtyPlace) -> Unit) {
-    var query by remember { mutableStateOf("") }
-    var predictions by remember { mutableStateOf<List<AutocompletePrediction>>(emptyList()) }
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val apiKey = context.getString(R.string.google_maps_key)
-    if (!Places.isInitialized()) {
-        Places.initialize(context.applicationContext, apiKey)
-    }
-
-    val placesClient = remember { Places.createClient(context) }
-
-    Column(
-        Modifier
-            .padding(16.dp)
-            .clickable {
-                predictions = emptyList()
-            }
-    ) {
-        TextField(
-            value = query,
-            onValueChange = { newQuery ->
-                query = newQuery
-                Log.d("aaa", "Query : $query")
-                if (newQuery.isNotEmpty()) {
-                    viewModel.searchPlaces(placesClient, newQuery) { results ->
-                        predictions = results
-
-                    }
-                } else {
-                    predictions = emptyList()
-                }
-            },
-            label = { Text(stringResource(R.string.search_place)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    predictions = emptyList()
-                }
-        )
-
-        LazyColumn(
-            modifier = Modifier
-                .heightIn(max = 200.dp)
-        ) {
-            items(predictions) { prediction ->
-                Text(
-                    text = prediction.getPrimaryText(null).toString(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            scope.launch {
-                                query = prediction
-                                    .getFullText(null)
-                                    .toString()
-                                val position = viewModel.fetchPlaceLatLng(
-                                    placesClient,
-                                    prediction.placeId
-                                ) ?: LatLng(0.0, 0.0)
-                                callback(RealtyPlace(prediction.placeId, query, position))
-                                predictions = emptyList()
-                            }
-
-                        }
-                        .padding(8.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun SelectableChipsGroup(
-    options: List<Pair<Amenity, String>>,
-    selectedOptions: List<Amenity>,
-    onSelectionChanged: (List<Amenity>) -> Unit
-) {
-    FlowRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        mainAxisSpacing = 8.dp,
-        crossAxisSpacing = 8.dp
-    ) {
-        options.forEach { (amenity, label) ->
-            val isSelected = amenity in selectedOptions
-            Chip(
-                label = label,
-                selected = isSelected,
-                onClick = {
-                    val updated = if (isSelected) {
-                        selectedOptions - amenity
-                    } else {
-                        selectedOptions + amenity
-                    }
-                    onSelectionChanged(updated)
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {
-    val interactionSource = remember { MutableInteractionSource() }
-
-    Surface(
-        modifier = Modifier
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                enabled = true,
-                onClick = { onClick() }
-            ),
-        shape = RoundedCornerShape(50),
-        color = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent,
-        border = BorderStroke(
-            1.dp,
-            if (selected) MaterialTheme.colorScheme.primary else Color.Gray
-        )) {
-        Text(
-            text = label,
-            color = if (selected) MaterialTheme.colorScheme.primary else Color.Gray,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(6.dp)
-        )
     }
 }
