@@ -29,15 +29,4 @@ class RealitiesViewModel(
         realtyRepository.allRealties = realities
     }
 
-    fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
-        return try {
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                BitmapFactory.decodeStream(inputStream)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
 }

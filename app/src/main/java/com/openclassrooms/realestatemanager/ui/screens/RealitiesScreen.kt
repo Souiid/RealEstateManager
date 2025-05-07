@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,6 +29,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 
@@ -58,34 +61,42 @@ fun RealitiesScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(realitiesToUse.size) { index ->
-                        val realty = realitiesToUse[index]
-                        RealtyItem(
-                            realty = realty,
-                            viewModel = viewModel,
-                            context = context,
-                            onClick = {
-                                onNext(realty.id)
-                            }
-                        )
-                    }
-                }
+                RealtyLazyColumn(realitiesToUse) { realtyID -> onNext(realtyID) }
             }
         }
     }
 }
 
+@Composable
+fun RealtyLazyColumn(realties: List<Realty>,
+                     onNext: (Int) -> Unit) {
+    val context = LocalContext.current
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        items(realties.size) { index ->
+            val realty = realties[index]
+            val uri = Uri.parse(realty.pictures.first().uriString)
+            val bitmap = Utils().uriToBitmapLegacy(context, uri) ?: return@items
+            RealtyItem(
+                realty = realty,
+                bitmap = bitmap,
+                context = context,
+                onClick = {
+                    onNext(realty.id)
+                }
+            )
+        }
+    }
+}
+
+
 
 @Composable
 fun RealtyItem(
     realty: Realty,
-    viewModel: RealitiesViewModel,
     context: Context,
+    bitmap: Bitmap,
     onClick: () -> Unit
 ) {
-    val uri = Uri.parse(realty.pictures.first().uriString)
-    val bitmap = viewModel.uriToBitmapLegacy(context, uri) ?: return
     Column(
         modifier = Modifier
             .fillMaxWidth()

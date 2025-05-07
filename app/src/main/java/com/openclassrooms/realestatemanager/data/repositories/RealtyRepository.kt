@@ -29,7 +29,11 @@ class RealtyRepository(context: Context): IRealtyRepository {
     }
 
     override fun getAllRealties(): Flow<List<Realty>> {
-       return dao.getAllRealties()
+        return dao.getAllRealties()
+    }
+
+    override fun getRealtyFromID(realtyID: Int) {
+        _selectedRealty.value = allRealties.find { it.id == realtyID }
     }
 
     override suspend fun updateRealty(realty: Realty) {
