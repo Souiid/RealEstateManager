@@ -52,6 +52,10 @@ class RealtyDescriptionViewModel(
         return Utils().getFormattedDate(date)
     }
 
+    fun getRealtyFromID(realtyID: Int) {
+        realtyRepository.getRealtyFromID(realtyID)
+    }
+
     fun updateRealtyStatus(realty: Realty) {
         viewModelScope.launch {
             realty.isAvailable

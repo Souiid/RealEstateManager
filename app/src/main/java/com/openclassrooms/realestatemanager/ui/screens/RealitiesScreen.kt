@@ -34,7 +34,7 @@ import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 @Composable
 fun RealitiesScreen(
     viewModel: RealitiesViewModel,
-    onNext: () -> Unit,
+    onNext: (Int) -> Unit,
     activity: MainActivity) {
     val context = LocalContext.current
     val realities by viewModel.realities.collectAsState(initial = emptyList())
@@ -66,8 +66,7 @@ fun RealitiesScreen(
                             viewModel = viewModel,
                             context = context,
                             onClick = {
-                                viewModel.setSelectedRealty(realty)
-                                onNext()
+                                onNext(realty.id)
                             }
                         )
                     }

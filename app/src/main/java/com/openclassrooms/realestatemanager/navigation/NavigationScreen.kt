@@ -4,7 +4,11 @@ sealed class NavigationScreen(val route: String) {
 
     //Main
     data object Realties: NavigationScreen("realties_screen")
-    data object RealtyDescription: NavigationScreen("realty_description_screen")
+    data object RealtyDescription : NavigationScreen("realty_description_screen") {
+        const val ARG_REALTY_ID = "realtyID"
+        val routeWithArgs = "$route/{$ARG_REALTY_ID}"
+        fun createRoute(realtyID: Int): String = "$route/$realtyID"
+    }
     data object Map: NavigationScreen("map_screen")
 
     //Form

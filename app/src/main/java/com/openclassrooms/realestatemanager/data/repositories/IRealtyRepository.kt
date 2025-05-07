@@ -13,6 +13,7 @@ interface IRealtyRepository {
     fun setSelectedRealty(realty: Realty?)
     suspend fun insertRealty(realty: Realty)
     fun getAllRealties(): Flow<List<Realty>>
+    fun getRealtyFromID(realtyID: Int)
     suspend fun updateRealty(realty: Realty)
     suspend fun searchRealities(
         isAvailable: Boolean?,

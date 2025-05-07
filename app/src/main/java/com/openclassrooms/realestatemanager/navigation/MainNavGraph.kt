@@ -26,11 +26,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavArgument
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
+import androidx.navigation.navOptions
 import com.openclassrooms.realestatemanager.ui.screens.MainActivity
 import com.openclassrooms.realestatemanager.ui.screens.map.MapScreen
 import com.openclassrooms.realestatemanager.ui.screens.RealitiesScreen
@@ -135,18 +139,26 @@ fun MainNavGraph(
         }
 
         NavHost(navController, NavigationScreen.Realties.route, modifier.padding(innerPadding)) {
+            composable(NavigationScreen.Realties.route,
 
-            composable(NavigationScreen.Realties.route) {
+            ) {
                 RealitiesScreen(
                     koinViewModel(),
-                    onNext = { navController.navigate(NavigationScreen.RealtyDescription.route) },
+                    onNext = { realtyID ->
+                        navController.navigate(NavigationScreen.RealtyDescription.createRoute(realtyID))
+                    },
                     activity = activity
                 )
             }
 
-            composable(NavigationScreen.RealtyDescription.route) {
+            composable(
+                route = NavigationScreen.RealtyDescription.routeWithArgs,
+                arguments = listOf(navArgument("realtyID") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val realtyID = backStackEntry.arguments?.getInt("realtyID") ?: -1
                 RealtyDescriptionScreen(
                     koinViewModel(),
+                    realtyID = realtyID
                 )
             }
 
