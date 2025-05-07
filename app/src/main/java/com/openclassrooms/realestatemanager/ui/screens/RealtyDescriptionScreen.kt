@@ -63,13 +63,15 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 
 @Composable
 fun RealtyDescriptionScreen(
-    viewModel: RealtyDescriptionViewModel
+    viewModel: RealtyDescriptionViewModel,
+    realtyID: Int
 ) {
 
     val realty by viewModel.selectedRealty.collectAsState()
     var realtyAgent by remember { mutableStateOf<RealtyAgent?>(null) }
 
     LaunchedEffect(Unit) {
+        viewModel.getRealtyFromID(realtyID)
         realtyAgent = viewModel.getAgentRepository(realty?.agentId ?: 0)
     }
 

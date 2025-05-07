@@ -21,11 +21,7 @@ class RealitiesViewModel(
         realtyRepository.updatedRealty = null
     }
 
-    fun setSelectedRealty(realty: Realty) {
-        realtyRepository.setSelectedRealty(realty)
-    }
-
-    fun setSortedRealities(realities: List<Realty>) {
+    fun setAllRealities(realities: List<Realty>) {
         realtyRepository.allRealties = realities
     }
 
@@ -39,5 +35,4 @@ class RealitiesViewModel(
             null
         }
     }
-
 }

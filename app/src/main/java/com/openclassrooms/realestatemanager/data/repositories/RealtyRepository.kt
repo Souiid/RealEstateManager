@@ -1,15 +1,12 @@
 package com.openclassrooms.realestatemanager.data.repositories
 
 import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Log
 import com.openclassrooms.realestatemanager.data.room.DatabaseProvider
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onEach
 import java.util.Date
 
 class RealtyRepository(context: Context): IRealtyRepository {
@@ -40,30 +37,53 @@ class RealtyRepository(context: Context): IRealtyRepository {
         dao.updateRealty(realty)
     }
 
-    override suspend fun searchRealties(
+    override fun getRealtyFromID(realtyID: Int) {
+        for (realty in allRealties) {
+            if (realty.id == realtyID) {
+                _selectedRealty.value = realty
+                return
+            }
+        }
+    }
+
+    override suspend fun searchRealities(
         isAvailable: Boolean?,
         minPrice: Double?,
         maxPrice: Double?,
         minSurface: Double?,
         maxSurface: Double?,
         minRooms: Int?,
-        entryDate: Date?,
-        soldDate: Date?,
+        maxRooms: Int?,
+        minEntryDate: Date?,
+        maxEntryDate: Date?,
+        minSoldDate: Date?,
+        maxSoldDate: Date?,
         realtyTypes: List<String>?,
-        amenity: String?
+        amenity: String?,
+        isReset: Boolean
     ) {
-        dao.searchRealties(
+        if (isReset) {
+            _sortedRealities.value = emptyList()
+            return
+        }
+        Log.d("aaa", "SEARCH REALTIES CALLED")
+        dao.searchRealities(
             isAvailable,
             minPrice,
             maxPrice,
             minSurface,
             maxSurface,
             minRooms,
-            entryDate,
-            soldDate,
+            maxRooms,
+            minEntryDate,
+            maxEntryDate,
+            minSoldDate,
+            maxSoldDate,
             realtyTypes,
+            realtyTypes?.size ?: 0,
             amenity
         ).collect { result ->
+            Log.d("aaa", "SEARCH REALTIES COLLECTED")
             _sortedRealities.value = result
         }
     }
