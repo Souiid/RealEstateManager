@@ -27,29 +27,39 @@ interface RealtyDao {
     @Update
     suspend fun updateRealty(realty: Realty)
 
-    @Query("""
-    SELECT * FROM realties
-    WHERE (:isAvailable IS NULL OR isAvailable = :isAvailable)
-    AND (:minPrice IS NULL OR price >= :minPrice)
-    AND (:maxPrice IS NULL OR price <= :maxPrice)
-    AND (:minSurface IS NULL OR surface >= :minSurface)
-    AND (:maxSurface IS NULL OR surface <= :maxSurface)
-    AND (:minRooms IS NULL OR roomsNbr >= :minRooms)
-    AND (:entryDate IS NULL OR entryDate <= :entryDate)
-    AND (:soldDate IS NULL OR (saleDate IS NOT NULL AND saleDate <= :soldDate))
-    AND (:realtyTypes IS NULL OR realtyType IN (:realtyTypes))
-    AND (:amenity IS NULL OR amenities LIKE '%' || :amenity || '%')
-""")
-    fun searchRealties(
+    @Query(
+        """
+SELECT * FROM realties
+WHERE (:isAvailable IS NULL OR isAvailable = :isAvailable)
+AND (:minPrice IS NULL OR price >= :minPrice)
+AND (:maxPrice IS NULL OR price <= :maxPrice)
+AND (:minSurface IS NULL OR surface >= :minSurface)
+AND (:maxSurface IS NULL OR surface <= :maxSurface)
+AND (:minRooms IS NULL OR roomsNbr >= :minRooms)
+AND (:maxRooms IS NULL OR roomsNbr <= :maxRooms)
+AND (:minEntryDate IS NULL OR entryDate >= :minEntryDate)
+AND (:maxEntryDate IS NULL OR entryDate <= :maxEntryDate)
+AND (:minSoldDate IS NULL OR (saleDate IS NOT NULL AND saleDate >= :minSoldDate))
+AND (:maxSoldDate IS NULL OR (saleDate IS NOT NULL AND saleDate <= :maxSoldDate))
+AND (COALESCE(:realtyTypesSize, 0) = 0 OR realtyType IN (:realtyTypes))
+AND (:amenity IS NULL OR amenities LIKE '%' || :amenity || '%')
+"""
+    )
+    fun searchRealities(
         isAvailable: Boolean? = null,
         minPrice: Double? = null,
         maxPrice: Double? = null,
         minSurface: Double? = null,
         maxSurface: Double? = null,
         minRooms: Int? = null,
-        entryDate: Date? = null,
-        soldDate: Date? = null,
+        maxRooms: Int? = null,
+        minEntryDate: Date? = null,
+        maxEntryDate: Date? = null,
+        minSoldDate: Date? = null,
+        maxSoldDate: Date?,
         realtyTypes: List<String>? = null,
+        realtyTypesSize: Int? = null,
         amenity: String? = null
     ): Flow<List<Realty>>
+
 }

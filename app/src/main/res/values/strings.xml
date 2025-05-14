@@ -69,9 +69,14 @@
     <string name="specification">Specification</string>
     <string name="status">Status</string>
     <string name="sold">Sold</string>
+    <string name="min_entry_date">Min entry date</string>
+    <string name="max_entry_date">Max entry date</string>
+    <string name="min_sold_date">Min sold date</string>
+    <string name="max_sold_date">Max sold date</string>
     <string name="sold_on">Sold on:</string>
     <string name="listed_on">Listed on:</string>
     <string name="agent_colon">Agent:</string>
     <string name="price_colon">Price:</string>
     <string name="apply">Apply</string>
+    <string name="reset">Reset</string>
 </resources>

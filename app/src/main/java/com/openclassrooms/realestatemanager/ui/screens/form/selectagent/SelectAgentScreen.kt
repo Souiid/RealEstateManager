@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
+import com.openclassrooms.realestatemanager.ui.composable.AgentDropdown
 import com.openclassrooms.realestatemanager.ui.composable.CheckAnimation
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
@@ -119,49 +120,11 @@ fun SelectAgentScreen(viewModel: SelectAgentViewModel, onBack: () -> Unit, onFin
                 }else {
                     if (!displayTF) {
                         if (agents.isNotEmpty()) {
-                            ExposedDropdownMenuBox(
-                                expanded = expanded,
-                                onExpandedChange = { expanded = !expanded }
-                            ) {
-                                OutlinedTextField(
-                                    value = selectedAgent?.name ?: agents.first().name,
-                                    onValueChange = {},
-                                    label = {
-                                        Text(text = stringResource(R.string.agent))
-                                    },
-                                    singleLine = true,
-                                    textStyle = TextStyle(
-                                        color = DarkGray,
-                                        fontSize = 16.sp
-                                    ),
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        focusedBorderColor = Green,
-                                    ),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .menuAnchor(),
-                                    readOnly = true,
-                                    trailingIcon = {
-                                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                                    }
-                                )
-
-                                ExposedDropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    agents.forEach { agent ->
-                                        DropdownMenuItem(
-                                            text = { Text(agent.name) },
-                                            onClick = {
-                                                selectedAgent = agent
-                                                expanded = false
-                                            }
-                                        )
-                                    }
-                                }
-                            }
+                            AgentDropdown(
+                                agents = agents,
+                                selectedAgent = selectedAgent,
+                                onAgentSelected = { selectedAgent = it }
+                            )
                         } else {
                             Text(stringResource(R.string.no_agent))
                         }

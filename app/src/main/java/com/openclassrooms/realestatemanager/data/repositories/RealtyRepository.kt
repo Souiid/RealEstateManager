@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.data.repositories
 
 import android.content.Context
-import android.util.Log
 import com.openclassrooms.realestatemanager.data.room.DatabaseProvider
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import kotlinx.coroutines.flow.Flow
@@ -37,15 +36,6 @@ class RealtyRepository(context: Context): IRealtyRepository {
         dao.updateRealty(realty)
     }
 
-    override fun getRealtyFromID(realtyID: Int) {
-        for (realty in allRealties) {
-            if (realty.id == realtyID) {
-                _selectedRealty.value = realty
-                return
-            }
-        }
-    }
-
     override suspend fun searchRealities(
         isAvailable: Boolean?,
         minPrice: Double?,
@@ -66,7 +56,6 @@ class RealtyRepository(context: Context): IRealtyRepository {
             _sortedRealities.value = emptyList()
             return
         }
-        Log.d("aaa", "SEARCH REALTIES CALLED")
         dao.searchRealities(
             isAvailable,
             minPrice,
@@ -83,7 +72,6 @@ class RealtyRepository(context: Context): IRealtyRepository {
             realtyTypes?.size ?: 0,
             amenity
         ).collect { result ->
-            Log.d("aaa", "SEARCH REALTIES COLLECTED")
             _sortedRealities.value = result
         }
     }

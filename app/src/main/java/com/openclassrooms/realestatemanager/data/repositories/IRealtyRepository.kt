@@ -15,16 +15,20 @@ interface IRealtyRepository {
     fun getAllRealties(): Flow<List<Realty>>
     fun getRealtyFromID(realtyID: Int)
     suspend fun updateRealty(realty: Realty)
-    suspend fun searchRealties(
-        isAvailable: Boolean? = null,
-        minPrice: Double? = null,
-        maxPrice: Double? = null,
-        minSurface: Double? = null,
-        maxSurface: Double? = null,
-        minRooms: Int? = null,
-        entryDate: Date? = null,
-        soldDate: Date? = null,
-        realtyTypes: List<String>? = null,
-        amenity: String? = null
+    suspend fun searchRealities(
+        isAvailable: Boolean?,
+        minPrice: Double?,
+        maxPrice: Double?,
+        minSurface: Double?,
+        maxSurface: Double?,
+        minRooms: Int?,
+        maxRooms: Int?,
+        minEntryDate: Date?,
+        maxEntryDate: Date?,
+        minSoldDate: Date?,
+        maxSoldDate: Date?,
+        realtyTypes: List<String>?,
+        amenity: String?,
+        isReset: Boolean
     )
 }

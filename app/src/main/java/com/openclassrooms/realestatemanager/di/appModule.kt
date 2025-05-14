@@ -1,12 +1,13 @@
 package com.openclassrooms.realestatemanager.di
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.openclassrooms.realestatemanager.data.repositories.AgentRepository
 import com.openclassrooms.realestatemanager.data.repositories.IAgentRepository
 import com.openclassrooms.realestatemanager.data.repositories.INewRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
+import com.openclassrooms.realestatemanager.data.repositories.ISearchRepository
 import com.openclassrooms.realestatemanager.data.repositories.NewRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.RealtyRepository
+import com.openclassrooms.realestatemanager.data.repositories.SearchRepository
 import com.openclassrooms.realestatemanager.ui.screens.RealitiesViewModel
 import com.openclassrooms.realestatemanager.ui.screens.RealtyDescriptionViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormViewModel
@@ -25,10 +26,10 @@ val appModule = module {
     viewModel { RealitiesViewModel(get()) }
     viewModel { RealtyDescriptionViewModel(androidContext(), get(), get()) }
     viewModel { MapViewModel(androidContext(), get()) }
-    viewModel { SearchViewModel(get()) }
+    viewModel { SearchViewModel(get(), get(), get()) }
 
     single<INewRealtyRepository> { NewRealtyRepository(androidContext()) }
     single<IAgentRepository> { AgentRepository(androidContext()) }
     single<IRealtyRepository> { RealtyRepository(androidContext()) }
-
+    single<ISearchRepository> { SearchRepository() }
 }

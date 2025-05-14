@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens.search
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -25,8 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +41,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyType
-import com.openclassrooms.realestatemanager.data.room.Amenity
+import com.openclassrooms.realestatemanager.data.SearchCriteria
+import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
+import com.openclassrooms.realestatemanager.ui.composable.AgentDropdown
 import com.openclassrooms.realestatemanager.ui.composable.PriceTextField
 import com.openclassrooms.realestatemanager.ui.composable.SelectableChipsGroup
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
@@ -50,128 +54,243 @@ import java.time.Instant
 import java.time.ZoneId
 import java.util.Date
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
-    var selectedList by remember { mutableStateOf(emptyList<RealtyType>()) }
-    var selectedStatus by remember { mutableStateOf<Boolean?>(null) }
-    var minPriceValue by remember { mutableStateOf<Int?>(null) }
-    var maxPriceValue by remember { mutableStateOf<Int?>(null) }
+    val criteria = viewModel.getCriteria()
+
+    var selectedRealtyTypes by remember { mutableStateOf(criteria?.realtyTypes ?: emptyList()) }
+    var selectedStatus by remember { mutableStateOf<Boolean?>(criteria?.isAvailable) }
+    var minPriceValue by remember { mutableStateOf<Int?>(criteria?.minPrice) }
+    var maxPriceValue by remember { mutableStateOf<Int?>(criteria?.maxPrice) }
     val currency = "$"
 
-    var minSurfaceValue by remember { mutableStateOf<Int?>(null) }
-    var maxSurfaceValue by remember { mutableStateOf<Int?>(null) }
+    var minSurfaceValue by remember { mutableStateOf<Int?>(criteria?.minSurface) }
+    var maxSurfaceValue by remember { mutableStateOf<Int?>(criteria?.maxSurface) }
 
     val datePickerState = rememberDatePickerState()
-    var entryDateValue by remember { mutableStateOf<Date?>(null) }
-    var soldDateValue by remember { mutableStateOf<Date?>(null) }
-    var selectedAmenities by remember { mutableStateOf(emptyList<Amenity>()) }
+    var minEntryDateValue by remember { mutableStateOf<Date?>(criteria?.minEntryDate) }
+    var maxEntryDateValue by remember { mutableStateOf<Date?>(criteria?.maxEntryDate) }
+    var minSoldDateValue by remember { mutableStateOf<Date?>(criteria?.minSoldDate) }
+    var maxSoldDateValue by remember { mutableStateOf<Date?>(criteria?.maxSoldDate) }
+    var selectedAmenities by remember { mutableStateOf(criteria?.amenities ?: emptyList()) }
 
-    var numberOfRooms by remember { mutableIntStateOf(0) }
+    val agents by viewModel.agentsFlow.collectAsState(initial = emptyList())
+    var selectedAgent by remember { mutableStateOf<RealtyAgent?>(criteria?.selectedAgent) }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        item {
-            StatusSegmentedButton(
-                selectedStatus = selectedStatus,
-                onStatusSelected = { selectedStatus = it }
-            )
-            HorizontalDivider()
-        }
+    var minNumberOfRooms by remember { mutableStateOf<Int?>(criteria?.minRooms) }
+    var maxNumberOfRooms by remember { mutableStateOf<Int?>(criteria?.minRooms) }
 
-        item {
-            RealtyTypeSelection(
-                onSelectionChanged = { selectedList = it }
-            )
-            HorizontalDivider()
-        }
+    Scaffold(
+        modifier = Modifier.fillMaxWidth(),
+        bottomBar = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ThemeButton(
+                    onClick = {
+                        selectedRealtyTypes = emptyList()
+                        selectedStatus = null
+                        minPriceValue = null
+                        maxPriceValue = null
+                        minSurfaceValue = null
+                        maxSurfaceValue = null
+                        minEntryDateValue = null
+                        maxEntryDateValue = null
+                        minSoldDateValue = null
+                        maxSoldDateValue = null
+                        selectedAmenities = emptyList()
+                        selectedAgent = null
+                        minNumberOfRooms = 0
+                        maxNumberOfRooms = 0
+                        viewModel.setCriteria(
+                            SearchCriteria(
+                                realtyTypes = emptyList(),
+                                isAvailable = null,
+                                minPrice = null,
+                                maxPrice = null,
+                                minSurface = null,
+                                maxSurface = null,
+                                minEntryDate = null,
+                                maxEntryDate = null,
+                                minSoldDate = null,
+                                maxSoldDate = null,
+                                amenities = emptyList(),
+                                selectedAgent = null,
+                                minRooms = 0,
+                                maxRooms = 0
+                            )
+                        )
+                        viewModel.performSearch(isReset = true)
+                    },
+                    text = stringResource(R.string.reset),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
 
-        item {
-            SetPriceFilterTextFields(
-                minPriceValue = minPriceValue,
-                maxPriceValue = maxPriceValue,
-                onMinPriceChange = { minPriceValue = it },
-                onMaxPriceChange = { maxPriceValue = it },
-                currencyP = currency
-            )
-            HorizontalDivider()
-        }
+                Spacer(modifier = Modifier.height(5.dp))
 
-        item {
-            SetSurfaceFilterTextFields(
-                minSurfaceValue = minSurfaceValue,
-                maxSurfaceValue = maxSurfaceValue,
-                onMinSurfaceChange = { minSurfaceValue = it },
-                onMaxSurfaceChange = { maxSurfaceValue = it }
-            )
-            HorizontalDivider()
-        }
+                ThemeButton(
+                    onClick = {
 
+                        viewModel.setCriteria(
+                            SearchCriteria(
+                                realtyTypes = selectedRealtyTypes,
+                                isAvailable = selectedStatus,
+                                minPrice = minPriceValue,
+                                maxPrice = maxPriceValue,
+                                minSurface = minSurfaceValue,
+                                maxSurface = maxSurfaceValue,
+                                minEntryDate = minEntryDateValue,
+                                maxEntryDate = maxEntryDateValue,
+                                minSoldDate = minSoldDateValue,
+                                maxSoldDate = maxSoldDateValue,
+                                amenities = selectedAmenities,
+                                selectedAgent = selectedAgent,
+                                minRooms = minNumberOfRooms,
+                                maxRooms = maxNumberOfRooms
+                            )
+                        )
 
-        item {
-            DatePickerDialog(
-                labelID = R.string.entry_date,
-                datePickerState = datePickerState,
-                onDateSelected = {
-                    entryDateValue = it
-                }
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-
-            DatePickerDialog(
-                labelID = R.string.sold_on,
-                datePickerState = datePickerState,
-                onDateSelected = {
-                    soldDateValue = it
-                }
-            )
-        }
-
-        item {
-            Text(stringResource(R.string.amenities))
-            SelectableChipsGroup(
-                selectedOptions = selectedAmenities,
-                onSelectionChanged = { selectedAmenities = it }
-            )
-        }
-
-        item {
-            NumberOfRooms(value = numberOfRooms.toString()) {
-                numberOfRooms = it.toIntOrNull() ?: 0
+                        viewModel.performSearch(
+                            isAvailable = selectedStatus,
+                            minPrice = minPriceValue?.toDouble(),
+                            maxPrice = maxPriceValue?.toDouble(),
+                            minSurface = minSurfaceValue?.toDouble(),
+                            maxSurface = maxSurfaceValue?.toDouble(),
+                            minRooms = minNumberOfRooms,
+                            maxRooms = maxNumberOfRooms,
+                            minEntryDate = minEntryDateValue,
+                            maxEntryDate = maxEntryDateValue,
+                            minSoldDate = minSoldDateValue,
+                            maxSoldDate = maxSoldDateValue,
+                            realtyTypes = selectedRealtyTypes.takeIf { it.isNotEmpty() == true }?.map { it.name },
+                            amenity = selectedAmenities.firstOrNull()?.name
+                        )
+                    },
+                    text = stringResource(R.string.apply),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
             }
         }
-
-        item {
-            ThemeButton(
-                onClick = {
-                    viewModel.performSearch(
-                    isAvailable = selectedStatus,
-                    minPrice = minPriceValue?.toDouble(),
-                    maxPrice = maxPriceValue?.toDouble(),
-                    minSurface = minSurfaceValue?.toDouble(),
-                    maxSurface = maxSurfaceValue?.toDouble(),
-                    minRooms = numberOfRooms,
-                    entryDate = entryDateValue,
-                    soldDate = soldDateValue,
-                    realtyTypes = selectedList.map { it.name },
-                    amenity = selectedAmenities.firstOrNull()?.name
-                )},
-                text = stringResource(R.string.apply),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            item {
+                StatusSegmentedButton(
+                    selectedStatus = selectedStatus,
+                    onStatusSelected = { selectedStatus = it }
                 )
-        }
+                HorizontalDivider()
+            }
 
-        item {
-        }
+            item {
+                RealtyTypeSelection(
+                    selectedTypes = selectedRealtyTypes,
+                    onSelectionChanged = { selectedRealtyTypes = it }
+                )
+                HorizontalDivider()
+            }
 
+            item {
+                SetPriceFilterTextFields(
+                    minPriceValue = minPriceValue,
+                    maxPriceValue = maxPriceValue,
+                    onMinPriceChange = { minPriceValue = it },
+                    onMaxPriceChange = { maxPriceValue = it },
+                    currencyP = currency
+                )
+                HorizontalDivider()
+            }
+
+            item {
+                SetSurfaceFilterTextFields(
+                    minSurfaceValue = minSurfaceValue,
+                    maxSurfaceValue = maxSurfaceValue,
+                    onMinSurfaceChange = { minSurfaceValue = it },
+                    onMaxSurfaceChange = { maxSurfaceValue = it }
+                )
+                HorizontalDivider()
+            }
+
+
+            item {
+                DatePickerDialog(
+                    labelID = R.string.min_entry_date,
+                    datePickerState = datePickerState,
+                    onDateSelected = {
+                        minEntryDateValue = it
+                    }
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+
+                DatePickerDialog(
+                    labelID = R.string.max_entry_date,
+                    datePickerState = datePickerState,
+                    onDateSelected = {
+                        maxEntryDateValue = it
+                    }
+                )
+            }
+
+            item {
+                DatePickerDialog(
+                    labelID = R.string.min_sold_date,
+                    datePickerState = datePickerState,
+                    onDateSelected = {
+                        minSoldDateValue = it
+                    }
+                )
+
+                DatePickerDialog(
+                    labelID = R.string.max_sold_date,
+                    datePickerState = datePickerState,
+                    onDateSelected = {
+                        maxSoldDateValue = it
+                    }
+                )
+            }
+
+            item {
+                Text(stringResource(R.string.amenities))
+                SelectableChipsGroup(
+                    selectedOptions = selectedAmenities,
+                    onSelectionChanged = { selectedAmenities = it }
+                )
+            }
+
+            item {
+                AgentDropdown(
+                    agents = agents,
+                    selectedAgent = selectedAgent,
+                    onAgentSelected = { selectedAgent = it },
+                    isForSearch = true
+                )
+            }
+
+            item {
+                NumberOfRooms(value = minNumberOfRooms.toString()) {
+                    minNumberOfRooms = it.toIntOrNull() ?: 0
+                }
+
+                Spacer(modifier = Modifier.height(5.dp))
+
+                NumberOfRooms(value = minNumberOfRooms.toString()) {
+                    minNumberOfRooms = it.toIntOrNull() ?: 0
+                }
+            }
+
+        }
     }
-
 }
 
 @Composable
@@ -180,14 +299,13 @@ fun NumberOfRooms(value: String, onValueChanged: (String) -> Unit) {
     Text("Number of rooms")
     ThemeOutlinedTextField(
         value = value,
-        onValueChanged = {onValueChanged(it)},
+        onValueChanged = { onValueChanged(it) },
         imeAction = ImeAction.Done,
         keyboardType = KeyboardType.Number,
         labelID = R.string.number_of_rooms,
         modifier = Modifier.fillMaxWidth()
     )
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -348,14 +466,18 @@ fun StatusSegmentedButton(
 
 @Composable
 fun RealtyTypeSelection(
+    selectedTypes: List<RealtyType>,
     onSelectionChanged: (List<RealtyType>) -> Unit
 ) {
-    val checkList =
-        remember { mutableStateListOf(*List(RealtyType.entries.size) { false }.toTypedArray()) }
+    val checkList = remember(selectedTypes) {
+        mutableStateListOf(
+            *RealtyType.entries.map { it in selectedTypes }.toTypedArray()
+        )
+    }
 
     Column(
         modifier = Modifier
-            .heightIn(max = 200.dp) // hauteur max auto-adaptée
+            .heightIn(max = 200.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Text(stringResource(R.string.realty_type))

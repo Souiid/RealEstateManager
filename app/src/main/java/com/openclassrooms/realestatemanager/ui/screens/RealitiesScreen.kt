@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.screens
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,25 +41,26 @@ fun RealitiesScreen(
 
     val sortedRealities by viewModel.sortedRealities.collectAsState(initial = emptyList())
 
-    LaunchedEffect(sortedRealities) {
-        sortedRealities.forEach {
-            Log.d("sortedRealities", "SORTED REALTY: ${it.id}")
-        }
-    }
-
     LaunchedEffect(Unit) {
         viewModel.initRealtyRepository()
     }
     RealEstateManagerTheme {
+
+        val realitiesToUse: List<Realty> = if (sortedRealities.isNotEmpty()) {
+            sortedRealities
+        } else {
+            realities
+        }
+
         if (realities.isNotEmpty()) {
-            viewModel.setSortedRealities(realities)
+            viewModel.setAllRealities(realitiesToUse)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(realities.size) { index ->
-                        val realty = realities[index]
+                    items(realitiesToUse.size) { index ->
+                        val realty = realitiesToUse[index]
                         RealtyItem(
                             realty = realty,
                             viewModel = viewModel,

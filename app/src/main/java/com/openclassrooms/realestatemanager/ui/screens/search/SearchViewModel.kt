@@ -9,7 +9,12 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.data.RealtyPlace
+import com.openclassrooms.realestatemanager.data.SearchCriteria
+import com.openclassrooms.realestatemanager.data.repositories.IAgentRepository
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
+import com.openclassrooms.realestatemanager.data.repositories.ISearchRepository
+import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Date
@@ -20,7 +25,13 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-class SearchViewModel(private val repository: IRealtyRepository): ViewModel() {
+class SearchViewModel(
+    private val realtyRepository: IRealtyRepository,
+    private val agentRepository: IAgentRepository,
+    private val searchRepository: ISearchRepository
+    ): ViewModel() {
+
+    val agentsFlow: Flow<List<RealtyAgent>> = agentRepository.getAllAgents()
 
     fun searchPlaces(
         placesClient: PlacesClient,
@@ -70,6 +81,14 @@ class SearchViewModel(private val repository: IRealtyRepository): ViewModel() {
             }
     }
 
+    fun setCriteria(criteria: SearchCriteria) {
+        searchRepository.currentCriteria = criteria
+    }
+
+    fun getCriteria(): SearchCriteria? {
+        return searchRepository.currentCriteria
+    }
+
     fun calculateDistanceInKm(start: LatLng, end: LatLng): Double {
         val earthRadiusKm = 6371.0
 
@@ -97,29 +116,37 @@ class SearchViewModel(private val repository: IRealtyRepository): ViewModel() {
     }
 
     fun performSearch(
-        isAvailable: Boolean?,
-        minPrice: Double?,
-        maxPrice: Double?,
-        minSurface: Double?,
-        maxSurface: Double?,
-        minRooms: Int?,
-        entryDate: Date?,
-        soldDate: Date?,
-        realtyTypes: List<String>?,
-        amenity: String?
+        isAvailable: Boolean? = null,
+        minPrice: Double? = null,
+        maxPrice: Double? = null,
+        minSurface: Double? = null,
+        maxSurface: Double? = null,
+        minRooms: Int? = null,
+        maxRooms: Int? = null,
+        minEntryDate: Date? = null,
+        maxEntryDate: Date? = null,
+        minSoldDate: Date? = null,
+        maxSoldDate: Date? = null,
+        realtyTypes: List<String>? = null,
+        amenity: String? = null,
+        isReset: Boolean = false
     ) {
         viewModelScope.launch {
-            repository.searchRealties(
+            realtyRepository.searchRealities(
                 isAvailable,
                 minPrice,
                 maxPrice,
                 minSurface,
                 maxSurface,
                 minRooms,
-                entryDate,
-                soldDate,
+                maxRooms,
+                minEntryDate,
+                maxEntryDate,
+                minSoldDate,
+                maxSoldDate,
                 realtyTypes,
-                amenity
+                amenity,
+                isReset
             )
         }
     }
