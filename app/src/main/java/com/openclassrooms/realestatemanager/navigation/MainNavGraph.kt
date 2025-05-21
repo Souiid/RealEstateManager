@@ -35,6 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
+import com.openclassrooms.realestatemanager.ui.screens.HomeTabletScreen
 import com.openclassrooms.realestatemanager.ui.screens.MainActivity
 import com.openclassrooms.realestatemanager.ui.screens.map.MapScreen
 import com.openclassrooms.realestatemanager.ui.screens.RealitiesScreen
@@ -138,7 +139,16 @@ fun MainNavGraph(
             }
         }
 
-        NavHost(navController, NavigationScreen.Realties.route, modifier.padding(innerPadding)) {
+        NavHost(navController, NavigationScreen.HomeTablet.route, modifier.padding(innerPadding)) {
+            composable(NavigationScreen.HomeTablet.route,
+
+                ) {
+                HomeTabletScreen(
+                    koinViewModel(),
+                   koinViewModel()
+                )
+            }
+
             composable(NavigationScreen.Realties.route,
 
             ) {
