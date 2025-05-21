@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -57,6 +58,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
@@ -75,14 +77,31 @@ fun RealtyDescriptionScreen(
         realtyAgent = viewModel.getAgentRepository(realty?.agentId ?: 0)
     }
 
+    val statusDateString = realty?.let {
+        if (!it.isAvailable) {
+            realty!!.saleDate?.let { viewModel.getTodayDate(it) } ?: "N/A"
+        } else {
+            viewModel.getTodayDate(realty!!.entryDate)
+        }
+    }
+
     if (realty != null) {
-        DetailScreen(realty!!, realtyAgent, viewModel)
+        DetailScreen(
+            realty = realty!!,
+            realtyAgent = realtyAgent,
+            statusDateString = statusDateString!!,
+            onPrimaryButtonClick = {
+            viewModel.updateRealtyStatus(it)
+        })
     }
 }
 
 
 @Composable
-fun DetailScreen(realty: Realty, realtyAgent: RealtyAgent?, viewModel: RealtyDescriptionViewModel) {
+fun DetailScreen(realty: Realty,
+                 realtyAgent: RealtyAgent?,
+                 statusDateString: String,
+                 onPrimaryButtonClick: (Realty) -> Unit) {
 
     val amenitiesLabels = realty.primaryInfo.amenities.map { amenity ->
         stringResource(id = amenity.labelResId)
@@ -93,6 +112,7 @@ fun DetailScreen(realty: Realty, realtyAgent: RealtyAgent?, viewModel: RealtyDes
     } else {
         amenitiesLabels.dropLast(1).joinToString(", ") + ", " + amenitiesLabels.last()
     }
+
 
     Column(
         modifier = Modifier
@@ -110,7 +130,7 @@ fun DetailScreen(realty: Realty, realtyAgent: RealtyAgent?, viewModel: RealtyDes
         LazyRow(modifier = Modifier.fillMaxWidth()) {
             items(realty.pictures.size) { index ->
                 Spacer(modifier = Modifier.size(5.dp))
-                RealtyPictureUI(realty.pictures[index], viewModel)
+                RealtyPictureUI(realty.pictures[index])
             }
         }
 
@@ -122,7 +142,12 @@ fun DetailScreen(realty: Realty, realtyAgent: RealtyAgent?, viewModel: RealtyDes
         )
         Spacer(modifier = Modifier.height(10.dp))
 
-        StatusSection(realty, realtyAgent, viewModel)
+        StatusSection(realty = realty,
+            agent = realtyAgent,
+            statusDateString = statusDateString,
+            onPrimaryButtonClick = { realty ->
+                onPrimaryButtonClick(realty)
+            })
         DescriptionSection(realty)
         AmenitiesSection(amenitiesText)
         SpecificationSection(realty)
@@ -132,18 +157,18 @@ fun DetailScreen(realty: Realty, realtyAgent: RealtyAgent?, viewModel: RealtyDes
 }
 
 @Composable
-fun StatusSection(realty: Realty, agent: RealtyAgent?, viewModel: RealtyDescriptionViewModel) {
+fun StatusSection(realty: Realty,
+                  agent: RealtyAgent?,
+                  statusDateString: String,
+                  onPrimaryButtonClick: (Realty) -> Unit
+) {
     var isAvailable by remember { mutableStateOf(realty.isAvailable) }
     val statusText =
         if (!isAvailable) stringResource(R.string.sold) else stringResource(R.string.for_sale)
     val statusColor = if (!isAvailable) Color.Red else Color(0xFF4CAF50)
     val statusDateLabel =
         if (!isAvailable) stringResource(R.string.sold_on) else stringResource(R.string.listed_on)
-    val statusDate = if (!isAvailable) {
-        realty.saleDate?.let { viewModel.getTodayDate(it) } ?: "N/A"
-    } else {
-        viewModel.getTodayDate(realty.entryDate)
-    }
+
 
     var isShowDialog by remember { mutableStateOf(false) }
 
@@ -157,7 +182,7 @@ fun StatusSection(realty: Realty, agent: RealtyAgent?, viewModel: RealtyDescript
             onPrimaryButtonClick = {
                 isAvailable = !isAvailable
                 realty.isAvailable = isAvailable
-                viewModel.updateRealtyStatus(realty)
+                onPrimaryButtonClick(realty)
                 isShowDialog = false
             },
             onSecondaryButtonClick = {
@@ -203,7 +228,7 @@ fun StatusSection(realty: Realty, agent: RealtyAgent?, viewModel: RealtyDescript
             }
 
             Text(
-                text = "$statusDateLabel $statusDate",
+                text = "$statusDateLabel $statusDateString",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W400
             )
@@ -311,13 +336,13 @@ fun ExpandableSection(
 
 
 @Composable
-fun RealtyPictureUI(realtyPicture: RealtyPicture, viewModel: RealtyDescriptionViewModel) {
+fun RealtyPictureUI(realtyPicture: RealtyPicture) {
     val context = LocalContext.current
     Box(
         modifier = Modifier.size(150.dp)
     ) {
         Image(
-            bitmap = viewModel.uriToBitmapLegacy(context, Uri.parse(realtyPicture.uriString))
+            bitmap = Utils().uriToBitmapLegacy(context, Uri.parse(realtyPicture.uriString))
                 ?.asImageBitmap() ?: return,
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
