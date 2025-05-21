@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.navigation
 sealed class NavigationScreen(val route: String) {
 
     //Main
+    data object HomeTablet: NavigationScreen("home_tablet_screen")
     data object Realties: NavigationScreen("realties_screen")
     data object RealtyDescription : NavigationScreen("realty_description_screen") {
         const val ARG_REALTY_ID = "realtyID"
