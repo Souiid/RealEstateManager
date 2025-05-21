@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -15,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,7 +33,9 @@ fun ThemeOutlinedTextField(
     singleLine: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null,
     height: Dp = 56.dp,
-    modifier: Modifier =  Modifier.fillMaxWidth().height(height),
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .height(height),
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -51,8 +55,12 @@ fun ThemeOutlinedTextField(
         ),
         trailingIcon = {
             if (iconText != null) {
-                Text(text = iconText)
-            }else {
+                Text(
+                    text = iconText,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.padding(end = 5.dp)
+                )
+            } else {
                 trailingIcon?.invoke()
 
             }

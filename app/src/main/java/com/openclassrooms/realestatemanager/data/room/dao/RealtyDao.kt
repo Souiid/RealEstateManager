@@ -45,7 +45,7 @@ AND (COALESCE(:realtyTypesSize, 0) = 0 OR realtyType IN (:realtyTypes))
 AND (:amenity IS NULL OR amenities LIKE '%' || :amenity || '%')
 """
     )
-    fun searchRealities(
+    fun getFilteredRealties(
         isAvailable: Boolean? = null,
         minPrice: Double? = null,
         maxPrice: Double? = null,
@@ -60,6 +60,6 @@ AND (:amenity IS NULL OR amenities LIKE '%' || :amenity || '%')
         realtyTypes: List<String>? = null,
         realtyTypesSize: Int? = null,
         amenity: String? = null
-    ): Flow<List<Realty>>
+    ): List<Realty>
 
 }

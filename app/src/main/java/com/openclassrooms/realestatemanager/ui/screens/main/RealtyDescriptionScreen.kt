@@ -1,6 +1,5 @@
-package com.openclassrooms.realestatemanager.ui.screens
+package com.openclassrooms.realestatemanager.ui.screens.main
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -17,15 +16,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -59,6 +61,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.Utils
+import com.openclassrooms.realestatemanager.data.formatSmart
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
@@ -66,7 +69,8 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 @Composable
 fun RealtyDescriptionScreen(
     viewModel: RealtyDescriptionViewModel,
-    realtyID: Int
+    realtyID: Int,
+    onSimulateClick: (Double) -> Unit
 ) {
 
     val realty by viewModel.selectedRealty.collectAsState()
@@ -90,18 +94,20 @@ fun RealtyDescriptionScreen(
             realty = realty!!,
             realtyAgent = realtyAgent,
             statusDateString = statusDateString!!,
-            onPrimaryButtonClick = {
-            viewModel.updateRealtyStatus(it)
-        })
+            onPrimaryButtonClick = { viewModel.updateRealtyStatus(it) },
+            onSimulateClick = { price-> onSimulateClick(price) })
     }
 }
 
 
 @Composable
-fun DetailScreen(realty: Realty,
-                 realtyAgent: RealtyAgent?,
-                 statusDateString: String,
-                 onPrimaryButtonClick: (Realty) -> Unit) {
+fun DetailScreen(
+    realty: Realty,
+    realtyAgent: RealtyAgent?,
+    statusDateString: String,
+    onPrimaryButtonClick: (Realty) -> Unit,
+    onSimulateClick: (Double) -> Unit
+) {
 
     val amenitiesLabels = realty.primaryInfo.amenities.map { amenity ->
         stringResource(id = amenity.labelResId)
@@ -113,54 +119,73 @@ fun DetailScreen(realty: Realty,
         amenitiesLabels.dropLast(1).joinToString(", ") + ", " + amenitiesLabels.last()
     }
 
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 15.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 15.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-
-        Text(
-            text = stringResource(R.string.media),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        LazyRow(modifier = Modifier.fillMaxWidth()) {
-            items(realty.pictures.size) { index ->
-                Spacer(modifier = Modifier.size(5.dp))
-                RealtyPictureUI(realty.pictures[index])
+            Text(
+                text = stringResource(R.string.media),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            LazyRow(modifier = Modifier.fillMaxWidth()) {
+                items(realty.pictures.size) { index ->
+                    Spacer(modifier = Modifier.size(5.dp))
+                    RealtyPictureUI(realty.pictures[index])
+                }
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            HorizontalDivider(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp), color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            StatusSection(realty = realty,
+                agent = realtyAgent,
+                statusDateString = statusDateString,
+                onPrimaryButtonClick = { realty ->
+                    onPrimaryButtonClick(realty)
+                })
+            DescriptionSection(realty)
+            AmenitiesSection(amenitiesText)
+            SpecificationSection(realty)
+            MapSection(realty)
+
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-        HorizontalDivider(
-            Modifier
-                .fillMaxWidth()
-                .height(1.dp), color = Color.Gray
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-
-        StatusSection(realty = realty,
-            agent = realtyAgent,
-            statusDateString = statusDateString,
-            onPrimaryButtonClick = { realty ->
-                onPrimaryButtonClick(realty)
-            })
-        DescriptionSection(realty)
-        AmenitiesSection(amenitiesText)
-        SpecificationSection(realty)
-        MapSection(realty)
-
+        Button(
+            onClick = { onSimulateClick(realty.primaryInfo.price) },
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomEnd)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Calculate,
+                contentDescription = "Calculatrice",
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(Modifier.width(5.dp))
+            Text(stringResource(R.string.simulate))
+        }
     }
+
 }
 
 @Composable
-fun StatusSection(realty: Realty,
-                  agent: RealtyAgent?,
-                  statusDateString: String,
-                  onPrimaryButtonClick: (Realty) -> Unit
+fun StatusSection(
+    realty: Realty,
+    agent: RealtyAgent?,
+    statusDateString: String,
+    onPrimaryButtonClick: (Realty) -> Unit
 ) {
     var isAvailable by remember { mutableStateOf(realty.isAvailable) }
     val statusText =
@@ -174,10 +199,10 @@ fun StatusSection(realty: Realty,
 
     if (isShowDialog) {
         ThemeDialog(
-            title = "Do you want to put this realty on sale ?",
+            title = stringResource(R.string.put_realty_on_sale),
             description = "",
-            primaryButtonTitle = "Yes",
-            secondaryButtonTitle = "Cancel",
+            primaryButtonTitle = stringResource(R.string.yes),
+            secondaryButtonTitle = stringResource(R.string.cancel),
 
             onPrimaryButtonClick = {
                 isAvailable = !isAvailable
@@ -198,7 +223,7 @@ fun StatusSection(realty: Realty,
         Column {
             Button(
                 onClick = { isShowDialog = true },
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = statusColor),
+                colors = ButtonDefaults.buttonColors(containerColor = statusColor),
                 shape = MaterialTheme.shapes.small,
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 elevation = null
@@ -214,7 +239,7 @@ fun StatusSection(realty: Realty,
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.price_colon) + " ${realty.primaryInfo.price} €",
+                text = stringResource(R.string.price_colon) + " ${realty.primaryInfo.price.formatSmart()} €",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W400
             )

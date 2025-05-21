@@ -11,6 +11,11 @@ sealed class NavigationScreen(val route: String) {
         fun createRoute(realtyID: Int): String = "$route/$realtyID"
     }
     data object Map: NavigationScreen("map_screen")
+    data object Mortgage: NavigationScreen("mortgage_screen") {
+        const val ARG_PRICE = "price"
+        val routeWithArgs = "$route/{$ARG_PRICE}"
+        fun createRoute(price: Double): String = "$route/$price"
+    }
 
     //Form
     data object RealtyForm: NavigationScreen("realty_form_screen")

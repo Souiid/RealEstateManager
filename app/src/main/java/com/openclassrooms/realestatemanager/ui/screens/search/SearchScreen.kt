@@ -57,30 +57,31 @@ import java.util.Date
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
-    val criteria = viewModel.getCriteria()
+fun SearchScreen(viewModel: SearchViewModel = koinViewModel(),
+                 onNewSearchCriteria: (SearchCriteria)-> Unit) {
+    val criteria by viewModel.criteriaFlow.collectAsState()
 
-    var selectedRealtyTypes by remember { mutableStateOf(criteria?.realtyTypes ?: emptyList()) }
-    var selectedStatus by remember { mutableStateOf<Boolean?>(criteria?.isAvailable) }
-    var minPriceValue by remember { mutableStateOf<Int?>(criteria?.minPrice) }
-    var maxPriceValue by remember { mutableStateOf<Int?>(criteria?.maxPrice) }
+    var selectedRealtyTypes by remember(criteria) { mutableStateOf(criteria?.realtyTypes ?: emptyList()) }
+    var selectedStatus by remember(criteria) { mutableStateOf<Boolean?>(criteria?.isAvailable) }
+    var minPriceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.minPrice) }
+    var maxPriceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.maxPrice) }
     val currency = "$"
 
-    var minSurfaceValue by remember { mutableStateOf<Int?>(criteria?.minSurface) }
-    var maxSurfaceValue by remember { mutableStateOf<Int?>(criteria?.maxSurface) }
+    var minSurfaceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.minSurface) }
+    var maxSurfaceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.maxSurface) }
 
     val datePickerState = rememberDatePickerState()
-    var minEntryDateValue by remember { mutableStateOf<Date?>(criteria?.minEntryDate) }
-    var maxEntryDateValue by remember { mutableStateOf<Date?>(criteria?.maxEntryDate) }
-    var minSoldDateValue by remember { mutableStateOf<Date?>(criteria?.minSoldDate) }
-    var maxSoldDateValue by remember { mutableStateOf<Date?>(criteria?.maxSoldDate) }
-    var selectedAmenities by remember { mutableStateOf(criteria?.amenities ?: emptyList()) }
+    var minEntryDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.minEntryDate) }
+    var maxEntryDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.maxEntryDate) }
+    var minSoldDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.minSoldDate) }
+    var maxSoldDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.maxSoldDate) }
+    var selectedAmenities by remember(criteria) { mutableStateOf(criteria?.amenities ?: emptyList()) }
 
     val agents by viewModel.agentsFlow.collectAsState(initial = emptyList())
-    var selectedAgent by remember { mutableStateOf<RealtyAgent?>(criteria?.selectedAgent) }
+    var selectedAgent by remember(criteria) { mutableStateOf<RealtyAgent?>(criteria?.selectedAgent) }
 
-    var minNumberOfRooms by remember { mutableStateOf<Int?>(criteria?.minRooms) }
-    var maxNumberOfRooms by remember { mutableStateOf<Int?>(criteria?.minRooms) }
+    var minNumberOfRooms by remember(criteria) { mutableStateOf<Int?>(criteria?.minRooms) }
+    var maxNumberOfRooms by remember(criteria) { mutableStateOf<Int?>(criteria?.maxRooms) }
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -105,25 +106,26 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
                         selectedAgent = null
                         minNumberOfRooms = 0
                         maxNumberOfRooms = 0
-                        viewModel.setCriteria(
-                            SearchCriteria(
-                                realtyTypes = emptyList(),
-                                isAvailable = null,
-                                minPrice = null,
-                                maxPrice = null,
-                                minSurface = null,
-                                maxSurface = null,
-                                minEntryDate = null,
-                                maxEntryDate = null,
-                                minSoldDate = null,
-                                maxSoldDate = null,
-                                amenities = emptyList(),
-                                selectedAgent = null,
-                                minRooms = 0,
-                                maxRooms = 0
-                            )
+
+                        val resetCriteria = SearchCriteria(
+                            realtyTypes = emptyList(),
+                            isAvailable = null,
+                            minPrice = null,
+                            maxPrice = null,
+                            minSurface = null,
+                            maxSurface = null,
+                            minEntryDate = null,
+                            maxEntryDate = null,
+                            minSoldDate = null,
+                            maxSoldDate = null,
+                            amenities = emptyList(),
+                            selectedAgent = null,
+                            minRooms = null,
+                            maxRooms = null,
                         )
-                        viewModel.performSearch(isReset = true)
+
+                        viewModel.setCriteria(resetCriteria)
+                        onNewSearchCriteria(resetCriteria) // 👈 AJOUTE CECI
                     },
                     text = stringResource(R.string.reset),
                     modifier = Modifier
@@ -135,41 +137,25 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
 
                 ThemeButton(
                     onClick = {
-
-                        viewModel.setCriteria(
-                            SearchCriteria(
-                                realtyTypes = selectedRealtyTypes,
-                                isAvailable = selectedStatus,
-                                minPrice = minPriceValue,
-                                maxPrice = maxPriceValue,
-                                minSurface = minSurfaceValue,
-                                maxSurface = maxSurfaceValue,
-                                minEntryDate = minEntryDateValue,
-                                maxEntryDate = maxEntryDateValue,
-                                minSoldDate = minSoldDateValue,
-                                maxSoldDate = maxSoldDateValue,
-                                amenities = selectedAmenities,
-                                selectedAgent = selectedAgent,
-                                minRooms = minNumberOfRooms,
-                                maxRooms = maxNumberOfRooms
-                            )
-                        )
-
-                        viewModel.performSearch(
+                        val newCriteria = SearchCriteria(
+                            realtyTypes = selectedRealtyTypes,
                             isAvailable = selectedStatus,
-                            minPrice = minPriceValue?.toDouble(),
-                            maxPrice = maxPriceValue?.toDouble(),
-                            minSurface = minSurfaceValue?.toDouble(),
-                            maxSurface = maxSurfaceValue?.toDouble(),
-                            minRooms = minNumberOfRooms,
-                            maxRooms = maxNumberOfRooms,
+                            minPrice = minPriceValue,
+                            maxPrice = maxPriceValue,
+                            minSurface = minSurfaceValue,
+                            maxSurface = maxSurfaceValue,
                             minEntryDate = minEntryDateValue,
                             maxEntryDate = maxEntryDateValue,
                             minSoldDate = minSoldDateValue,
                             maxSoldDate = maxSoldDateValue,
-                            realtyTypes = selectedRealtyTypes.takeIf { it.isNotEmpty() == true }?.map { it.name },
-                            amenity = selectedAmenities.firstOrNull()?.name
+                            amenities = selectedAmenities,
+                            selectedAgent = selectedAgent,
+                            minRooms = minNumberOfRooms,
+                            maxRooms = maxNumberOfRooms
                         )
+
+                        viewModel.setCriteria(newCriteria)
+                        onNewSearchCriteria(newCriteria)
                     },
                     text = stringResource(R.string.apply),
                     modifier = Modifier
@@ -296,7 +282,7 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel()) {
 @Composable
 fun NumberOfRooms(value: String, onValueChanged: (String) -> Unit) {
 
-    Text("Number of rooms")
+    Text(stringResource(R.string.number_of_rooms))
     ThemeOutlinedTextField(
         value = value,
         onValueChanged = { onValueChanged(it) },
@@ -337,7 +323,7 @@ fun DatePickerDialog(
             },
             dismissButton = {
                 TextButton(onClick = { showDialog = false }) {
-                    Text("Annuler")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         ) {
@@ -469,26 +455,24 @@ fun RealtyTypeSelection(
     selectedTypes: List<RealtyType>,
     onSelectionChanged: (List<RealtyType>) -> Unit
 ) {
-    val checkList = remember(selectedTypes) {
-        mutableStateListOf(
-            *RealtyType.entries.map { it in selectedTypes }.toTypedArray()
-        )
-    }
-
     Column(
         modifier = Modifier
             .heightIn(max = 200.dp)
             .verticalScroll(rememberScrollState())
     ) {
         Text(stringResource(R.string.realty_type))
-        RealtyType.entries.forEachIndexed { index, realtyType ->
+        RealtyType.entries.forEach { realtyType ->
+            val isChecked = realtyType in selectedTypes
             RealtyTypeItem(
                 realtyTypeName = realtyType.name,
-                isChecked = checkList[index],
-                onCheckedChange = {
-                    checkList[index] = it
-                    val selectedList = RealtyType.entries.filterIndexed { i, _ -> checkList[i] }
-                    onSelectionChanged(selectedList)
+                isChecked = isChecked,
+                onCheckedChange = { checked ->
+                    val updatedList = if (checked) {
+                        selectedTypes + realtyType
+                    } else {
+                        selectedTypes - realtyType
+                    }
+                    onSelectionChanged(updatedList)
                 }
             )
         }

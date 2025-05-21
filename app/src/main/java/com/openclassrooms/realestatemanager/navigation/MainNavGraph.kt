@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.navigation
 
 import android.content.Intent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -26,21 +25,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import androidx.navigation.navOptions
-import com.openclassrooms.realestatemanager.ui.screens.HomeTabletScreen
-import com.openclassrooms.realestatemanager.ui.screens.MainActivity
+import com.openclassrooms.realestatemanager.data.SearchCriteria
+import com.openclassrooms.realestatemanager.ui.screens.main.HomeTabletScreen
+import com.openclassrooms.realestatemanager.ui.screens.main.MainActivity
 import com.openclassrooms.realestatemanager.ui.screens.map.MapScreen
-import com.openclassrooms.realestatemanager.ui.screens.RealitiesScreen
-import com.openclassrooms.realestatemanager.ui.screens.RealtyDescriptionScreen
+import com.openclassrooms.realestatemanager.ui.screens.main.RealitiesScreen
+import com.openclassrooms.realestatemanager.ui.screens.main.RealtyDescriptionScreen
 import com.openclassrooms.realestatemanager.ui.screens.form.FormActivity
+import com.openclassrooms.realestatemanager.ui.screens.main.MortgageScreen
 import com.openclassrooms.realestatemanager.ui.screens.search.SearchScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -129,23 +127,32 @@ fun MainNavGraph(
             }
         )
     }) { innerPadding ->
-
+        var criterias by remember { mutableStateOf<SearchCriteria?>(null) }
         if (showSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showSheet = false },
                 sheetState = sheetState
             ) {
-                SearchScreen()
+                SearchScreen(
+                    onNewSearchCriteria = { newCriteria ->
+                        criterias = newCriteria
+                    }
+                )
             }
         }
 
-        NavHost(navController, NavigationScreen.HomeTablet.route, modifier.padding(innerPadding)) {
+        NavHost(navController, NavigationScreen.Realties .route, modifier.padding(innerPadding)) {
             composable(NavigationScreen.HomeTablet.route,
 
                 ) {
                 HomeTabletScreen(
                     koinViewModel(),
-                   koinViewModel()
+                   koinViewModel(),
+                    onSimulateClick = { price ->
+                        navController.navigate(
+                            NavigationScreen.Mortgage.createRoute(price)
+                        )
+                    }
                 )
             }
 
@@ -157,6 +164,7 @@ fun MainNavGraph(
                     onNext = { realtyID ->
                         navController.navigate(NavigationScreen.RealtyDescription.createRoute(realtyID))
                     },
+                    criteria = criterias,
                     activity = activity
                 )
             }
@@ -168,8 +176,24 @@ fun MainNavGraph(
                 val realtyID = backStackEntry.arguments?.getInt("realtyID") ?: -1
                 RealtyDescriptionScreen(
                     koinViewModel(),
-                    realtyID = realtyID
+                    realtyID = realtyID,
+                    onSimulateClick = { price ->
+                        navController.navigate(
+                            NavigationScreen.Mortgage.createRoute(price)
+                        )
+                    }
                 )
+            }
+
+            composable(
+                route = NavigationScreen.Mortgage.routeWithArgs,
+                arguments = listOf(
+                    navArgument(NavigationScreen.Mortgage.ARG_PRICE) { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val priceString = backStackEntry.arguments?.getString(NavigationScreen.Mortgage.ARG_PRICE)
+                val price = priceString?.toDoubleOrNull() ?: 0.0
+                MortgageScreen(price = price)
             }
 
             composable(NavigationScreen.Map.route) {

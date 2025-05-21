@@ -8,11 +8,12 @@ import com.openclassrooms.realestatemanager.data.repositories.ISearchRepository
 import com.openclassrooms.realestatemanager.data.repositories.NewRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.RealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.SearchRepository
-import com.openclassrooms.realestatemanager.ui.screens.RealitiesViewModel
-import com.openclassrooms.realestatemanager.ui.screens.RealtyDescriptionViewModel
+import com.openclassrooms.realestatemanager.ui.screens.main.RealitiesViewModel
+import com.openclassrooms.realestatemanager.ui.screens.main.RealtyDescriptionViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.selectagent.SelectAgentViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture.SetRealtyPictureViewModel
+import com.openclassrooms.realestatemanager.ui.screens.main.MortgageViewModel
 import com.openclassrooms.realestatemanager.ui.screens.map.MapViewModel
 import com.openclassrooms.realestatemanager.ui.screens.search.SearchViewModel
 import org.koin.android.ext.koin.androidContext
@@ -27,6 +28,7 @@ val appModule = module {
     viewModel { RealtyDescriptionViewModel(androidContext(), get(), get()) }
     viewModel { MapViewModel(androidContext(), get()) }
     viewModel { SearchViewModel(get(), get(), get()) }
+    viewModel { MortgageViewModel() }
 
     single<INewRealtyRepository> { NewRealtyRepository(androidContext()) }
     single<IAgentRepository> { AgentRepository(androidContext()) }

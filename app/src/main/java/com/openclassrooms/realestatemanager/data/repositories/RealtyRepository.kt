@@ -1,23 +1,24 @@
 package com.openclassrooms.realestatemanager.data.repositories
 
 import android.content.Context
+import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.room.DatabaseProvider
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.util.Date
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class RealtyRepository(context: Context): IRealtyRepository {
 
     private val db = DatabaseProvider.getDatabase(context)
     private val dao = db.realtyDao()
-
+    override var filteredRealties = emptyList<Realty>()
     override var allRealties: List<Realty> = emptyList()
     private val _selectedRealty = MutableStateFlow<Realty?>(null)
     override val selectedRealtyFlow: StateFlow<Realty?> = _selectedRealty
-    private val _sortedRealities = MutableStateFlow<List<Realty>>(emptyList())
-    override val sortedRealities: StateFlow<List<Realty>> = _sortedRealities
     override var updatedRealty: Realty? = null
 
     override fun setSelectedRealty(realty: Realty?) {
@@ -40,43 +41,26 @@ class RealtyRepository(context: Context): IRealtyRepository {
         dao.updateRealty(realty)
     }
 
-    override suspend fun searchRealities(
-        isAvailable: Boolean?,
-        minPrice: Double?,
-        maxPrice: Double?,
-        minSurface: Double?,
-        maxSurface: Double?,
-        minRooms: Int?,
-        maxRooms: Int?,
-        minEntryDate: Date?,
-        maxEntryDate: Date?,
-        minSoldDate: Date?,
-        maxSoldDate: Date?,
-        realtyTypes: List<String>?,
-        amenity: String?,
-        isReset: Boolean
-    ) {
-        if (isReset) {
-            _sortedRealities.value = emptyList()
-            return
-        }
-        dao.searchRealities(
-            isAvailable,
-            minPrice,
-            maxPrice,
-            minSurface,
-            maxSurface,
-            minRooms,
-            maxRooms,
-            minEntryDate,
-            maxEntryDate,
-            minSoldDate,
-            maxSoldDate,
-            realtyTypes,
-            realtyTypes?.size ?: 0,
-            amenity
-        ).collect { result ->
-            _sortedRealities.value = result
-        }
-    }
+    override fun getFilteredRealtiesFlow(criteria: SearchCriteria?): Flow<List<Realty>> = flow {
+        emit(
+            dao.getFilteredRealties(
+                criteria?.isAvailable,
+                criteria?.minPrice?.toDouble(),
+                criteria?.maxPrice?.toDouble(),
+                criteria?.minSurface?.toDouble(),
+                criteria?.maxSurface?.toDouble(),
+                criteria?.minRooms,
+                criteria?.maxRooms,
+                criteria?.minEntryDate,
+                criteria?.maxEntryDate,
+                criteria?.minSoldDate,
+                criteria?.maxSoldDate,
+                criteria?.realtyTypes?.map { it.name },
+                criteria?.realtyTypes?.size ?: 0,
+            )
+        )
+    }.flowOn(Dispatchers.IO)
+
+
+
 }

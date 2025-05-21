@@ -101,4 +101,6 @@ dependencies {
     implementation(libs.material3)
 
     implementation(libs.accompanist.flowlayout)
+
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }

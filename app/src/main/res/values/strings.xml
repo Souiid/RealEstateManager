@@ -79,4 +79,16 @@
     <string name="price_colon">Price:</string>
     <string name="apply">Apply</string>
     <string name="reset">Reset</string>
+    <string name="down_payment">Down payment</string>
+    <string name="interest_rate">Interest rate</string>
+    <string name="duration_years">Duration years</string>
+    <string name="total_cost">Total cost</string>
+    <string name="monthly_payment">Monthly payment</string>
+    <string name="property_price">The price of this property is %s</string>
+    <string name="enter_information_below">Enter the information below</string>
+    <string name="calculate">Calculate</string>
+    <string name="result">Result</string>
+    <string name="simulate">Simulate</string>
+    <string name="put_realty_on_sale">Do you want to put this realty on sale ?</string>
+    <string name="yes">Yes</string>
 </resources>

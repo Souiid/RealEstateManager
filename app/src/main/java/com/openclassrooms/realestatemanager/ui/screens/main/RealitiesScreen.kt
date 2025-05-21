@@ -1,8 +1,7 @@
-package com.openclassrooms.realestatemanager.ui.screens
+package com.openclassrooms.realestatemanager.ui.screens.main
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -29,7 +28,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
+import com.openclassrooms.realestatemanager.data.formatSmart
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 
@@ -38,30 +39,30 @@ import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 fun RealitiesScreen(
     viewModel: RealitiesViewModel,
     onNext: (Int) -> Unit,
-    activity: MainActivity) {
+    criteria: SearchCriteria? = null,
+    activity: MainActivity
+) {
     val context = LocalContext.current
-    val realities by viewModel.realities.collectAsState(initial = emptyList())
+    val realities by viewModel.realties.collectAsState(initial = emptyList())
 
-    val sortedRealities by viewModel.sortedRealities.collectAsState(initial = emptyList())
+   // val sortedRealities = viewModel.getFilteredRealties()
 
     LaunchedEffect(Unit) {
         viewModel.initRealtyRepository()
     }
+
+    LaunchedEffect(criteria) {
+        viewModel.setCriteria(criteria)
+    }
     RealEstateManagerTheme {
 
-        val realitiesToUse: List<Realty> = if (sortedRealities.isNotEmpty()) {
-            sortedRealities
-        } else {
-            realities
-        }
-
         if (realities.isNotEmpty()) {
-            viewModel.setAllRealities(realitiesToUse)
+            viewModel.setAllRealities(realities)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                RealtyLazyColumn(realitiesToUse) { realtyID -> onNext(realtyID) }
+                RealtyLazyColumn(realities) { realtyID -> onNext(realtyID) }
             }
         }
     }
@@ -122,7 +123,7 @@ fun RealtyItem(
                 )
                 Text(text = realty.primaryInfo.realtyPlace.name, color = Color.Gray)
                 Text(
-                    text = realty.primaryInfo.price.toString() + "$",
+                    text = realty.primaryInfo.price.formatSmart() + "$",
                     color = Color.Red,
                     fontWeight = FontWeight.Bold
                 )

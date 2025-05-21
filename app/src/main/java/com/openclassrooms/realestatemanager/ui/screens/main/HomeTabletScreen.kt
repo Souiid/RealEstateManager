@@ -1,12 +1,9 @@
-package com.openclassrooms.realestatemanager.ui.screens
+package com.openclassrooms.realestatemanager.ui.screens.main
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,18 +14,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
-import com.openclassrooms.realestatemanager.ui.screens.RealtyLazyColumn
 
 @Composable
 fun HomeTabletScreen(
     realitiesViewModel: RealitiesViewModel,
     detailViewModel: RealtyDescriptionViewModel,
+    onSimulateClick: (Double)-> Unit
 ) {
-    val realities by realitiesViewModel.realities.collectAsState(initial = emptyList())
-    val sortedRealities by realitiesViewModel.sortedRealities.collectAsState(initial = emptyList())
+    val realities by realitiesViewModel.realties.collectAsState(initial = emptyList())
     val selectedRealty = detailViewModel.selectedRealty.collectAsState()
     var selectedID by remember { mutableStateOf<Int?>(null) }
     var realtyAgent by remember { mutableStateOf<RealtyAgent?>(null) }
@@ -36,10 +31,9 @@ fun HomeTabletScreen(
         if (!it.isAvailable) it.saleDate?.let(detailViewModel::getTodayDate) ?: "N/A"
         else detailViewModel.getTodayDate(it.entryDate)
     } ?: "N/A"
+    val sortedRealities = realitiesViewModel.getFilteredRealties()
 
-    val realitiesToUse: List<Realty> = if (sortedRealities.isNotEmpty()) {
-        sortedRealities
-    } else {
+    val realitiesToUse: List<Realty> = sortedRealities.ifEmpty {
         realities
     }
 
@@ -86,7 +80,8 @@ fun HomeTabletScreen(
                         statusDateString = statusDateString,
                         onPrimaryButtonClick = { realty ->
                             detailViewModel.updateRealtyStatus(realty)
-                        }
+                        },
+                        onSimulateClick = { price -> onSimulateClick(price)}
                     )
                 }
             }

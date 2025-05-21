@@ -15,6 +15,8 @@ import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.ISearchRepository
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Date
@@ -32,6 +34,9 @@ class SearchViewModel(
     ): ViewModel() {
 
     val agentsFlow: Flow<List<RealtyAgent>> = agentRepository.getAllAgents()
+    private val _criteriaFlow = MutableStateFlow<SearchCriteria?>(null)
+
+    val criteriaFlow: StateFlow<SearchCriteria?> = _criteriaFlow
 
     fun searchPlaces(
         placesClient: PlacesClient,
@@ -82,12 +87,12 @@ class SearchViewModel(
     }
 
     fun setCriteria(criteria: SearchCriteria) {
-        searchRepository.currentCriteria = criteria
+        searchRepository.saveCriteria(criteria)
+        _criteriaFlow.value = criteria
     }
 
-    fun getCriteria(): SearchCriteria? {
-        return searchRepository.currentCriteria
-    }
+
+    fun getCriteria(): SearchCriteria? = _criteriaFlow.value
 
     fun calculateDistanceInKm(start: LatLng, end: LatLng): Double {
         val earthRadiusKm = 6371.0
@@ -115,39 +120,39 @@ class SearchViewModel(
         }
     }
 
-    fun performSearch(
-        isAvailable: Boolean? = null,
-        minPrice: Double? = null,
-        maxPrice: Double? = null,
-        minSurface: Double? = null,
-        maxSurface: Double? = null,
-        minRooms: Int? = null,
-        maxRooms: Int? = null,
-        minEntryDate: Date? = null,
-        maxEntryDate: Date? = null,
-        minSoldDate: Date? = null,
-        maxSoldDate: Date? = null,
-        realtyTypes: List<String>? = null,
-        amenity: String? = null,
-        isReset: Boolean = false
-    ) {
-        viewModelScope.launch {
-            realtyRepository.searchRealities(
-                isAvailable,
-                minPrice,
-                maxPrice,
-                minSurface,
-                maxSurface,
-                minRooms,
-                maxRooms,
-                minEntryDate,
-                maxEntryDate,
-                minSoldDate,
-                maxSoldDate,
-                realtyTypes,
-                amenity,
-                isReset
-            )
-        }
-    }
+   // fun setFilteredSearch(
+   //     isAvailable: Boolean? = null,
+   //     minPrice: Double? = null,
+   //     maxPrice: Double? = null,
+   //     minSurface: Double? = null,
+   //     maxSurface: Double? = null,
+   //     minRooms: Int? = null,
+   //     maxRooms: Int? = null,
+   //     minEntryDate: Date? = null,
+   //     maxEntryDate: Date? = null,
+   //     minSoldDate: Date? = null,
+   //     maxSoldDate: Date? = null,
+   //     realtyTypes: List<String>? = null,
+   //     amenity: String? = null,
+   //     isReset: Boolean = false
+   // ) {
+   //     viewModelScope.launch {
+   //         realtyRepository.setFilteredRealties(
+   //             isAvailable,
+   //             minPrice,
+   //             maxPrice,
+   //             minSurface,
+   //             maxSurface,
+   //             minRooms,
+   //             maxRooms,
+   //             minEntryDate,
+   //             maxEntryDate,
+   //             minSoldDate,
+   //             maxSoldDate,
+   //             realtyTypes,
+   //             amenity,
+   //             isReset
+   //         )
+   //     }
+   // }
 }
