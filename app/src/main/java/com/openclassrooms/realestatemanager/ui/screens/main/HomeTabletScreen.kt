@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 
@@ -21,7 +22,8 @@ import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 fun HomeTabletScreen(
     realitiesViewModel: RealitiesViewModel,
     detailViewModel: RealtyDescriptionViewModel,
-    onSimulateClick: (Double)-> Unit
+    onSimulateClick: (Double)-> Unit,
+    criteria: SearchCriteria?
 ) {
     val realities by realitiesViewModel.realties.collectAsState(initial = emptyList())
     val selectedRealty = detailViewModel.selectedRealty.collectAsState()
@@ -31,6 +33,10 @@ fun HomeTabletScreen(
         else detailViewModel.getTodayDate(it.entryDate)
     } ?: "N/A"
 
+
+    LaunchedEffect(criteria) {
+        realitiesViewModel.setCriteria(criteria)
+    }
 
     LaunchedEffect(Unit) {
         realitiesViewModel.initRealtyRepository()

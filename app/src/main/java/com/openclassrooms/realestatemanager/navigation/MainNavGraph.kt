@@ -63,65 +63,51 @@ fun MainNavGraph(
             ),
             title = { Text(text = "Real Estate") },
             actions = {
+                when (currentDestination) {
+                    NavigationScreen.HomeTablet.route,
+                    NavigationScreen.Realties.route -> {
+                        IconButton(onClick = {
+                            val intent = Intent(activity, FormActivity::class.java)
+                            activity.startActivity(intent)
+                        }) {
+                            Icon(Icons.Filled.Add, contentDescription = null, tint = Color.White)
+                        }
 
-                if (currentDestination == NavigationScreen.Realties.route) {
-                    IconButton(onClick = {
-                        val intent = Intent(activity, FormActivity::class.java)
-                        activity.startActivity(intent)
-                    }) {
+                        IconButton(onClick = { showSheet = true }) {
+                            Icon(Icons.Filled.Search, contentDescription = null, tint = Color.White)
+                        }
 
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                        IconButton(onClick = { navController.navigate(NavigationScreen.Map.route) }) {
+                            Icon(Icons.Default.Place, contentDescription = null, tint = Color.White)
+                        }
                     }
 
-                    IconButton(onClick = { showSheet = true }) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                    NavigationScreen.RealtyDescription.route -> {
+                        IconButton(onClick = {
+                            val intent = Intent(activity, FormActivity::class.java)
+                            intent.putExtra("isEditing", true)
+                            activity.startActivity(intent)
+                        }) {
+                            Icon(Icons.Filled.Create, contentDescription = null, tint = Color.White)
+                        }
                     }
 
-                    IconButton(onClick = { navController.navigate(NavigationScreen.Map.route) }) {
-                        Icon(
-                            imageVector = Icons.Default.Place,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
-                    }
-                } else {
-                    IconButton(onClick = {
-                        val intent = Intent(activity, FormActivity::class.java)
-                        intent.putExtra("isEditing", true)
-                        activity.startActivity(intent)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Create,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                    NavigationScreen.Map.route -> {
+                        IconButton(onClick = { showSheet = true }) {
+                            Icon(Icons.Filled.Search, contentDescription = null, tint = Color.White)
+                        }
                     }
                 }
             },
             navigationIcon = {
-                if (currentDestination == NavigationScreen.Realties.route) {
+                if (currentDestination == NavigationScreen.HomeTablet.route ||
+                    currentDestination == NavigationScreen.Realties.route) {
                     IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                        Icon(Icons.Filled.Menu, contentDescription = null, tint = Color.White)
                     }
                 } else {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, tint = Color.White)
                     }
                 }
             }
@@ -146,13 +132,12 @@ fun MainNavGraph(
 
                 ) {
                 HomeTabletScreen(
-                    koinViewModel(),
-                   koinViewModel(),
+                    realitiesViewModel = koinViewModel(),
+                    detailViewModel = koinViewModel(),
                     onSimulateClick = { price ->
-                        navController.navigate(
-                            NavigationScreen.Mortgage.createRoute(price)
-                        )
-                    }
+                        navController.navigate(NavigationScreen.Mortgage.createRoute(price))
+                    },
+                    criteria = criterias
                 )
             }
 
