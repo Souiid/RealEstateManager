@@ -16,7 +16,6 @@ class RealtyRepository(context: Context): IRealtyRepository {
     private val db = DatabaseProvider.getDatabase(context)
     private val dao = db.realtyDao()
     override var filteredRealties = emptyList<Realty>()
-    override var allRealties: List<Realty> = emptyList()
     private val _selectedRealty = MutableStateFlow<Realty?>(null)
     override val selectedRealtyFlow: StateFlow<Realty?> = _selectedRealty
     override var updatedRealty: Realty? = null
@@ -33,8 +32,8 @@ class RealtyRepository(context: Context): IRealtyRepository {
         return dao.getAllRealties()
     }
 
-    override fun getRealtyFromID(realtyID: Int) {
-        _selectedRealty.value = allRealties.find { it.id == realtyID }
+    override suspend fun getRealtyFromID(realtyID: Int): Realty? {
+        return db.realtyDao().getRealtyById(realtyID.toString())
     }
 
     override suspend fun updateRealty(realty: Realty) {

@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.ui.screens.main
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -57,7 +58,6 @@ fun RealitiesScreen(
     RealEstateManagerTheme {
 
         if (realities.isNotEmpty()) {
-            viewModel.setAllRealities(realities)
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -75,6 +75,8 @@ fun RealtyLazyColumn(realties: List<Realty>,
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
         items(realties.size) { index ->
             val realty = realties[index]
+            Log.d("DEBUG", "Realty item ID=${realty.id}, isAvailable=${realty.isAvailable}")
+
             val uri = Uri.parse(realty.pictures.first().uriString)
             val bitmap = Utils().uriToBitmapLegacy(context, uri) ?: return@items
             RealtyItem(

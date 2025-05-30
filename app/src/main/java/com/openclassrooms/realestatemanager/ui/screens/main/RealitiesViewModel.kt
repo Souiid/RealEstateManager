@@ -43,8 +43,5 @@ class RealitiesViewModel(
         realtyRepository.setSelectedRealty(realty)
     }
 
-    fun setAllRealities(realities: List<Realty>) {
-        realtyRepository.allRealties = realities
-    }
 
 }

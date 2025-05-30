@@ -49,7 +49,6 @@ fun MapScreen(viewModel: MapViewModel, onMarkerClick: ()->Unit) {
         }
     }
 
-    val realities = viewModel.getSortedRealities()
 
 
 
@@ -72,26 +71,26 @@ fun MapScreen(viewModel: MapViewModel, onMarkerClick: ()->Unit) {
         }
     }
 
-    GoogleMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState,
-        properties = MapProperties(
-            isMyLocationEnabled = userLocation != null
-        )
-    ) {
-        realities?.forEach {realty->
-            val latitude = realty.primaryInfo.realtyPlace.positionLatLng.latitude
-            val longitude = realty.primaryInfo.realtyPlace.positionLatLng.longitude
-            Marker(
-                state = rememberMarkerState(position = LatLng(latitude, longitude)),
-                onClick = { _ ->
-                    viewModel.setSelectedRealty(realty)
-                    onMarkerClick()
-                    true
-                }
-            )
-        }
-    }
+  //GoogleMap(
+  //    modifier = Modifier.fillMaxSize(),
+  //    cameraPositionState = cameraPositionState,
+  //    properties = MapProperties(
+  //        isMyLocationEnabled = userLocation != null
+  //    )
+  //) {
+  //    realities?.forEach {realty->
+  //        val latitude = realty.primaryInfo.realtyPlace.positionLatLng.latitude
+  //        val longitude = realty.primaryInfo.realtyPlace.positionLatLng.longitude
+  //        Marker(
+  //            state = rememberMarkerState(position = LatLng(latitude, longitude)),
+  //            onClick = { _ ->
+  //                viewModel.setSelectedRealty(realty)
+  //                onMarkerClick()
+  //                true
+  //            }
+  //        )
+  //    }
+  //}
 }
 
 private fun getLastKnownLocation(

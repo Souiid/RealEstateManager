@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.ui.screens.main
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.Places
@@ -44,15 +45,23 @@ class RealtyDescriptionViewModel(
     }
 
     fun getRealtyFromID(realtyID: Int) {
-        realtyRepository.getRealtyFromID(realtyID)
+        viewModelScope.launch {
+            val realty = realtyRepository.getRealtyFromID(realtyID)
+            realtyRepository.setSelectedRealty(realty)
+        }
     }
 
     fun updateRealtyStatus(realty: Realty) {
+        Log.d("DEBUG", "Updating realty ID=${realty.id}, isAvailable=${realty.isAvailable}")
         viewModelScope.launch {
-            realty.isAvailable
-            realty.saleDate = Date()
             realtyRepository.updateRealty(realty)
+            realtyRepository.setSelectedRealty(realty) // <- ajoute ça
+
         }
+    }
+
+    fun setSelectedRealty(realty: Realty?) {
+        realtyRepository.setSelectedRealty(realty)
     }
 
 }

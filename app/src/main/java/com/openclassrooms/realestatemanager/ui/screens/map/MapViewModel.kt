@@ -20,10 +20,6 @@ class MapViewModel(
         placesClient = Places.createClient(context)
     }
 
-    fun getSortedRealities(): List<Realty>? {
-        return realtyRepository.allRealties
-    }
-
     fun setSelectedRealty(realty: Realty) {
         realtyRepository.setSelectedRealty(realty)
     }

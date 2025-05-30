@@ -25,26 +25,18 @@ fun HomeTabletScreen(
 ) {
     val realities by realitiesViewModel.realties.collectAsState(initial = emptyList())
     val selectedRealty = detailViewModel.selectedRealty.collectAsState()
-    var selectedID by remember { mutableStateOf<Int?>(null) }
     var realtyAgent by remember { mutableStateOf<RealtyAgent?>(null) }
     val statusDateString = selectedRealty.value?.let {
         if (!it.isAvailable) it.saleDate?.let(detailViewModel::getTodayDate) ?: "N/A"
         else detailViewModel.getTodayDate(it.entryDate)
     } ?: "N/A"
-    val sortedRealities = realitiesViewModel.getFilteredRealties()
 
-    val realitiesToUse: List<Realty> = sortedRealities.ifEmpty {
-        realities
-    }
 
     LaunchedEffect(Unit) {
         realitiesViewModel.initRealtyRepository()
     }
 
-    LaunchedEffect(selectedID, selectedRealty.value) {
-        selectedID?.let { id ->
-            detailViewModel.getRealtyFromID(id)
-        }
+    LaunchedEffect(selectedRealty.value) {
         selectedRealty.value?.let { realty ->
             realtyAgent = detailViewModel.getAgentRepository(realty.agentId)
         }
@@ -52,7 +44,6 @@ fun HomeTabletScreen(
 
 
     if (realities.isNotEmpty()) {
-        realitiesViewModel.setAllRealities(realitiesToUse)
 
         Row(modifier = Modifier
             .fillMaxSize()
@@ -63,8 +54,11 @@ fun HomeTabletScreen(
                     .fillMaxHeight()
             ) {
                 RealtyLazyColumn(
-                    realties = realitiesToUse,
-                    onNext = { realtyID -> selectedID = realtyID }
+                    realties = realities,
+                    onNext = { realtyID ->
+                        val realty = realities.firstOrNull { it.id == realtyID }
+                        detailViewModel.setSelectedRealty(realty)
+                    }
                 )
             }
 

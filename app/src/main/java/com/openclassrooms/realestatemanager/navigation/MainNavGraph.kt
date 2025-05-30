@@ -141,7 +141,7 @@ fun MainNavGraph(
             }
         }
 
-        NavHost(navController, NavigationScreen.Realties .route, modifier.padding(innerPadding)) {
+        NavHost(navController, NavigationScreen.HomeTablet.route, modifier.padding(innerPadding)) {
             composable(NavigationScreen.HomeTablet.route,
 
                 ) {

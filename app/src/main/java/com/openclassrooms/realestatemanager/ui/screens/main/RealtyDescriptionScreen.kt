@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens.main
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -65,6 +66,7 @@ import com.openclassrooms.realestatemanager.data.formatSmart
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
+import java.util.Date
 
 @Composable
 fun RealtyDescriptionScreen(
@@ -108,7 +110,7 @@ fun DetailScreen(
     onPrimaryButtonClick: (Realty) -> Unit,
     onSimulateClick: (Double) -> Unit
 ) {
-
+    Log.d("DEBUG", "DetailScreen loaded for ID=${realty.id}, isAvailable=${realty.isAvailable}")
     val amenitiesLabels = realty.primaryInfo.amenities.map { amenity ->
         stringResource(id = amenity.labelResId)
     }
@@ -187,13 +189,12 @@ fun StatusSection(
     statusDateString: String,
     onPrimaryButtonClick: (Realty) -> Unit
 ) {
-    var isAvailable by remember { mutableStateOf(realty.isAvailable) }
+    val newAvailability = !realty.isAvailable
     val statusText =
-        if (!isAvailable) stringResource(R.string.sold) else stringResource(R.string.for_sale)
-    val statusColor = if (!isAvailable) Color.Red else Color(0xFF4CAF50)
+        if (!realty.isAvailable) stringResource(R.string.sold) else stringResource(R.string.for_sale)
+    val statusColor = if (!realty.isAvailable) Color.Red else Color(0xFF4CAF50)
     val statusDateLabel =
-        if (!isAvailable) stringResource(R.string.sold_on) else stringResource(R.string.listed_on)
-
+        if (!realty.isAvailable) stringResource(R.string.sold_on) else stringResource(R.string.listed_on)
 
     var isShowDialog by remember { mutableStateOf(false) }
 
@@ -205,9 +206,13 @@ fun StatusSection(
             secondaryButtonTitle = stringResource(R.string.cancel),
 
             onPrimaryButtonClick = {
-                isAvailable = !isAvailable
-                realty.isAvailable = isAvailable
-                onPrimaryButtonClick(realty)
+                val newAvailability = !realty.isAvailable
+                val updatedRealty = realty.copy(
+                    isAvailable = newAvailability,
+                    saleDate = if (!newAvailability) Date() else null
+                )
+                Log.d("DEBUG", "Clicked on sale status for ID=${realty.id}, new isAvailable=$newAvailability")
+                onPrimaryButtonClick(updatedRealty)
                 isShowDialog = false
             },
             onSecondaryButtonClick = {

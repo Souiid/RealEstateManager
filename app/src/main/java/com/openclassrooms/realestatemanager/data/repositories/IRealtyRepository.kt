@@ -7,14 +7,13 @@ import kotlinx.coroutines.flow.StateFlow
 import java.util.Date
 
 interface IRealtyRepository {
-    var allRealties: List<Realty>
     var filteredRealties: List<Realty>
     val selectedRealtyFlow: StateFlow<Realty?>
     var updatedRealty: Realty?
     fun setSelectedRealty(realty: Realty?)
     suspend fun insertRealty(realty: Realty)
     fun getAllRealties(): Flow<List<Realty>>
-    fun getRealtyFromID(realtyID: Int)
+    suspend fun getRealtyFromID(realtyID: Int): Realty?
     suspend fun updateRealty(realty: Realty)
     fun getFilteredRealtiesFlow(criteria: SearchCriteria?): Flow<List<Realty>>
 
