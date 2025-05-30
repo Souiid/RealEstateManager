@@ -64,7 +64,35 @@ fun MainNavGraph(
             title = { Text(text = "Real Estate") },
             actions = {
                 when (currentDestination) {
-                    NavigationScreen.HomeTablet.route,
+                    NavigationScreen.HomeTablet.route -> {
+                        // Add
+                        IconButton(onClick = {
+                            val intent = Intent(activity, FormActivity::class.java)
+                            activity.startActivity(intent)
+                        }) {
+                            Icon(Icons.Filled.Add, contentDescription = null, tint = Color.White)
+                        }
+
+                        // Search
+                        IconButton(onClick = { showSheet = true }) {
+                            Icon(Icons.Filled.Search, contentDescription = null, tint = Color.White)
+                        }
+
+                        // Map
+                        IconButton(onClick = { navController.navigate(NavigationScreen.Map.route) }) {
+                            Icon(Icons.Default.Place, contentDescription = null, tint = Color.White)
+                        }
+
+                        // Edit
+                        IconButton(onClick = {
+                            val intent = Intent(activity, FormActivity::class.java)
+                            intent.putExtra("isEditing", true)
+                            activity.startActivity(intent)
+                        }) {
+                            Icon(Icons.Filled.Create, contentDescription = null, tint = Color.White)
+                        }
+                    }
+
                     NavigationScreen.Realties.route -> {
                         IconButton(onClick = {
                             val intent = Intent(activity, FormActivity::class.java)
@@ -82,7 +110,7 @@ fun MainNavGraph(
                         }
                     }
 
-                    NavigationScreen.RealtyDescription.route -> {
+                    else -> if (currentDestination?.startsWith(NavigationScreen.RealtyDescription.route) == true) {
                         IconButton(onClick = {
                             val intent = Intent(activity, FormActivity::class.java)
                             intent.putExtra("isEditing", true)
@@ -90,9 +118,7 @@ fun MainNavGraph(
                         }) {
                             Icon(Icons.Filled.Create, contentDescription = null, tint = Color.White)
                         }
-                    }
-
-                    NavigationScreen.Map.route -> {
+                    } else if (currentDestination == NavigationScreen.Map.route) {
                         IconButton(onClick = { showSheet = true }) {
                             Icon(Icons.Filled.Search, contentDescription = null, tint = Color.White)
                         }
