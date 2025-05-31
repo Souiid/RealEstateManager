@@ -4,8 +4,8 @@ import com.openclassrooms.realestatemanager.data.room.Amenity
 
 data class RealtyPrimaryInfo(
     var realtyType: RealtyType,
-    var surface: Double,
-    var price: Double,
+    var surface: Int,
+    var price: Int,
     var roomsNbr: Int,
     var bathroomsNbr: Int,
     var bedroomsNbr: Int,

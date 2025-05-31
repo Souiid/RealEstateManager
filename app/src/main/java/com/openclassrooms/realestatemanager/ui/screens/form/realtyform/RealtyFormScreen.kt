@@ -34,7 +34,6 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
 import com.openclassrooms.realestatemanager.data.RealtyType
-import com.openclassrooms.realestatemanager.data.formatSmart
 import com.openclassrooms.realestatemanager.data.room.Amenity
 import com.openclassrooms.realestatemanager.ui.composable.PlaceAutocomplete
 import com.openclassrooms.realestatemanager.ui.composable.SelectableChipsGroup
@@ -64,8 +63,8 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
     val realtyPrimaryInfo = viewModel.getPrimaryInfo()
 
     if (realtyPrimaryInfo != null) {
-        surfaceValue = realtyPrimaryInfo.surface.formatSmart()
-        priceValue = realtyPrimaryInfo.price.formatSmart()
+        surfaceValue = "${realtyPrimaryInfo.surface}"
+        priceValue = "${realtyPrimaryInfo.price}"
         roomsNbrValue = realtyPrimaryInfo.roomsNbr.toString()
         descriptionValue = realtyPrimaryInfo.description
         realtyPlaceValue = realtyPrimaryInfo.realtyPlace
@@ -121,8 +120,8 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                             updatedRealty = updatedRealty,
                             realtyPrimaryInfo = RealtyPrimaryInfo(
                                 realtyType = selectedOption,
-                                surface = surfaceValue.toDouble(),
-                                price = priceValue.toDouble(),
+                                surface = surfaceValue.toInt(),
+                                price = priceValue.toInt(),
                                 roomsNbr = roomsNbrValue.toInt(),
                                 bathroomsNbr = bathRoomNbrValue.toInt(),
                                 bedroomsNbr = bedRoomNbrValue.toInt(),

@@ -22,7 +22,7 @@ import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 fun HomeTabletScreen(
     realitiesViewModel: RealitiesViewModel,
     detailViewModel: RealtyDescriptionViewModel,
-    onSimulateClick: (Double)-> Unit,
+    onSimulateClick: (Int)-> Unit,
     criteria: SearchCriteria?
 ) {
     val realities by realitiesViewModel.realties.collectAsState(initial = emptyList())

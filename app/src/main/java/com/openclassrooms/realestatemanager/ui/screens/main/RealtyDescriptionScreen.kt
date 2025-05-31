@@ -62,7 +62,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.Utils
-import com.openclassrooms.realestatemanager.data.formatSmart
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
@@ -72,7 +71,7 @@ import java.util.Date
 fun RealtyDescriptionScreen(
     viewModel: RealtyDescriptionViewModel,
     realtyID: Int,
-    onSimulateClick: (Double) -> Unit
+    onSimulateClick: (Int) -> Unit
 ) {
 
     val realty by viewModel.selectedRealty.collectAsState()
@@ -108,7 +107,7 @@ fun DetailScreen(
     realtyAgent: RealtyAgent?,
     statusDateString: String,
     onPrimaryButtonClick: (Realty) -> Unit,
-    onSimulateClick: (Double) -> Unit
+    onSimulateClick: (Int) -> Unit
 ) {
     Log.d("DEBUG", "DetailScreen loaded for ID=${realty.id}, isAvailable=${realty.isAvailable}")
     val amenitiesLabels = realty.primaryInfo.amenities.map { amenity ->
@@ -244,7 +243,7 @@ fun StatusSection(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.price_colon) + " ${realty.primaryInfo.price.formatSmart()} €",
+                text = stringResource(R.string.price_colon) + " ${realty.primaryInfo.price} €",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W400
             )

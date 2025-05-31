@@ -125,7 +125,7 @@ fun RealtyItem(
                 )
                 Text(text = realty.primaryInfo.realtyPlace.name, color = Color.Gray)
                 Text(
-                    text = realty.primaryInfo.price.formatSmart() + "$",
+                    text = "${realty.primaryInfo.price} $",
                     color = Color.Red,
                     fontWeight = FontWeight.Bold
                 )
