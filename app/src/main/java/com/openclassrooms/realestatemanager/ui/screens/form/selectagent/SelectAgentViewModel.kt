@@ -31,6 +31,8 @@ class SelectAgentViewModel(
     fun insertRealty(realty: Realty) {
         viewModelScope.launch {
             realtyRepository.insertRealty(realty)
+            newRealtyRepository.images = null
+            newRealtyRepository.realtyPrimaryInfo = null
         }
     }
 

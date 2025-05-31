@@ -29,6 +29,8 @@ class SetRealtyPictureViewModel(
                 realtyRepository.setSelectedRealty(freshRealty)
                 realtyRepository.updateRealty(realty = freshRealty)
                 realtyRepository.updatedRealty = null
+                newRealtyRepository.images = null
+                newRealtyRepository.realtyPrimaryInfo = null
                 completion()
             }
         }
