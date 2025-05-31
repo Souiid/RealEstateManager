@@ -72,26 +72,36 @@ fun RealtyFormScreen(
     val isEuro by currencyViewModel.isEuroFlow.collectAsState()
     val realtyPrimaryInfo = viewModel.getPrimaryInfo()
 
-    var priceComponent by remember { mutableStateOf(PriceComponent(0, "")) }
+    var priceComponent by remember { mutableStateOf(Utils().getCorrectPriceComponent(0, isEuro)) }
 
-    if (realtyPrimaryInfo != null) {
-        priceComponent = Utils().getCorrectPriceComponent(realtyPrimaryInfo.price, isEuro)
-        surfaceValue = "${realtyPrimaryInfo.surface}"
-        priceValue = "${priceComponent.price}"
-        roomsNbrValue = realtyPrimaryInfo.roomsNbr.toString()
-        descriptionValue = realtyPrimaryInfo.description
-        realtyPlaceValue = realtyPrimaryInfo.realtyPlace
-        bedRoomNbrValue = realtyPrimaryInfo.bedroomsNbr.toString()
-        bathRoomNbrValue = realtyPrimaryInfo.bathroomsNbr.toString()
-        realtyPlaceValue = realtyPrimaryInfo.realtyPlace
+    LaunchedEffect(isEuro) {
+        if (realtyPrimaryInfo == null) {
+            priceComponent = Utils().getCorrectPriceComponent(priceValue.toIntOrNull() ?: 0, isEuro)
+        }
+    }
+
+    LaunchedEffect(realtyPrimaryInfo, isEuro) {
+        realtyPrimaryInfo?.let {
+            priceComponent = Utils().getCorrectPriceComponent(it.price, isEuro)
+            surfaceValue = it.surface.toString()
+            priceValue = priceComponent.price.toString()
+            roomsNbrValue = it.roomsNbr.toString()
+            descriptionValue = it.description
+            realtyPlaceValue = it.realtyPlace
+            bedRoomNbrValue = it.bedroomsNbr.toString()
+            bathRoomNbrValue = it.bathroomsNbr.toString()
+            selectedOption = it.realtyType
+            selectedAmenities = it.amenities
+        }
     }
 
     val updatedRealty = viewModel.getRealtyFromRealtyRepository()
     Log.d("aaa", "Updated Realty : $updatedRealty")
-    LaunchedEffect(updatedRealty) {
+    LaunchedEffect(updatedRealty, isEuro) {
         updatedRealty?.let {
+            priceComponent = Utils().getCorrectPriceComponent(it.primaryInfo.price, isEuro)
             val surface = it.primaryInfo.surface
-            val price = it.primaryInfo.price
+            val price = priceComponent.price
             val roomsNbr = it.primaryInfo.roomsNbr
             val description = it.primaryInfo.description
             val realtyPlace = it.primaryInfo.realtyPlace
