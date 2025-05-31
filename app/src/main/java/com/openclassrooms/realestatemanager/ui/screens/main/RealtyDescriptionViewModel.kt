@@ -41,7 +41,7 @@ class RealtyDescriptionViewModel(
     }
 
     fun getTodayDate(date: Date): String {
-        return Utils().getFormattedDate(date)
+        return Utils().getTodayDate(date)
     }
 
     fun getRealtyFromID(realtyID: Int) {

@@ -1,13 +1,11 @@
 package com.openclassrooms.realestatemanager.data
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
-import android.net.wifi.WifiManager
 import androidx.compose.ui.unit.dp
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -27,16 +25,15 @@ class Utils {
         return Math.round(euros * 1.15).toDouble()
     }
 
-    fun getCorrectStringCurrency(isEuro: Boolean): String {
-        return if (isEuro) "€" else "$"
+    fun getCorrectPriceComponent(price: Int = 0, isEuro: Boolean = true): PriceComponent {
+        return if (isEuro) {
+            PriceComponent(price, "€")
+        }else {
+            PriceComponent(convertEuroToDollar(price), "$")
+        }
     }
 
-    fun getTodayDate(): String {
-        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
-        return dateFormat.format(Date())
-    }
-
-    fun getFormattedDate(date: Date): String {
+    fun getTodayDate(date: Date): String {
         val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
         return dateFormat.format(date)
     }

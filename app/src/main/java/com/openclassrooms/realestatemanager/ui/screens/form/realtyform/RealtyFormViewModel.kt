@@ -29,7 +29,6 @@ class RealtyFormViewModel(
             newRealtyRepository.realtyPrimaryInfo = realtyPrimaryInfo
         }else {
             updatedRealty.primaryInfo = realtyPrimaryInfo
-            Log.d("aaa", "Updated Realty : $updatedRealty")
             realtyRepository.updatedRealty = updatedRealty
         }
     }

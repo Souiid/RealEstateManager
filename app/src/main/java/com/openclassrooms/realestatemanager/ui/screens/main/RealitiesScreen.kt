@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,7 +34,6 @@ import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
 import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RealitiesScreen(
     realitiesViewModel: RealitiesViewModel = koinViewModel(),
@@ -106,12 +104,7 @@ fun RealtyItem(
     bitmap: Bitmap,
     onClick: () -> Unit
 ) {
-    val currency = Utils().getCorrectStringCurrency(isEuro)
-    val price = if (isEuro) {
-        realty.primaryInfo.price
-    }else {
-        Utils().convertEuroToDollar(realty.primaryInfo.price)
-    }
+    val priceComponent = Utils().getCorrectPriceComponent(realty.primaryInfo.price, isEuro)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,7 +130,7 @@ fun RealtyItem(
                 )
                 Text(text = realty.primaryInfo.realtyPlace.name, color = Color.Gray)
                 Text(
-                    text = "${price}$currency",
+                    text = "${priceComponent.price}${priceComponent.currency}",
                     color = Color.Red,
                     fontWeight = FontWeight.Bold
                 )

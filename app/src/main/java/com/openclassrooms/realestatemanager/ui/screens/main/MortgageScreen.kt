@@ -43,12 +43,7 @@ fun MortgageScreen(
     var durationYears by remember { mutableStateOf("10") }
     var mortgageResult by remember { mutableStateOf<MortgageResult?>(null) }
     val isEuro by currencyViewModel.isEuroFlow.collectAsState()
-    val currencyString = Utils().getCorrectStringCurrency(isEuro)
-    val convertPrice: Int = if (isEuro) {
-        price
-    } else {
-        Utils().convertEuroToDollar(price)
-    }
+    val priceComponent = Utils().getCorrectPriceComponent(price, isEuro)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,7 +53,7 @@ fun MortgageScreen(
 
 
         ThemeText(
-            text = stringResource(R.string.the_pice_of_this_realty, convertPrice, currencyString),
+            text = stringResource(R.string.the_pice_of_this_realty, priceComponent.price.toString(), priceComponent.currency),
             style = ThemeTextStyle.TITLE,
         )
 
@@ -77,7 +72,7 @@ fun MortgageScreen(
             value = downPayment,
             labelID = R.string.down_payment,
             imeAction = ImeAction.Next,
-            iconText = currencyString,
+            iconText = priceComponent.currency,
             keyboardType = KeyboardType.Number,
         )
         Spacer(modifier = Modifier.height(5.dp))
@@ -110,7 +105,7 @@ fun MortgageScreen(
         ThemeButton(
             onClick = {
                 mortgageResult = mortgageViewModel.calculateMortgage(
-                    propertyPrice = convertPrice.toDouble(),
+                    propertyPrice = priceComponent.price.toDouble(),
                     downPayment = downPayment.toDouble(),
                     interestRate = interestRate.toDouble(),
                     durationYears = durationYears.toInt(),
@@ -163,8 +158,6 @@ fun MortgageResultRow(
     isEuro: Boolean
 ) {
 
-    val currencyString = if (isEuro) "€" else "$"
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -176,7 +169,7 @@ fun MortgageResultRow(
         )
 
         ThemeText(
-            text = "$resultString $currencyString",
+            text = "$resultString ${Utils().getCorrectPriceComponent(0, isEuro).currency}",
             style = ThemeTextStyle.NORMAL,
         )
     }

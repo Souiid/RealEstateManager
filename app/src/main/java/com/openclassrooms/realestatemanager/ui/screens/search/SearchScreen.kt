@@ -142,20 +142,13 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
                     onClick = {
                         var minPrice: Int? = null
                         minPriceValue?.let {
-                            minPrice = if (!isEuro) {
-                                Utils().convertDollarToEuro(it)
-                            }else {
-                                it
-                            }
+
+                            minPrice = Utils().getCorrectPriceComponent(it).price
                         }
 
                         var maxPrice: Int? = null
                         maxPriceValue?.let {
-                            maxPrice = if (!isEuro) {
-                                Utils().convertDollarToEuro(it)
-                            }else {
-                                it
-                            }
+                            maxPrice = Utils().getCorrectPriceComponent(it).price
                         }
 
                         val newCriteria = SearchCriteria(
@@ -407,7 +400,7 @@ fun SetPriceFilterTextFields(
     onMaxPriceChange: (Int?) -> Unit,
     isEuro: Boolean
 ) {
-    val currencyString = if (isEuro) "€" else "$"
+    val currencyString = Utils().getCorrectPriceComponent(0, isEuro).currency
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,

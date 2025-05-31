@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.data.PriceComponent
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
 import com.openclassrooms.realestatemanager.data.RealtyType
@@ -71,14 +72,12 @@ fun RealtyFormScreen(
     val isEuro by currencyViewModel.isEuroFlow.collectAsState()
     val realtyPrimaryInfo = viewModel.getPrimaryInfo()
 
+    var priceComponent by remember { mutableStateOf(PriceComponent(0, "")) }
+
     if (realtyPrimaryInfo != null) {
-        val price = if (isEuro) {
-            realtyPrimaryInfo.price
-        }else {
-            Utils().convertEuroToDollar(realtyPrimaryInfo.price)
-        }
+        priceComponent = Utils().getCorrectPriceComponent(realtyPrimaryInfo.price, isEuro)
         surfaceValue = "${realtyPrimaryInfo.surface}"
-        priceValue = "$price"
+        priceValue = "${priceComponent.price}"
         roomsNbrValue = realtyPrimaryInfo.roomsNbr.toString()
         descriptionValue = realtyPrimaryInfo.description
         realtyPlaceValue = realtyPrimaryInfo.realtyPlace
@@ -133,7 +132,7 @@ fun RealtyFormScreen(
                         val price = if (isEuro) {
                             priceValue.toInt()
                         }else {
-                            Utils().convertEuroToDollar(priceValue.toInt())
+                            Utils().convertDollarToEuro(priceValue.toInt())
                         }
                         viewModel.setPrimaryInfo(
                             updatedRealty = updatedRealty,
@@ -240,7 +239,7 @@ fun RealtyFormScreen(
                     onValueChanged = { priceValue = it },
                     labelID = R.string.price,
                     imeAction = ImeAction.Next,
-                    iconText = if (isEuro) "€" else "$",
+                    iconText = priceComponent.currency,
                     keyboardType = KeyboardType.Number
                 )
             }
