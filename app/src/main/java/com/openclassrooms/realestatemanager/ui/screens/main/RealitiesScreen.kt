@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.screens.main
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
@@ -31,29 +30,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
-import com.openclassrooms.realestatemanager.data.formatSmart
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
+import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
 import com.openclassrooms.realestatemanager.ui.theme.RealEstateManagerTheme
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RealitiesScreen(
-    viewModel: RealitiesViewModel,
+    realitiesViewModel: RealitiesViewModel = koinViewModel(),
+    currencyViewModel: CurrencyViewModel = koinViewModel(),
     onNext: (Int) -> Unit,
     criteria: SearchCriteria? = null,
-    activity: MainActivity
 ) {
-    val context = LocalContext.current
-    val realities by viewModel.realties.collectAsState(initial = emptyList())
+    val realities by realitiesViewModel.realties.collectAsState(initial = emptyList())
 
-   // val sortedRealities = viewModel.getFilteredRealties()
+    val isEuro by currencyViewModel.isEuroFlow.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.initRealtyRepository()
+        realitiesViewModel.initRealtyRepository()
     }
 
     LaunchedEffect(criteria) {
-        viewModel.setCriteria(criteria)
+        realitiesViewModel.setCriteria(criteria)
     }
     RealEstateManagerTheme {
 
@@ -62,15 +61,23 @@ fun RealitiesScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                RealtyLazyColumn(realities) { realtyID -> onNext(realtyID) }
+                RealtyLazyColumn(
+                    realties = realities,
+                    isEuro = isEuro,
+                    onNext = { realtyID ->
+                        onNext(realtyID)
+                    })
             }
         }
     }
 }
 
 @Composable
-fun RealtyLazyColumn(realties: List<Realty>,
-                     onNext: (Int) -> Unit) {
+fun RealtyLazyColumn(
+    realties: List<Realty>,
+    onNext: (Int) -> Unit,
+    isEuro: Boolean
+) {
     val context = LocalContext.current
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
         items(realties.size) { index ->
@@ -82,7 +89,7 @@ fun RealtyLazyColumn(realties: List<Realty>,
             RealtyItem(
                 realty = realty,
                 bitmap = bitmap,
-                context = context,
+                isEuro = isEuro,
                 onClick = {
                     onNext(realty.id)
                 }
@@ -92,14 +99,19 @@ fun RealtyLazyColumn(realties: List<Realty>,
 }
 
 
-
 @Composable
 fun RealtyItem(
     realty: Realty,
-    context: Context,
+    isEuro: Boolean,
     bitmap: Bitmap,
     onClick: () -> Unit
 ) {
+    val currency = Utils().getCorrectStringCurrency(isEuro)
+    val price = if (isEuro) {
+        realty.primaryInfo.price
+    }else {
+        Utils().convertEuroToDollar(realty.primaryInfo.price)
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,7 +137,7 @@ fun RealtyItem(
                 )
                 Text(text = realty.primaryInfo.realtyPlace.name, color = Color.Gray)
                 Text(
-                    text = "${realty.primaryInfo.price} $",
+                    text = "${price}$currency",
                     color = Color.Red,
                     fontWeight = FontWeight.Bold
                 )

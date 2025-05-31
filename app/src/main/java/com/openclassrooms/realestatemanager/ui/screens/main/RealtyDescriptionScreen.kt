@@ -65,28 +65,32 @@ import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
+import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 
 @Composable
 fun RealtyDescriptionScreen(
-    viewModel: RealtyDescriptionViewModel,
+    realtyDescriptionViewModel: RealtyDescriptionViewModel = koinViewModel(),
+    currencyViewModel: CurrencyViewModel = koinViewModel(),
     realtyID: Int,
     onSimulateClick: (Int) -> Unit
 ) {
 
-    val realty by viewModel.selectedRealty.collectAsState()
+    val realty by realtyDescriptionViewModel.selectedRealty.collectAsState()
     var realtyAgent by remember { mutableStateOf<RealtyAgent?>(null) }
+    val isEuro by currencyViewModel.isEuroFlow.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getRealtyFromID(realtyID)
-        realtyAgent = viewModel.getAgentRepository(realty?.agentId ?: 0)
+        realtyDescriptionViewModel.getRealtyFromID(realtyID)
+        realtyAgent = realtyDescriptionViewModel.getAgentRepository(realty?.agentId ?: 0)
     }
 
     val statusDateString = realty?.let {
         if (!it.isAvailable) {
-            realty!!.saleDate?.let { viewModel.getTodayDate(it) } ?: "N/A"
+            realty!!.saleDate?.let { realtyDescriptionViewModel.getTodayDate(it) } ?: "N/A"
         } else {
-            viewModel.getTodayDate(realty!!.entryDate)
+            realtyDescriptionViewModel.getTodayDate(realty!!.entryDate)
         }
     }
 
@@ -95,8 +99,9 @@ fun RealtyDescriptionScreen(
             realty = realty!!,
             realtyAgent = realtyAgent,
             statusDateString = statusDateString!!,
-            onPrimaryButtonClick = { viewModel.updateRealtyStatus(it) },
-            onSimulateClick = { price-> onSimulateClick(price) })
+            isEuro = isEuro,
+            onPrimaryButtonClick = { realtyDescriptionViewModel.updateRealtyStatus(it) },
+            onSimulateClick = { price -> onSimulateClick(price) })
     }
 }
 
@@ -105,6 +110,7 @@ fun RealtyDescriptionScreen(
 fun DetailScreen(
     realty: Realty,
     realtyAgent: RealtyAgent?,
+    isEuro: Boolean,
     statusDateString: String,
     onPrimaryButtonClick: (Realty) -> Unit,
     onSimulateClick: (Int) -> Unit
@@ -152,6 +158,7 @@ fun DetailScreen(
             StatusSection(realty = realty,
                 agent = realtyAgent,
                 statusDateString = statusDateString,
+                isEuro = isEuro,
                 onPrimaryButtonClick = { realty ->
                     onPrimaryButtonClick(realty)
                 })
@@ -186,9 +193,9 @@ fun StatusSection(
     realty: Realty,
     agent: RealtyAgent?,
     statusDateString: String,
-    onPrimaryButtonClick: (Realty) -> Unit
+    isEuro: Boolean,
+    onPrimaryButtonClick: (Realty) -> Unit,
 ) {
-    val newAvailability = !realty.isAvailable
     val statusText =
         if (!realty.isAvailable) stringResource(R.string.sold) else stringResource(R.string.for_sale)
     val statusColor = if (!realty.isAvailable) Color.Red else Color(0xFF4CAF50)
@@ -210,7 +217,10 @@ fun StatusSection(
                     isAvailable = newAvailability,
                     saleDate = if (!newAvailability) Date() else null
                 )
-                Log.d("DEBUG", "Clicked on sale status for ID=${realty.id}, new isAvailable=$newAvailability")
+                Log.d(
+                    "DEBUG",
+                    "Clicked on sale status for ID=${realty.id}, new isAvailable=$newAvailability"
+                )
                 onPrimaryButtonClick(updatedRealty)
                 isShowDialog = false
             },
@@ -241,9 +251,17 @@ fun StatusSection(
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-
+            val price: Int
+            val symbol: String
+            if (isEuro) {
+                price = realty.primaryInfo.price
+                symbol = "€"
+            } else {
+                price = Utils().convertEuroToDollar(realty.primaryInfo.price)
+                symbol = "$"
+            }
             Text(
-                text = stringResource(R.string.price_colon) + " ${realty.primaryInfo.price} €",
+                text = stringResource(R.string.price_colon) + " $price $symbol",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W400
             )

@@ -8,6 +8,7 @@ import com.openclassrooms.realestatemanager.data.repositories.ISearchRepository
 import com.openclassrooms.realestatemanager.data.repositories.NewRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.RealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.SearchRepository
+import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
 import com.openclassrooms.realestatemanager.ui.screens.main.RealitiesViewModel
 import com.openclassrooms.realestatemanager.ui.screens.main.RealtyDescriptionViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormViewModel
@@ -29,6 +30,7 @@ val appModule = module {
     viewModel { MapViewModel(androidContext(), get()) }
     viewModel { SearchViewModel(get(), get(), get()) }
     viewModel { MortgageViewModel() }
+    viewModel { CurrencyViewModel(androidContext()) }
 
     single<INewRealtyRepository> { NewRealtyRepository(androidContext()) }
     single<IAgentRepository> { AgentRepository(androidContext()) }

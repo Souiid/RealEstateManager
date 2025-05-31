@@ -91,4 +91,7 @@
     <string name="simulate">Simulate</string>
     <string name="put_realty_on_sale">Do you want to put this realty on sale ?</string>
     <string name="yes">Yes</string>
+    <string name="the_pice_of_this_realty">The price of this property is %s%s</string>
+    <string name="selected_currency">Selected currency</string>
+
 </resources>

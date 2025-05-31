@@ -17,6 +17,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
 import com.openclassrooms.realestatemanager.data.RealtyType
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.Amenity
 import com.openclassrooms.realestatemanager.ui.composable.PlaceAutocomplete
 import com.openclassrooms.realestatemanager.ui.composable.SelectableChipsGroup
@@ -41,10 +43,16 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
+import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack: () -> Unit) {
+fun RealtyFormScreen(
+    viewModel: RealtyFormViewModel = koinViewModel(),
+    currencyViewModel: CurrencyViewModel = koinViewModel(),
+    onNext: () -> Unit,
+    onBack: () -> Unit) {
 
     var surfaceValue by remember { mutableStateOf("") }
     var priceValue by remember { mutableStateOf("") }
@@ -60,11 +68,17 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
     var selectedOption by remember { mutableStateOf(options[0]) }
     var selectedAmenities by remember { mutableStateOf(emptyList<Amenity>()) }
 
+    val isEuro by currencyViewModel.isEuroFlow.collectAsState()
     val realtyPrimaryInfo = viewModel.getPrimaryInfo()
 
     if (realtyPrimaryInfo != null) {
+        val price = if (isEuro) {
+            realtyPrimaryInfo.price
+        }else {
+            Utils().convertEuroToDollar(realtyPrimaryInfo.price)
+        }
         surfaceValue = "${realtyPrimaryInfo.surface}"
-        priceValue = "${realtyPrimaryInfo.price}"
+        priceValue = "$price"
         roomsNbrValue = realtyPrimaryInfo.roomsNbr.toString()
         descriptionValue = realtyPrimaryInfo.description
         realtyPlaceValue = realtyPrimaryInfo.realtyPlace
@@ -116,12 +130,17 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                             realtyPlace = realtyPlaceValue
                         )
                     ) {
+                        val price = if (isEuro) {
+                            priceValue.toInt()
+                        }else {
+                            Utils().convertEuroToDollar(priceValue.toInt())
+                        }
                         viewModel.setPrimaryInfo(
                             updatedRealty = updatedRealty,
                             realtyPrimaryInfo = RealtyPrimaryInfo(
                                 realtyType = selectedOption,
                                 surface = surfaceValue.toInt(),
-                                price = priceValue.toInt(),
+                                price = price,
                                 roomsNbr = roomsNbrValue.toInt(),
                                 bathroomsNbr = bathRoomNbrValue.toInt(),
                                 bedroomsNbr = bedRoomNbrValue.toInt(),
@@ -221,7 +240,7 @@ fun RealtyFormScreen(viewModel: RealtyFormViewModel, onNext: () -> Unit, onBack:
                     onValueChanged = { priceValue = it },
                     labelID = R.string.price,
                     imeAction = ImeAction.Next,
-                    iconText = "€",
+                    iconText = if (isEuro) "€" else "$",
                     keyboardType = KeyboardType.Number
                 )
             }

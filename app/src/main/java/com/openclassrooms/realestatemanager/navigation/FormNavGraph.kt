@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormScreen
 import com.openclassrooms.realestatemanager.ui.screens.form.selectagent.SelectAgentScreen
 import com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture.SetRealtyPictureScreen
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FormNavGraph(
@@ -21,7 +20,7 @@ fun FormNavGraph(
     NavHost(navController, NavigationScreen.RealtyForm.route, modifier) {
 
         composable(NavigationScreen.RealtyForm.route) {
-            RealtyFormScreen(koinViewModel(),
+            RealtyFormScreen(
                 onBack = { activity.finish() },
                 onNext = {
                     navController.navigate(NavigationScreen.SetRealtyPicture.route)
@@ -30,7 +29,6 @@ fun FormNavGraph(
 
         composable(NavigationScreen.SetRealtyPicture.route) {
             SetRealtyPictureScreen(
-                koinViewModel(),
                 onNext = {
                     if (!isEditing) {
                         navController.navigate(NavigationScreen.SelectAgentScreen.route)
@@ -45,7 +43,6 @@ fun FormNavGraph(
 
         composable(NavigationScreen.SelectAgentScreen.route) {
             SelectAgentScreen(
-                koinViewModel(),
                 onBack = {
                     navController.popBackStack()
                 },

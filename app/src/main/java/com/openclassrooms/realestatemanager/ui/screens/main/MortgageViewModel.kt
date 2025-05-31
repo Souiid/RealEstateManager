@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import com.openclassrooms.realestatemanager.data.MortgageResult
+import com.openclassrooms.realestatemanager.data.Utils
 
 class MortgageViewModel: ViewModel() {
 
@@ -9,7 +10,8 @@ class MortgageViewModel: ViewModel() {
         propertyPrice: Double,
         downPayment: Double,
         interestRate: Double,
-        durationYears: Int
+        durationYears: Int,
+        isEuro: Boolean
     ): MortgageResult {
         val loanAmount = propertyPrice - downPayment
         val months = durationYears * 12
@@ -29,8 +31,8 @@ class MortgageViewModel: ViewModel() {
         val totalCost = (monthlyPayment * months) - loanAmount
 
         return MortgageResult(
-            monthlyPayment = monthlyPayment,
-            totalCost = totalCost
+            monthlyPayment = if (isEuro) monthlyPayment else Utils().convertEuroToDollarDouble(monthlyPayment),
+            totalCost =  if (isEuro) totalCost else Utils().convertEuroToDollarDouble(totalCost)
         )
     }
 }

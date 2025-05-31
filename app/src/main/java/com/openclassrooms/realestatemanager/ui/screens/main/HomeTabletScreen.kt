@@ -17,11 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
+import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeTabletScreen(
-    realitiesViewModel: RealitiesViewModel,
-    detailViewModel: RealtyDescriptionViewModel,
+    realitiesViewModel: RealitiesViewModel = koinViewModel(),
+    detailViewModel: RealtyDescriptionViewModel = koinViewModel(),
+    currencyViewModel: CurrencyViewModel = koinViewModel(),
     onSimulateClick: (Int)-> Unit,
     criteria: SearchCriteria?
 ) {
@@ -33,6 +36,7 @@ fun HomeTabletScreen(
         else detailViewModel.getTodayDate(it.entryDate)
     } ?: "N/A"
 
+    val isEuro by currencyViewModel.isEuroFlow.collectAsState()
 
     LaunchedEffect(criteria) {
         realitiesViewModel.setCriteria(criteria)
@@ -61,6 +65,7 @@ fun HomeTabletScreen(
             ) {
                 RealtyLazyColumn(
                     realties = realities,
+                    isEuro = isEuro,
                     onNext = { realtyID ->
                         val realty = realities.firstOrNull { it.id == realtyID }
                         detailViewModel.setSelectedRealty(realty)
@@ -76,6 +81,7 @@ fun HomeTabletScreen(
                 if (selectedRealty.value != null) {
                     DetailScreen(
                         realty = selectedRealty.value!!,
+                        isEuro = isEuro,
                         realtyAgent = realtyAgent,
                         statusDateString = statusDateString,
                         onPrimaryButtonClick = { realty ->

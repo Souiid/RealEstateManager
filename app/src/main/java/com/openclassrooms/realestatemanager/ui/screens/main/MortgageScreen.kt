@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,22 +24,31 @@ import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.MortgageResult
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.formatSmart
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
+import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MortgageScreen(
     mortgageViewModel: MortgageViewModel = koinViewModel(),
-    price: Double
+    currencyViewModel: CurrencyViewModel = koinViewModel(),
+    price: Int
 ) {
 
     var downPayment by remember { mutableStateOf("0") }
     var interestRate by remember { mutableStateOf("1") }
     var durationYears by remember { mutableStateOf("10") }
     var mortgageResult by remember { mutableStateOf<MortgageResult?>(null) }
-
+    val isEuro by currencyViewModel.isEuroFlow.collectAsState()
+    val currencyString = Utils().getCorrectStringCurrency(isEuro)
+    val convertPrice: Int = if (isEuro) {
+        price
+    } else {
+        Utils().convertEuroToDollar(price)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,8 +56,9 @@ fun MortgageScreen(
         horizontalAlignment = Alignment.Start
     ) {
 
+
         ThemeText(
-            text = "$price €",
+            text = stringResource(R.string.the_pice_of_this_realty, convertPrice, currencyString),
             style = ThemeTextStyle.TITLE,
         )
 
@@ -66,7 +77,7 @@ fun MortgageScreen(
             value = downPayment,
             labelID = R.string.down_payment,
             imeAction = ImeAction.Next,
-            iconText = "$",
+            iconText = currencyString,
             keyboardType = KeyboardType.Number,
         )
         Spacer(modifier = Modifier.height(5.dp))
@@ -99,10 +110,11 @@ fun MortgageScreen(
         ThemeButton(
             onClick = {
                 mortgageResult = mortgageViewModel.calculateMortgage(
-                    propertyPrice = price,
+                    propertyPrice = convertPrice.toDouble(),
                     downPayment = downPayment.toDouble(),
                     interestRate = interestRate.toDouble(),
-                    durationYears = durationYears.toInt()
+                    durationYears = durationYears.toInt(),
+                    isEuro = isEuro
                 )
             },
             text = stringResource(R.string.calculate),
@@ -118,20 +130,28 @@ fun MortgageScreen(
             )
             Spacer(modifier = Modifier.height(5.dp))
 
-            MortgageResultSection(it)
+            MortgageResultSection(it, isEuro)
         }
     }
 }
 
 @Composable
-fun MortgageResultSection(mortgageResult: MortgageResult) {
+fun MortgageResultSection(mortgageResult: MortgageResult, isEuro: Boolean) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        MortgageResultRow(stringResource(R.string.monthly_payment), mortgageResult.monthlyPayment)
-        MortgageResultRow(stringResource(R.string.total_cost), mortgageResult.totalCost)
+        MortgageResultRow(
+            stringResource(R.string.monthly_payment),
+            mortgageResult.monthlyPayment.formatSmart(),
+            isEuro
+        )
+        MortgageResultRow(
+            stringResource(R.string.total_cost),
+            mortgageResult.totalCost.formatSmart(),
+            isEuro
+        )
     }
 
 }
@@ -139,8 +159,12 @@ fun MortgageResultSection(mortgageResult: MortgageResult) {
 @Composable
 fun MortgageResultRow(
     titleText: String,
-    resultDouble: Double
+    resultString: String,
+    isEuro: Boolean
 ) {
+
+    val currencyString = if (isEuro) "€" else "$"
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -152,7 +176,7 @@ fun MortgageResultRow(
         )
 
         ThemeText(
-            text = resultDouble.formatSmart(),
+            text = "$resultString $currencyString",
             style = ThemeTextStyle.NORMAL,
         )
     }

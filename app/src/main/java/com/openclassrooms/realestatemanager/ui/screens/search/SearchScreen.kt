@@ -29,7 +29,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,13 +41,14 @@ import androidx.compose.ui.unit.dp
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.data.SearchCriteria
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.AgentDropdown
-import com.openclassrooms.realestatemanager.ui.composable.PriceTextField
 import com.openclassrooms.realestatemanager.ui.composable.SelectableChipsGroup
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTFForDPD
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
+import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
 import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.ZoneId
@@ -57,15 +57,15 @@ import java.util.Date
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(viewModel: SearchViewModel = koinViewModel(),
+fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
+                 currencyViewModel: CurrencyViewModel = koinViewModel(),
                  onNewSearchCriteria: (SearchCriteria)-> Unit) {
-    val criteria by viewModel.criteriaFlow.collectAsState()
+    val criteria by searchViewModel.criteriaFlow.collectAsState()
 
     var selectedRealtyTypes by remember(criteria) { mutableStateOf(criteria?.realtyTypes ?: emptyList()) }
     var selectedStatus by remember(criteria) { mutableStateOf<Boolean?>(criteria?.isAvailable) }
     var minPriceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.minPrice) }
     var maxPriceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.maxPrice) }
-    val currency = "$"
 
     var minSurfaceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.minSurface) }
     var maxSurfaceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.maxSurface) }
@@ -77,11 +77,14 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel(),
     var maxSoldDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.maxSoldDate) }
     var selectedAmenities by remember(criteria) { mutableStateOf(criteria?.amenities ?: emptyList()) }
 
-    val agents by viewModel.agentsFlow.collectAsState(initial = emptyList())
+    val agents by searchViewModel.agentsFlow.collectAsState(initial = emptyList())
     var selectedAgent by remember(criteria) { mutableStateOf<RealtyAgent?>(criteria?.selectedAgent) }
 
     var minNumberOfRooms by remember(criteria) { mutableStateOf<Int?>(criteria?.minRooms) }
     var maxNumberOfRooms by remember(criteria) { mutableStateOf<Int?>(criteria?.maxRooms) }
+
+    val isEuro by currencyViewModel.isEuroFlow.collectAsState()
+
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -124,8 +127,8 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel(),
                             maxRooms = null,
                         )
 
-                        viewModel.setCriteria(resetCriteria)
-                        onNewSearchCriteria(resetCriteria) // 👈 AJOUTE CECI
+                        searchViewModel.setCriteria(resetCriteria)
+                        onNewSearchCriteria(resetCriteria)
                     },
                     text = stringResource(R.string.reset),
                     modifier = Modifier
@@ -137,11 +140,29 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel(),
 
                 ThemeButton(
                     onClick = {
+                        var minPrice: Int? = null
+                        minPriceValue?.let {
+                            minPrice = if (!isEuro) {
+                                Utils().convertDollarToEuro(it)
+                            }else {
+                                it
+                            }
+                        }
+
+                        var maxPrice: Int? = null
+                        maxPriceValue?.let {
+                            maxPrice = if (!isEuro) {
+                                Utils().convertDollarToEuro(it)
+                            }else {
+                                it
+                            }
+                        }
+
                         val newCriteria = SearchCriteria(
                             realtyTypes = selectedRealtyTypes,
                             isAvailable = selectedStatus,
-                            minPrice = minPriceValue,
-                            maxPrice = maxPriceValue,
+                            minPrice = minPrice,
+                            maxPrice = maxPrice,
                             minSurface = minSurfaceValue,
                             maxSurface = maxSurfaceValue,
                             minEntryDate = minEntryDateValue,
@@ -154,7 +175,7 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel(),
                             maxRooms = maxNumberOfRooms
                         )
 
-                        viewModel.setCriteria(newCriteria)
+                        searchViewModel.setCriteria(newCriteria)
                         onNewSearchCriteria(newCriteria)
                     },
                     text = stringResource(R.string.apply),
@@ -193,7 +214,7 @@ fun SearchScreen(viewModel: SearchViewModel = koinViewModel(),
                     maxPriceValue = maxPriceValue,
                     onMinPriceChange = { minPriceValue = it },
                     onMaxPriceChange = { maxPriceValue = it },
-                    currencyP = currency
+                    isEuro = isEuro
                 )
                 HorizontalDivider()
             }
@@ -384,38 +405,33 @@ fun SetPriceFilterTextFields(
     maxPriceValue: Int?,
     onMinPriceChange: (Int?) -> Unit,
     onMaxPriceChange: (Int?) -> Unit,
-    currencyP: String
+    isEuro: Boolean
 ) {
-
-    var currency by remember { mutableStateOf(currencyP) }
-
+    val currencyString = if (isEuro) "€" else "$"
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        PriceTextField(
+        ThemeOutlinedTextField(
             value = minPriceValue.toString(),
-            onValueChange = { onMinPriceChange(it.toIntOrNull()) },
-            currency = currency,
+            onValueChanged = { onMinPriceChange(it.toIntOrNull())},
             labelID = R.string.min_price,
-            onCurrencyChange = {
-                currency = it
-            },
+            imeAction = ImeAction.Next,
+            iconText = currencyString,
+            keyboardType = KeyboardType.Number,
             modifier = Modifier.weight(1f)
         )
 
-        PriceTextField(
+        ThemeOutlinedTextField(
             value = maxPriceValue.toString(),
-            onValueChange = { onMaxPriceChange(it.toIntOrNull()) },
-            currency = currency,
+            onValueChanged = { onMaxPriceChange(it.toIntOrNull())},
             labelID = R.string.max_price,
-            onCurrencyChange = {
-                currency = it
-            },
+            imeAction = ImeAction.Next,
+            iconText = currencyString,
+            keyboardType = KeyboardType.Number,
             modifier = Modifier.weight(1f)
         )
-
     }
 }
 

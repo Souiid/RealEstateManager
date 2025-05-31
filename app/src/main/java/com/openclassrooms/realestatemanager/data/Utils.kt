@@ -23,6 +23,14 @@ class Utils {
         return Math.round(euros * 1.15).toInt()
     }
 
+    fun convertEuroToDollarDouble(euros: Double): Double {
+        return Math.round(euros * 1.15).toDouble()
+    }
+
+    fun getCorrectStringCurrency(isEuro: Boolean): String {
+        return if (isEuro) "€" else "$"
+    }
+
     fun getTodayDate(): String {
         val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
         return dateFormat.format(Date())

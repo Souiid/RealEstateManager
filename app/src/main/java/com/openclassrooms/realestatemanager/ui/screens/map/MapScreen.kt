@@ -24,10 +24,11 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberMarkerState
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun MapScreen(viewModel: MapViewModel, onMarkerClick: ()->Unit) {
+fun MapScreen(viewModel: MapViewModel = koinViewModel(), onMarkerClick: ()->Unit) {
     val context = LocalContext.current
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)

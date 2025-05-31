@@ -63,10 +63,11 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SetRealtyPictureScreen(
-    viewModel: SetRealtyPictureViewModel,
+    viewModel: SetRealtyPictureViewModel = koinViewModel(),
     onNext: () -> Unit,
     onBack: () -> Unit
 ) {

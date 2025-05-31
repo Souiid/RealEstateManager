@@ -10,6 +10,7 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.SearchCriteria
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.repositories.IAgentRepository
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.ISearchRepository

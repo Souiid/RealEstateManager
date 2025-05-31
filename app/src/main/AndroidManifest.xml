@@ -43,6 +43,10 @@
             android:exported="true"
             android:theme="@style/Theme.RealEstateManager">
         </activity>
+
+        <activity android:name=".ui.screens.settings.SettingsActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
