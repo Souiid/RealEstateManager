@@ -101,10 +101,10 @@ fun RealtyFormScreen(
     }
 
     val updatedRealty = viewModel.getRealtyFromRealtyRepository()
-    Log.d("aaa", "Updated Realty : $updatedRealty")
     LaunchedEffect(updatedRealty, isEuro) {
         updatedRealty?.let {
-            priceComponent = Utils().getCorrectPriceComponent(it.primaryInfo.price, isEuro)
+            val isSavedInDollar = !it.primaryInfo.isEuro
+            priceComponent = Utils().getCorrectPriceComponent(it.primaryInfo.price, isEuro, isSavedInDollar)
             val surface = it.primaryInfo.surface
             val price = priceComponent.price
             val roomsNbr = it.primaryInfo.roomsNbr
@@ -148,23 +148,20 @@ fun RealtyFormScreen(
                             realtyPlace = realtyPlaceValue
                         )
                     ) {
-                        val price = if (isEuro) {
-                            priceValue.toInt()
-                        } else {
-                            Utils().convertDollarToEuro(priceValue.toInt())
-                        }
+
                         viewModel.setPrimaryInfo(
                             updatedRealty = updatedRealty,
                             realtyPrimaryInfo = RealtyPrimaryInfo(
                                 realtyType = selectedOption,
                                 surface = surfaceValue.toInt(),
-                                price = price,
+                                price = priceValue.toInt(),
                                 roomsNbr = roomsNbrValue.toInt(),
                                 bathroomsNbr = bathRoomNbrValue.toInt(),
                                 bedroomsNbr = bedRoomNbrValue.toInt(),
                                 description = descriptionValue,
                                 realtyPlace = realtyPlaceValue ?: return@ThemeButton,
-                                amenities = selectedAmenities
+                                amenities = selectedAmenities,
+                                isEuro = isEuro
                             )
                         )
                         onNext()

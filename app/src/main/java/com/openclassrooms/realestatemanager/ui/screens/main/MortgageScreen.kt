@@ -35,7 +35,8 @@ import org.koin.androidx.compose.koinViewModel
 fun MortgageScreen(
     mortgageViewModel: MortgageViewModel = koinViewModel(),
     currencyViewModel: CurrencyViewModel = koinViewModel(),
-    price: Int
+    price: Int,
+    isSavedInDollar: Boolean
 ) {
 
     var downPayment by remember { mutableStateOf("0") }

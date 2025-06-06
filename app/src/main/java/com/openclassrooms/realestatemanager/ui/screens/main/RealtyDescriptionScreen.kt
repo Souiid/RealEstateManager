@@ -78,7 +78,7 @@ fun RealtyDescriptionScreen(
     realtyDescriptionViewModel: RealtyDescriptionViewModel = koinViewModel(),
     currencyViewModel: CurrencyViewModel = koinViewModel(),
     realtyID: Int,
-    onSimulateClick: (Int) -> Unit
+    onSimulateClick: (Int, Boolean) -> Unit
 ) {
 
     val realty by realtyDescriptionViewModel.selectedRealty.collectAsState()
@@ -99,13 +99,15 @@ fun RealtyDescriptionScreen(
     }
 
     if (realty != null) {
+        val isSavedInDollar = !realty!!.primaryInfo.isEuro
         DetailScreen(
             realty = realty!!,
             realtyAgent = realtyAgent,
             statusDateString = statusDateString!!,
             isEuro = isEuro,
+            isSavedInDollar = isSavedInDollar,
             onPrimaryButtonClick = { realtyDescriptionViewModel.updateRealtyStatus(it) },
-            onSimulateClick = { price -> onSimulateClick(price) })
+            onSimulateClick = { price, _ -> onSimulateClick(price, isSavedInDollar) })
     }
 }
 
@@ -115,9 +117,10 @@ fun DetailScreen(
     realty: Realty,
     realtyAgent: RealtyAgent?,
     isEuro: Boolean,
+    isSavedInDollar: Boolean,
     statusDateString: String,
     onPrimaryButtonClick: (Realty) -> Unit,
-    onSimulateClick: (Int) -> Unit
+    onSimulateClick: (Int, Boolean) -> Unit
 ) {
     Log.d("DEBUG", "DetailScreen loaded for ID=${realty.id}, isAvailable=${realty.isAvailable}")
     val amenitiesLabels = realty.primaryInfo.amenities.map { amenity ->
@@ -134,13 +137,13 @@ fun DetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
 
             ThemeText(
                 text = stringResource(R.string.media),
-                style = ThemeTextStyle.NORMAL
+                style = ThemeTextStyle.SECTION_TITLE
             )
 
             LazyRow(modifier = Modifier.fillMaxWidth()) {
@@ -162,6 +165,7 @@ fun DetailScreen(
                 agent = realtyAgent,
                 statusDateString = statusDateString,
                 isEuro = isEuro,
+                isSavedInDollar = isSavedInDollar,
                 onPrimaryButtonClick = { realty ->
                     onPrimaryButtonClick(realty)
                 })
@@ -173,7 +177,7 @@ fun DetailScreen(
         }
 
         ThemeButton(
-            onClick = { onSimulateClick(realty.primaryInfo.price) },
+            onClick = { onSimulateClick(realty.primaryInfo.price, isSavedInDollar) },
             elevation = 8.dp,
             text = stringResource(R.string.simulate),
             modifier = Modifier
@@ -191,6 +195,7 @@ fun StatusSection(
     agent: RealtyAgent?,
     statusDateString: String,
     isEuro: Boolean,
+    isSavedInDollar: Boolean,
     onPrimaryButtonClick: (Realty) -> Unit,
 ) {
     val statusText =
@@ -247,17 +252,11 @@ fun StatusSection(
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-            val price: Int
-            val symbol: String
-            if (isEuro) {
-                price = realty.primaryInfo.price
-                symbol = "€"
-            } else {
-                price = Utils().convertEuroToDollar(realty.primaryInfo.price)
-                symbol = "$"
-            }
+
+            val priceComponent = Utils().getCorrectPriceComponent(realty.primaryInfo.price, isEuro, isSavedInDollar)
+
             Text(
-                text = stringResource(R.string.price_colon) + " $price $symbol",
+                text = stringResource(R.string.price_colon) + " ${priceComponent.price} ${priceComponent.currency}",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.W400
             )
@@ -361,7 +360,10 @@ fun ExpandableSection(
         Row(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
+            ThemeText(
+                text = title,
+                style = ThemeTextStyle.SECTION_TITLE
+            )
             Icon(
                 imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                 contentDescription = null

@@ -13,8 +13,9 @@ sealed class NavigationScreen(val route: String) {
     data object Map: NavigationScreen("map_screen")
     data object Mortgage: NavigationScreen("mortgage_screen") {
         const val ARG_PRICE = "price"
-        val routeWithArgs = "$route/{$ARG_PRICE}"
-        fun createRoute(price: Int): String = "$route/$price"
+        const val ARG_IS_SAVED_IN_DOLLAR = "isSavedInDollar"
+        val routeWithArgs = "$route/{$ARG_PRICE}/{$ARG_IS_SAVED_IN_DOLLAR}"
+        fun createRoute(price: Int, isSavedInDollar: Boolean): String = "$route/$price/$isSavedInDollar"
     }
 
     //Form

@@ -26,8 +26,9 @@ fun ThemeText(
         ThemeTextStyle.TITLE -> 28.sp to FontWeight.Bold
         ThemeTextStyle.SUBTITLE -> 20.sp to FontWeight.Bold
         ThemeTextStyle.NORMAL -> 18.sp to FontWeight.Normal
-        ThemeTextStyle.BUTTON -> 18.sp to FontWeight.SemiBold
         ThemeTextStyle.LITTLE -> 14.sp to FontWeight.Normal
+        ThemeTextStyle.SECTION_TITLE -> 18.sp to FontWeight.Bold
+        ThemeTextStyle.BUTTON -> 18.sp to FontWeight.SemiBold
         ThemeTextStyle.CHIP -> 14.sp to FontWeight.Normal
         ThemeTextStyle.LABEL -> 16.sp to FontWeight.Normal
 

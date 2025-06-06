@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,8 +30,8 @@ fun HomeTabletScreen(
     realitiesViewModel: RealitiesViewModel = koinViewModel(),
     detailViewModel: RealtyDescriptionViewModel = koinViewModel(),
     currencyViewModel: CurrencyViewModel = koinViewModel(),
-    onSimulateClick: (Int)-> Unit,
-    criteria: SearchCriteria?
+    onSimulateClick: (Int, Boolean)-> Unit,
+    criteria: SearchCriteria?,
 ) {
     val realities by realitiesViewModel.realties.collectAsState(initial = emptyList())
     val selectedRealty = detailViewModel.selectedRealty.collectAsState()
@@ -88,10 +89,11 @@ fun HomeTabletScreen(
                         isEuro = isEuro,
                         realtyAgent = realtyAgent,
                         statusDateString = statusDateString,
+                        isSavedInDollar = !selectedRealty.value!!.primaryInfo.isEuro,
                         onPrimaryButtonClick = { realty ->
                             detailViewModel.updateRealtyStatus(realty)
                         },
-                        onSimulateClick = { price -> onSimulateClick(price)}
+                        onSimulateClick = { price, isSavedInDollar -> onSimulateClick(price, isSavedInDollar)}
                     )
                 }
             }

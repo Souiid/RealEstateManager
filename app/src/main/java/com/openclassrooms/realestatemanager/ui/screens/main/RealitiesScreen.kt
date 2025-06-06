@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
@@ -79,7 +80,7 @@ fun RealtyLazyColumn(
     isEuro: Boolean
 ) {
     val context = LocalContext.current
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    LazyColumn(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         items(realties.size) { index ->
             val realty = realties[index]
             Log.d("DEBUG", "Realty item ID=${realty.id}, isAvailable=${realty.isAvailable}")
@@ -106,7 +107,8 @@ fun RealtyItem(
     bitmap: Bitmap,
     onClick: () -> Unit
 ) {
-    val priceComponent = Utils().getCorrectPriceComponent(realty.primaryInfo.price, isEuro)
+    val isInDollar = !realty.primaryInfo.isEuro
+    val priceComponent = Utils().getCorrectPriceComponent(realty.primaryInfo.price, isEuro, isInDollar)
     Column(
         modifier = Modifier
             .fillMaxWidth()

@@ -25,23 +25,13 @@ class RealitiesViewModel(
         }
     }
 
-
     fun initRealtyRepository() {
         realtyRepository.setSelectedRealty(null)
         realtyRepository.updatedRealty = null
     }
 
-    fun getFilteredRealties(): List<Realty> {
-        return realtyRepository.filteredRealties
-    }
-
     fun setCriteria(criteria: SearchCriteria?) {
         criteriaFlow.value = criteria
     }
-
-    fun setSelectedRealty(realty: Realty) {
-        realtyRepository.setSelectedRealty(realty)
-    }
-
 
 }

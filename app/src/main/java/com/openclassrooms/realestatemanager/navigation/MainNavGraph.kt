@@ -196,8 +196,8 @@ fun MainNavGraph(
 
                     ) {
                     HomeTabletScreen(
-                        onSimulateClick = { price ->
-                            navController.navigate(NavigationScreen.Mortgage.createRoute(price))
+                        onSimulateClick = { price, isSavedInDollar ->
+                            navController.navigate(NavigationScreen.Mortgage.createRoute(price, isSavedInDollar))
                         },
                         criteria = criterias
                     )
@@ -221,9 +221,9 @@ fun MainNavGraph(
                     val realtyID = backStackEntry.arguments?.getInt("realtyID") ?: -1
                     RealtyDescriptionScreen(
                         realtyID = realtyID,
-                        onSimulateClick = { price ->
+                        onSimulateClick = { price, isSavedInDollar ->
                             navController.navigate(
-                                NavigationScreen.Mortgage.createRoute(price)
+                                NavigationScreen.Mortgage.createRoute(price, isSavedInDollar)
                             )
                         }
                     )
@@ -236,8 +236,9 @@ fun MainNavGraph(
                     )
                 ) { backStackEntry ->
                     val priceString = backStackEntry.arguments?.getString(NavigationScreen.Mortgage.ARG_PRICE)
+                    val isSavedInDollar = backStackEntry.arguments?.getBoolean(NavigationScreen.Mortgage.ARG_IS_SAVED_IN_DOLLAR) ?: false
                     val price = priceString?.toIntOrNull() ?: 0
-                    MortgageScreen(price = price)
+                    MortgageScreen(price = price, isSavedInDollar = isSavedInDollar)
                 }
 
                 composable(NavigationScreen.Map.route) {

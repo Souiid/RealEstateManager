@@ -13,24 +13,39 @@ import java.util.Date
 
 class Utils {
 
-    fun convertDollarToEuro(dollars: Int): Int {
-        return Math.round(dollars * 0.812).toInt()
-    }
+    private val euroToDollarRate = 1.15
+    private val dollarToEuroRate = 1 / euroToDollarRate
+
+    //Méthode imprecise pour convertir les devises, lorsque l'utilisateur choisi euro ou dollar
+  // fun convertDollarToEuro(dollars: Int): Int {
+  //     return Math.round(dollars * 0.812).toInt()
+  // }
+  //
+  // fun convertEuroToDollar(euros: Int): Int {
+  //     return Math.round(euros * 1.15).toInt()
+  // }
 
     fun convertEuroToDollar(euros: Int): Int {
-        return Math.round(euros * 1.15).toInt()
+        return Math.round(euros * euroToDollarRate).toInt()
+    }
+
+    fun convertDollarToEuro(dollars: Int): Int {
+        return Math.round(dollars * dollarToEuroRate).toInt()
     }
 
     fun convertEuroToDollarDouble(euros: Double): Double {
         return Math.round(euros * 1.15).toDouble()
     }
 
-    fun getCorrectPriceComponent(price: Int = 0, isEuro: Boolean = true): PriceComponent {
-        return if (isEuro) {
-            PriceComponent(price, "€")
-        }else {
-            PriceComponent(convertEuroToDollar(price), "$")
+    fun getCorrectPriceComponent(price: Int = 0, isEuro: Boolean = true, isSaveInDollar: Boolean = false): PriceComponent {
+        val finalPrice = when {
+            isEuro && isSaveInDollar -> convertDollarToEuro(price)
+            !isEuro && !isSaveInDollar -> convertEuroToDollar(price)
+            else -> price
         }
+
+        val currencySymbol = if (isEuro) "€" else "$"
+        return PriceComponent(finalPrice, currencySymbol)
     }
 
     fun getTodayDate(date: Date): String {

@@ -63,7 +63,7 @@ fun SettingsScreen(
             .systemBarsPadding(),
         topBar = {
             ThemeTopBar(
-                title = stringResource(R.string.realty_form),
+                title = stringResource(R.string.settings),
                 onBackClick = onBackClick
             )
         }

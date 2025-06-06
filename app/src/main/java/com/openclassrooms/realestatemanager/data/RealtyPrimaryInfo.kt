@@ -11,5 +11,6 @@ data class RealtyPrimaryInfo(
     var bedroomsNbr: Int,
     var description: String,
     var realtyPlace: RealtyPlace,
-    var amenities: List<Amenity> = emptyList()
+    var amenities: List<Amenity> = emptyList(),
+    var isEuro: Boolean
 )
