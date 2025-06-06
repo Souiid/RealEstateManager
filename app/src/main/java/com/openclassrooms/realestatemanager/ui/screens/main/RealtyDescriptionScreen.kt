@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -434,27 +435,28 @@ fun LiteModeMapView(
     modifier: Modifier = Modifier, realty: Realty
 ) {
     val location = realty.primaryInfo.realtyPlace.positionLatLng
-
-    AndroidView(modifier = modifier, factory = { ctx ->
-        val options = GoogleMapOptions().liteMode(true)
-        MapView(ctx, options).apply {
-            onCreate(null)
-            getMapAsync { googleMap ->
-                val latitude = location.latitude
-                val longitude = location.longitude
-                googleMap.addMarker(
-                    MarkerOptions().position(LatLng(latitude, longitude))
-                )
-                googleMap.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                        LatLng(
-                            latitude, longitude
-                        ), 15f
+    key(realty.id) {
+        AndroidView(modifier = modifier, factory = { ctx ->
+            val options = GoogleMapOptions().liteMode(true)
+            MapView(ctx, options).apply {
+                onCreate(null)
+                getMapAsync { googleMap ->
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    googleMap.addMarker(
+                        MarkerOptions().position(LatLng(latitude, longitude))
                     )
-                )
+                    googleMap.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(
+                                latitude, longitude
+                            ), 15f
+                        )
+                    )
+                }
             }
-        }
-    }, update = { mapView ->
-        mapView.onResume()
-    })
+        }, update = { mapView ->
+            mapView.onResume()
+        })
+    }
 }
