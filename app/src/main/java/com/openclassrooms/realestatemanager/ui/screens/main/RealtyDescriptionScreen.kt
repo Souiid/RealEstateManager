@@ -59,13 +59,17 @@ import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
+import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
+import com.openclassrooms.realestatemanager.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
 
@@ -134,12 +138,11 @@ fun DetailScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            Text(
+            ThemeText(
                 text = stringResource(R.string.media),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth(),
+                style = ThemeTextStyle.NORMAL
             )
+
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 items(realty.pictures.size) { index ->
                     Spacer(modifier = Modifier.size(5.dp))
@@ -169,21 +172,15 @@ fun DetailScreen(
 
         }
 
-        Button(
+        ThemeButton(
             onClick = { onSimulateClick(realty.primaryInfo.price) },
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp),
+            elevation = 8.dp,
+            text = stringResource(R.string.simulate),
             modifier = Modifier
                 .padding(16.dp)
-                .align(Alignment.BottomEnd)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Calculate,
-                contentDescription = "Calculatrice",
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(Modifier.width(5.dp))
-            Text(stringResource(R.string.simulate))
-        }
+                .align(Alignment.BottomEnd),
+            imageVector = Icons.Default.Calculate
+        )
     }
 
 }
@@ -242,11 +239,10 @@ fun StatusSection(
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 elevation = null
             ) {
-                Text(
+                ThemeText(
                     text = statusText,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
+                    style = ThemeTextStyle.BUTTON,
+                    color = White
                 )
             }
 
@@ -267,17 +263,15 @@ fun StatusSection(
             )
 
             agent?.let {
-                Text(
-                    text = stringResource(R.string.agent_colon) + " ${it.name}",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.W400
+                ThemeText(
+                    text = stringResource(R.string.agent_colon) + it.name,
+                    style = ThemeTextStyle.NORMAL
                 )
             }
 
-            Text(
+            ThemeText(
                 text = "$statusDateLabel $statusDateString",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.W400
+                style = ThemeTextStyle.NORMAL
             )
         }
     }
@@ -342,8 +336,9 @@ fun AmenitiesSection(amenitiesText: String) {
 @Composable
 fun DescriptionSection(realty: Realty) {
     ExpandableSection(title = stringResource(R.string.description)) {
-        Text(
-            text = realty.primaryInfo.description, fontSize = 16.sp, fontWeight = FontWeight.W400
+        ThemeText(
+            text = realty.primaryInfo.description,
+            style = ThemeTextStyle.NORMAL
         )
     }
 }
@@ -401,9 +396,10 @@ fun RealtyPictureUI(realtyPicture: RealtyPicture) {
                 .background(Color.Black.copy(alpha = 0.5f))
                 .padding(12.dp)
         ) {
-            Text(
+            ThemeText(
                 text = realtyPicture.description,
-                color = Color.White,
+                style = ThemeTextStyle.NORMAL,
+                color = White
             )
         }
     }
@@ -417,8 +413,15 @@ fun RealtyProperty(imageVector: ImageVector, title: String, value: String) {
         Image(imageVector = imageVector, contentDescription = null)
         Spacer(modifier = Modifier.size(5.dp))
         Column {
-            Text(title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            Text(value, fontSize = 16.sp, fontWeight = FontWeight.W400)
+            ThemeText(
+                text = title,
+                style = ThemeTextStyle.NORMAL
+            )
+
+            ThemeText(
+                text = value,
+                style = ThemeTextStyle.LITTLE
+            )
         }
 
     }

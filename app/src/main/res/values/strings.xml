@@ -93,5 +93,7 @@
     <string name="yes">Yes</string>
     <string name="the_pice_of_this_realty">The price of this property is %s%s</string>
     <string name="selected_currency">Selected currency</string>
+    <string name="settings">Settings</string>
+    <string name="no_realty">No realty</string>
 
 </resources>

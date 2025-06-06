@@ -33,12 +33,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.ui.screens.main.HomeTabletScreen
 import com.openclassrooms.realestatemanager.ui.screens.main.MainActivity
@@ -71,7 +75,10 @@ fun MainNavGraph(
         drawerContent = {
             ModalDrawerSheet {
                 ListItem(
-                    headlineContent = { Text("Settings") },
+                    headlineContent = { ThemeText(
+                        text = stringResource(R.string.settings),
+                        style = ThemeTextStyle.NORMAL
+                    ) },
                     leadingContent = {
                         Icon(Icons.Default.Settings, contentDescription = "Settings")
                     },

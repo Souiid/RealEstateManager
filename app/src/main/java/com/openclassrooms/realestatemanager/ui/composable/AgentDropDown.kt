@@ -22,6 +22,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.theme.Green
 
@@ -45,7 +47,10 @@ fun AgentDropdown(
             OutlinedTextField(
                 value = selectedAgent?.name ?: if (!isForSearch) agents.first().name else "",
                 onValueChange = {},
-                label = { Text(text = stringResource(R.string.agent)) },
+                label = { ThemeText(
+                    text = stringResource(R.string.agent),
+                    style = ThemeTextStyle.NORMAL
+                ) },
                 singleLine = true,
                 textStyle = TextStyle(
                     color = DarkGray,
@@ -80,6 +85,9 @@ fun AgentDropdown(
             }
         }
     } else {
-        Text(stringResource(R.string.no_agent))
+        ThemeText(
+            text = stringResource(R.string.no_agent),
+            style = ThemeTextStyle.NORMAL
+        )
     }
 }

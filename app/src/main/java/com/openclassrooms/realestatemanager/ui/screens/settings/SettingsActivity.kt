@@ -45,7 +45,7 @@ class SettingsActivity : ComponentActivity() {
 
         setContent {
             RealEstateManagerTheme {
-                SettingsScreen(onBackClick = {finish()})
+                SettingsScreen(onBackClick = { finish() })
             }
         }
     }
@@ -96,7 +96,7 @@ fun CurrencySection(
     ) {
         ThemeText(
             text = stringResource(R.string.selected_currency),
-            style = ThemeTextStyle.LITTLE,
+            style = ThemeTextStyle.NORMAL
         )
 
         Spacer(Modifier.width(5.dp))
@@ -107,7 +107,12 @@ fun CurrencySection(
                     icon = {},
                     onClick = { onCurrencySelected(index == 0) },
                     shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
-                    label = { Text(label) }
+                    label = {
+                        ThemeText(
+                            text = label,
+                            style = ThemeTextStyle.NORMAL
+                        )
+                    }
                 )
             }
         }

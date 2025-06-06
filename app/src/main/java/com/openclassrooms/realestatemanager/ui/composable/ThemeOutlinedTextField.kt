@@ -8,7 +8,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Green
@@ -20,6 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 
 
 @Composable
@@ -44,8 +45,9 @@ fun ThemeOutlinedTextField(
             onValueChanged(newValue)
         },
         label = {
-            Text(
-                text = stringResource(id = labelID),
+            ThemeText(
+                text = stringResource(labelID),
+                style = ThemeTextStyle.LABEL
             )
         },
         singleLine = singleLine,

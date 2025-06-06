@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.ui.screens.form.realtyform
 
+import android.content.res.Resources.Theme
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +33,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.PriceComponent
 import com.openclassrooms.realestatemanager.data.RealtyPlace
@@ -53,7 +57,8 @@ fun RealtyFormScreen(
     viewModel: RealtyFormViewModel = koinViewModel(),
     currencyViewModel: CurrencyViewModel = koinViewModel(),
     onNext: () -> Unit,
-    onBack: () -> Unit) {
+    onBack: () -> Unit
+) {
 
     var surfaceValue by remember { mutableStateOf("") }
     var priceValue by remember { mutableStateOf("") }
@@ -127,7 +132,11 @@ fun RealtyFormScreen(
         modifier = Modifier
             .fillMaxSize()
             .systemBarsPadding(),
-        topBar = { ThemeTopBar(title = stringResource(R.string.realty_form), onBackClick = { onBack() }) },
+        topBar = {
+            ThemeTopBar(
+                title = stringResource(R.string.realty_form),
+                onBackClick = { onBack() })
+        },
         bottomBar = {
             ThemeButton(
                 onClick = {
@@ -141,7 +150,7 @@ fun RealtyFormScreen(
                     ) {
                         val price = if (isEuro) {
                             priceValue.toInt()
-                        }else {
+                        } else {
                             Utils().convertDollarToEuro(priceValue.toInt())
                         }
                         viewModel.setPrimaryInfo(
@@ -183,7 +192,8 @@ fun RealtyFormScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
 
             item {
@@ -195,7 +205,10 @@ fun RealtyFormScreen(
                         value = stringResource(selectedOption.labelResId),
                         onValueChange = {},
                         label = {
-                            Text(text = stringResource(R.string.type))
+                            ThemeText(
+                                text = stringResource(R.string.realty_type),
+                                style = ThemeTextStyle.LABEL
+                            )
                         },
                         singleLine = true,
                         textStyle = TextStyle(
@@ -221,7 +234,12 @@ fun RealtyFormScreen(
                     ) {
                         options.forEach { option ->
                             DropdownMenuItem(
-                                text = { Text(stringResource(option.labelResId)) },
+                                text = {
+                                    ThemeText(
+                                        text = stringResource(option.labelResId),
+                                        style = ThemeTextStyle.NORMAL
+                                    )
+                                },
                                 onClick = {
                                     selectedOption = option
                                     expanded = false
@@ -298,7 +316,7 @@ fun RealtyFormScreen(
 
             if (updatedRealty == null) {
                 item {
-                   PlaceAutocomplete(
+                    PlaceAutocomplete(
                         onSearchPlaces = { placesClient, query, callback ->
                             viewModel.searchPlaces(placesClient, query, callback)
                         },

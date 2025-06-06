@@ -15,9 +15,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.ui.theme.Black
-import com.openclassrooms.realestatemanager.ui.theme.Green
 
+//For datePickerDialog
 @Composable
 fun ThemeOutlinedTFForDPD(
     value: String,
@@ -37,8 +39,9 @@ fun ThemeOutlinedTFForDPD(
         enabled = false,
         readOnly = true,
         label = {
-            Text(
-                text = stringResource(id = labelID),
+            ThemeText(
+                text = stringResource(labelID),
+                style = ThemeTextStyle.NORMAL
             )
         },
         singleLine = singleLine,

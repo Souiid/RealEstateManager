@@ -26,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
@@ -103,7 +105,10 @@ fun SelectAgentScreen(selectAgentViewModel:  SelectAgentViewModel = koinViewMode
                 if (isFinish) {
                     CheckAnimation()
                     Spacer(Modifier.height(20.dp))
-                    Text(text = stringResource(R.string.realty_added))
+                    ThemeText(
+                        text = stringResource(R.string.realty_added),
+                        style = ThemeTextStyle.NORMAL
+                    )
                 }else {
                     if (!displayTF) {
                         if (agents.isNotEmpty()) {

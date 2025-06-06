@@ -27,6 +27,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
@@ -123,16 +125,17 @@ fun RealtyItem(
             Spacer(modifier = Modifier.size(10.dp))
 
             Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxHeight()) {
-                Text(
+                ThemeText(
                     text = realty.primaryInfo.realtyType.name,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
+                    style = ThemeTextStyle.SUBTITLE
                 )
-                Text(text = realty.primaryInfo.realtyPlace.name, color = Color.Gray)
-                Text(
+                ThemeText(
+                    text = realty.primaryInfo.realtyPlace.name,
+                    style = ThemeTextStyle.NORMAL
+                )
+                ThemeText(
                     text = "${priceComponent.price}${priceComponent.currency}",
-                    color = Color.Red,
-                    fontWeight = FontWeight.Bold
+                    style = ThemeTextStyle.NORMAL
                 )
             }
         }

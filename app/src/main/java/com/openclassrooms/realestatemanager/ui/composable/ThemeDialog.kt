@@ -13,14 +13,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.R
 
 @Composable
 fun ThemeDialog(
     title: String,
-    description: String,
+    description: String? = null,
     primaryButtonTitle: String,
     onPrimaryButtonClick: () -> Unit,
     secondaryButtonTitle: String? = null,
@@ -39,27 +43,36 @@ fun ThemeDialog(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
+                ThemeText(
                     text = title,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    style = ThemeTextStyle.SUBTITLE
                 )
-                Text(
-                    text = description,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                Row(
-                    horizontalArrangement = Arrangement.End,
+
+                description?.let {
+                    ThemeText(
+                        text = it,
+                        style = ThemeTextStyle.NORMAL
+                    )
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Optional secondary button
-                    if (secondaryButtonTitle != null && onSecondaryButtonClick != null) {
-                        TextButton(onClick = onSecondaryButtonClick) {
-                            Text(text = secondaryButtonTitle)
-                        }
-                    }
-                    // Primary button
+
                     TextButton(onClick = onPrimaryButtonClick) {
-                        Text(text = primaryButtonTitle)
+                        ThemeButton(
+                            onClick = onPrimaryButtonClick,
+                            text = primaryButtonTitle,
+                        )
+                    }
+
+                    if (secondaryButtonTitle != null && onSecondaryButtonClick != null) {
+                        ThemeButton(
+                            onClick = onSecondaryButtonClick,
+                            text = secondaryButtonTitle,
+                        )
                     }
                 }
             }
@@ -73,9 +86,9 @@ fun PreviewThemeDialog() {
     ThemeDialog(
         title = "Title",
         description = "Description",
-        primaryButtonTitle = "Choisir dans la gallerie",
+        primaryButtonTitle = stringResource(R.string.choose_from_gallery),
         onPrimaryButtonClick = {},
-        secondaryButtonTitle = "Prendre une photo",
+        secondaryButtonTitle = stringResource(R.string.take_a_picture),
         onSecondaryButtonClick = {},
         onDismissRequest = {}
     )

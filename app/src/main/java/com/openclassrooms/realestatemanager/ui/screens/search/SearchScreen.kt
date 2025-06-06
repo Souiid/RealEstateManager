@@ -38,6 +38,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.data.SearchCriteria
@@ -261,7 +263,10 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             }
 
             item {
-                Text(stringResource(R.string.amenities))
+                ThemeText(
+                    text = stringResource(R.string.amenities),
+                    style = ThemeTextStyle.NORMAL
+                )
                 SelectableChipsGroup(
                     selectedOptions = selectedAmenities,
                     onSelectionChanged = { selectedAmenities = it }
@@ -332,7 +337,10 @@ fun DatePickerDialog(
                     }
                     showDialog = false
                 }) {
-                    Text("OK")
+                    ThemeText(
+                        text = stringResource(R.string.ok),
+                        style = ThemeTextStyle.NORMAL
+                    )
                 }
             },
             dismissButton = {
@@ -441,7 +449,10 @@ fun StatusSegmentedButton(
 
     val selectedIndex = statusList.indexOfFirst { it.second == selectedStatus }
 
-    Text(stringResource(R.string.realty_status))
+    ThemeText(
+        text = stringResource(R.string.realty_status),
+        style = ThemeTextStyle.NORMAL
+    )
 
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
         statusList.forEachIndexed { index, label ->
@@ -469,7 +480,10 @@ fun RealtyTypeSelection(
             .heightIn(max = 200.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text(stringResource(R.string.realty_type))
+        ThemeText(
+            text = stringResource(R.string.realty_type),
+            style = ThemeTextStyle.NORMAL
+        )
         RealtyType.entries.forEach { realtyType ->
             val isChecked = realtyType in selectedTypes
             RealtyTypeItem(

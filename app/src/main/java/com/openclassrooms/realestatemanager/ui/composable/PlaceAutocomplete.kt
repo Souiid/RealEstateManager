@@ -24,6 +24,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import kotlinx.coroutines.launch
@@ -66,7 +68,12 @@ fun PlaceAutocomplete(
                     predictions = emptyList()
                 }
             },
-            label = { Text(stringResource(R.string.search_place)) },
+            label = {
+                ThemeText(
+                    text = stringResource(R.string.search_place),
+                    style = ThemeTextStyle.NORMAL
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
         )
@@ -83,7 +90,11 @@ fun PlaceAutocomplete(
                         .clickable {
                             scope.launch {
                                 query = prediction.getFullText(null).toString()
-                                val position = onFetchLatLng(placesClient, prediction.placeId) ?: LatLng(0.0, 0.0)
+                                val position =
+                                    onFetchLatLng(placesClient, prediction.placeId) ?: LatLng(
+                                        0.0,
+                                        0.0
+                                    )
                                 callback(RealtyPlace(prediction.placeId, query, position))
                                 predictions = emptyList()
                             }

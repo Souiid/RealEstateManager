@@ -18,6 +18,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.room.Amenity
 
 @Composable
@@ -70,12 +73,10 @@ fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {
             1.dp,
             if (selected) MaterialTheme.colorScheme.primary else Color.Gray
         )) {
-        Text(
+        ThemeText(
             text = label,
-            color = if (selected) MaterialTheme.colorScheme.primary else Color.Gray,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(6.dp)
+            style = ThemeTextStyle.CHIP,
+            padding = 6.dp
         )
     }
 }

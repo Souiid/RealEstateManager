@@ -52,11 +52,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
+import com.idrisssouissi.smartbait.presentation.components.ThemeText
+import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
@@ -184,7 +187,11 @@ fun SetRealtyPictureScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (photos.isEmpty()) {
-                    Text(text = stringResource(R.string.no_photo))
+                    ThemeText(
+                        text = stringResource(R.string.no_photo),
+                        style = ThemeTextStyle.NORMAL,
+                        textAlign = TextAlign.Center
+                    )
                     enabled = false
                 } else {
                     LazyVerticalGrid(
@@ -212,11 +219,9 @@ fun SetRealtyPictureScreen(
                                         .padding(4.dp)
                                         .clip(RoundedCornerShape(8.dp))
                                 )
-                                Text(
+                                ThemeText(
                                     text = realtyPicture.description,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.padding(top = 8.dp)
+                                    style = ThemeTextStyle.NORMAL
                                 )
                             }
                         }
@@ -319,13 +324,19 @@ fun ImageDescriptionDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = { onDismissRequest() }) {
-                        Text(stringResource(R.string.cancel))
+                        ThemeText(
+                            text = stringResource(R.string.cancel),
+                            style = ThemeTextStyle.NORMAL
+                        )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = { onAddClick(description) }
                     ) {
-                        Text( stringResource(R.string.add))
+                        ThemeText(
+                            text = stringResource(R.string.add),
+                            style = ThemeTextStyle.NORMAL
+                        )
                     }
                 }
             }
