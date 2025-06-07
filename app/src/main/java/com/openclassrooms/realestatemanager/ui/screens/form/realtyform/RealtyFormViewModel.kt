@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens.form.realtyform
 
+import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
@@ -8,6 +9,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.repositories.INewRealtyRepository
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
@@ -19,29 +21,45 @@ import kotlin.coroutines.resume
 class RealtyFormViewModel(
     private val newRealtyRepository: INewRealtyRepository,
     private val realtyRepository: IRealtyRepository
-    ) : ViewModel() {
+) : ViewModel() {
 
     fun setPrimaryInfo(
-       realtyPrimaryInfo: RealtyPrimaryInfo,
-       updatedRealty: Realty? = null,
+        realtyPrimaryInfo: RealtyPrimaryInfo,
+        updatedRealty: Realty? = null,
     ) {
         if (updatedRealty == null) {
             newRealtyRepository.realtyPrimaryInfo = realtyPrimaryInfo
-        }else {
+        } else {
             updatedRealty.primaryInfo = realtyPrimaryInfo
             realtyRepository.updatedRealty = updatedRealty
         }
     }
 
-    fun isFormValid(
+    fun getFormValidationError(
         surface: String,
         price: String,
         rooms: String,
+        bedrooms: String,
+        bathrooms: String,
         description: String,
-        realtyPlace: RealtyPlace?
-    ): Boolean {
-        return surface.isNotBlank() && price.isNotBlank() && rooms.isNotBlank() && description.isNotBlank() && realtyPlace != null
+        realtyPlace: RealtyPlace?,
+        resources: Resources
+    ): String? {
+        return when {
+            surface.isBlank() -> resources.getString(R.string.error_surface_required)
+            price.isBlank() -> resources.getString(R.string.error_price_required)
+            rooms.isBlank() -> resources.getString(R.string.error_rooms_required)
+            bedrooms.isBlank() -> resources.getString(R.string.error_bedrooms_required)
+            bathrooms.isBlank() -> resources.getString(R.string.error_bathrooms_required)
+            description.isBlank() -> resources.getString(R.string.error_description_required)
+            realtyPlace == null -> resources.getString(R.string.error_place_required)
+            !isNumberOfRoomsValid(rooms.toIntOrNull() ?: 0, bedrooms.toIntOrNull() ?: 0, bathrooms.toIntOrNull() ?: 0) ->
+                resources.getString(R.string.error_rooms_logic)
+            else -> null
+        }
     }
+
+    private fun isNumberOfRoomsValid(rooms: Int, bedrooms: Int, bathrooms: Int): Boolean = bedrooms + bathrooms + 1 <= rooms
 
     fun getPrimaryInfo(): RealtyPrimaryInfo? {
         return newRealtyRepository.realtyPrimaryInfo

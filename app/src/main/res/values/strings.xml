@@ -95,5 +95,13 @@
     <string name="selected_currency">Selected currency</string>
     <string name="settings">Settings</string>
     <string name="no_realty">No realty</string>
+    <string name="error_surface_required">Surface is required</string>
+    <string name="error_price_required">Price is required</string>
+    <string name="error_rooms_required">Number of rooms is required</string>
+    <string name="error_bedrooms_required">Number of bedrooms is required</string>
+    <string name="error_bathrooms_required">Number of bathrooms is required</string>
+    <string name="error_description_required">Description is required</string>
+    <string name="error_place_required">Place is required, click on a suggestion</string>
+    <string name="error_rooms_logic">The number of rooms must be greater than or equal to the sum of bedrooms and bathrooms + one room (living room)</string>
 
 </resources>

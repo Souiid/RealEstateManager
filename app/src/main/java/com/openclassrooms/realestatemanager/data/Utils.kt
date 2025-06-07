@@ -76,4 +76,8 @@ class Utils {
             null
         }
     }
+
+    fun filterOnlyDigits(input: String): String {
+        return input.filter { it.isDigit() }
+    }
 }

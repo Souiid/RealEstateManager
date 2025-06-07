@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.ui.screens.form.realtyform
 
-import android.content.res.Resources.Theme
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +14,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Green
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -36,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.data.PriceComponent
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
 import com.openclassrooms.realestatemanager.data.RealtyType
@@ -79,6 +76,11 @@ fun RealtyFormScreen(
 
     var priceComponent by remember { mutableStateOf(Utils().getCorrectPriceComponent(0, isEuro)) }
 
+    val utils = Utils()
+
+    val localRessource = LocalContext.current.resources
+    var formErrorMessage by remember { mutableStateOf("") }
+
     LaunchedEffect(isEuro) {
         if (realtyPrimaryInfo == null) {
             priceComponent = Utils().getCorrectPriceComponent(priceValue.toIntOrNull() ?: 0, isEuro)
@@ -104,7 +106,8 @@ fun RealtyFormScreen(
     LaunchedEffect(updatedRealty, isEuro) {
         updatedRealty?.let {
             val isSavedInDollar = !it.primaryInfo.isEuro
-            priceComponent = Utils().getCorrectPriceComponent(it.primaryInfo.price, isEuro, isSavedInDollar)
+            priceComponent =
+                Utils().getCorrectPriceComponent(it.primaryInfo.price, isEuro, isSavedInDollar)
             val surface = it.primaryInfo.surface
             val price = priceComponent.price
             val roomsNbr = it.primaryInfo.roomsNbr
@@ -140,14 +143,17 @@ fun RealtyFormScreen(
         bottomBar = {
             ThemeButton(
                 onClick = {
-                    if (viewModel.isFormValid(
-                            surface = surfaceValue,
-                            price = priceValue,
-                            rooms = roomsNbrValue,
-                            description = descriptionValue,
-                            realtyPlace = realtyPlaceValue
-                        )
-                    ) {
+                    val errorMessage = viewModel.getFormValidationError(
+                        surface = surfaceValue,
+                        price = priceValue,
+                        rooms = roomsNbrValue,
+                        bedrooms = bedRoomNbrValue,
+                        bathrooms = bathRoomNbrValue,
+                        description = descriptionValue,
+                        realtyPlace = realtyPlaceValue,
+                        resources = localRessource)
+
+                    if (errorMessage == null) {
 
                         viewModel.setPrimaryInfo(
                             updatedRealty = updatedRealty,
@@ -166,6 +172,7 @@ fun RealtyFormScreen(
                         )
                         onNext()
                     } else {
+                        formErrorMessage = errorMessage
                         displayDialog = true
                     }
                 },
@@ -179,7 +186,7 @@ fun RealtyFormScreen(
         if (displayDialog) {
             ThemeDialog(
                 title = stringResource(R.string.error),
-                description = stringResource(R.string.fill_all_fields),
+                description = formErrorMessage,
                 primaryButtonTitle = stringResource(R.string.ok),
                 onPrimaryButtonClick = { displayDialog = false },
                 onDismissRequest = {})
@@ -250,7 +257,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = surfaceValue,
-                    onValueChanged = { surfaceValue = it },
+                    onValueChanged = { surfaceValue = utils.filterOnlyDigits(it) },
                     labelID = R.string.surface,
                     imeAction = ImeAction.Next,
                     iconText = "m²",
@@ -261,7 +268,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = priceValue,
-                    onValueChanged = { priceValue = it },
+                    onValueChanged = { priceValue = utils.filterOnlyDigits(it) },
                     labelID = R.string.price,
                     imeAction = ImeAction.Next,
                     iconText = priceComponent.currency,
@@ -272,7 +279,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = roomsNbrValue,
-                    onValueChanged = { roomsNbrValue = it },
+                    onValueChanged = { roomsNbrValue = utils.filterOnlyDigits(it) },
                     labelID = R.string.number_of_rooms,
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Number
@@ -282,7 +289,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = bedRoomNbrValue,
-                    onValueChanged = { bedRoomNbrValue = it },
+                    onValueChanged = { bedRoomNbrValue = utils.filterOnlyDigits(it) },
                     labelID = R.string.number_of_bedrooms,
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Number
@@ -292,7 +299,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = bathRoomNbrValue,
-                    onValueChanged = { bathRoomNbrValue = it },
+                    onValueChanged = { bathRoomNbrValue = utils.filterOnlyDigits(it) },
                     labelID = R.string.number_of_bathrooms,
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Number
