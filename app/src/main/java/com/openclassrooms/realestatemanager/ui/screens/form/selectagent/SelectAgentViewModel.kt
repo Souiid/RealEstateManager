@@ -41,4 +41,8 @@ class SelectAgentViewModel(
             agentRepository.insertAgent(name)
         }
     }
+
+    fun isAgentNameValid(name: String): Boolean {
+        return name.trim().length >= 2
+    }
 }

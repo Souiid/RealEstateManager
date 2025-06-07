@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens.form.selectagent
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,9 +44,12 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SelectAgentScreen(selectAgentViewModel:  SelectAgentViewModel = koinViewModel(),
-                      onBack: () -> Unit, onFinish: ()->Unit) {
+fun SelectAgentScreen(
+    selectAgentViewModel: SelectAgentViewModel = koinViewModel(),
+    onBack: () -> Unit, onFinish: () -> Unit
+) {
 
+    val context = LocalContext.current
     var displayTF by remember { mutableStateOf(false) }
     var agentName by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -53,12 +58,27 @@ fun SelectAgentScreen(selectAgentViewModel:  SelectAgentViewModel = koinViewMode
     val realtyPrimaryInfo = selectAgentViewModel.getRealtyPrimaryInfo()
     val realtyPictures = selectAgentViewModel.getImages()
     var isFinish by remember { mutableStateOf(false) }
+    var showNameError by remember { mutableStateOf(false) }
 
     LaunchedEffect(isFinish) {
         if (isFinish) {
             delay(2000)
             onFinish()
         }
+    }
+
+    LaunchedEffect(agents) {
+        if (agents.isNotEmpty()) {
+            selectedAgent = agents[0]
+        }
+    }
+
+    if (showNameError) {
+        Toast.makeText(
+            context,
+            context.getString(R.string.agent_must_have_two_characters),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     Scaffold(
@@ -69,27 +89,30 @@ fun SelectAgentScreen(selectAgentViewModel:  SelectAgentViewModel = koinViewMode
             ThemeTopBar(title = stringResource(R.string.select_agent), onBackClick = { onBack() })
         },
         bottomBar = {
-            if (!isFinish) {
-                ThemeButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
-                    text = stringResource(R.string.complete),
-                    enabled = true,
-                    onClick = {
-                        val realty = Realty(
-                            agentId = selectedAgent!!.id,
-                            primaryInfo = realtyPrimaryInfo!!,
-                            pictures = realtyPictures!!,
-                        )
-                        scope.launch {
-                            selectAgentViewModel.insertRealty(realty)
-                            isFinish = true
-                        }
+            if (!displayTF) {
+                if (!isFinish) {
+                    ThemeButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp),
+                        text = stringResource(R.string.complete),
+                        enabled = selectedAgent != null,
+                        onClick = {
+                            val realty = Realty(
+                                agentId = selectedAgent!!.id,
+                                primaryInfo = realtyPrimaryInfo!!,
+                                pictures = realtyPictures!!,
+                            )
+                            scope.launch {
+                                selectAgentViewModel.insertRealty(realty)
+                                isFinish = true
+                            }
 
-                    }
-                )
+                        }
+                    )
+                }
             }
+
 
         },
 
@@ -109,7 +132,7 @@ fun SelectAgentScreen(selectAgentViewModel:  SelectAgentViewModel = koinViewMode
                         text = stringResource(R.string.realty_added),
                         style = ThemeTextStyle.NORMAL
                     )
-                }else {
+                } else {
                     if (!displayTF) {
                         if (agents.isNotEmpty()) {
                             AgentDropdown(
@@ -124,12 +147,15 @@ fun SelectAgentScreen(selectAgentViewModel:  SelectAgentViewModel = koinViewMode
                         Spacer(modifier = Modifier.height(10.dp))
                         ThemeButton(
                             modifier = Modifier.fillMaxWidth(),
-                            text = if (agents.isNotEmpty()) stringResource(R.string.or_add_agent) else stringResource(R.string.add_agent),
+                            text = if (agents.isNotEmpty()) stringResource(R.string.or_add_agent) else stringResource(
+                                R.string.add_agent
+                            ),
                             enabled = true,
-                            onClick = { displayTF = true }
+                            onClick = {
+                                displayTF = true
+                            }
                         )
-                    }
-                    else {
+                    } else {
                         ThemeOutlinedTextField(
                             value = agentName,
                             labelID = R.string.agent_name,
@@ -145,7 +171,9 @@ fun SelectAgentScreen(selectAgentViewModel:  SelectAgentViewModel = koinViewMode
                                 modifier = Modifier.weight(1f),
                                 text = stringResource(R.string.cancel),
                                 enabled = true,
-                                onClick = { displayTF = false }
+                                onClick = {
+                                    displayTF = false
+                                }
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             ThemeButton(
@@ -153,9 +181,15 @@ fun SelectAgentScreen(selectAgentViewModel:  SelectAgentViewModel = koinViewMode
                                 text = stringResource(R.string.add),
                                 enabled = true,
                                 onClick = {
-                                    scope.launch {
-                                        selectAgentViewModel.insertAgent(agentName)
-                                        displayTF = false
+                                    if (selectAgentViewModel.isAgentNameValid(agentName)) {
+                                        scope.launch {
+                                            selectAgentViewModel.insertAgent(agentName)
+                                            agentName = ""
+                                            displayTF = false
+                                            showNameError = false
+                                        }
+                                    } else {
+                                        showNameError = true
                                     }
                                 }
                             )
