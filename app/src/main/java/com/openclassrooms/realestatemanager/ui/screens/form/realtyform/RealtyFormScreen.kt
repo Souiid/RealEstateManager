@@ -257,7 +257,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = surfaceValue,
-                    onValueChanged = { surfaceValue = utils.filterOnlyDigits(it) },
+                    onValueChanged = { surfaceValue = it },
                     labelID = R.string.surface,
                     imeAction = ImeAction.Next,
                     iconText = "m²",
@@ -268,7 +268,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = priceValue,
-                    onValueChanged = { priceValue = utils.filterOnlyDigits(it) },
+                    onValueChanged = { priceValue = it },
                     labelID = R.string.price,
                     imeAction = ImeAction.Next,
                     iconText = priceComponent.currency,
@@ -279,7 +279,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = roomsNbrValue,
-                    onValueChanged = { roomsNbrValue = utils.filterOnlyDigits(it) },
+                    onValueChanged = { roomsNbrValue = it },
                     labelID = R.string.number_of_rooms,
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Number
@@ -289,7 +289,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = bedRoomNbrValue,
-                    onValueChanged = { bedRoomNbrValue = utils.filterOnlyDigits(it) },
+                    onValueChanged = { bedRoomNbrValue = it },
                     labelID = R.string.number_of_bedrooms,
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Number
@@ -299,7 +299,7 @@ fun RealtyFormScreen(
             item {
                 ThemeOutlinedTextField(
                     value = bathRoomNbrValue,
-                    onValueChanged = { bathRoomNbrValue = utils.filterOnlyDigits(it) },
+                    onValueChanged = { bathRoomNbrValue = it },
                     labelID = R.string.number_of_bathrooms,
                     imeAction = ImeAction.Next,
                     keyboardType = KeyboardType.Number

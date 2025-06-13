@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.data.Utils
 
 
 @Composable
@@ -42,7 +43,10 @@ fun ThemeOutlinedTextField(
         modifier = modifier,
         value = value,
         onValueChange = { newValue ->
-            onValueChanged(newValue)
+            val filtered = if (keyboardType == KeyboardType.Number) {
+                Utils().filterOnlyDigits(newValue)
+            } else newValue
+            onValueChanged(filtered)
         },
         label = {
             ThemeText(
