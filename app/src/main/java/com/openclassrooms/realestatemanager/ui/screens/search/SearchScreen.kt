@@ -87,7 +87,6 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
 
     val isEuro by currencyViewModel.isEuroFlow.collectAsState()
 
-
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         bottomBar = {
@@ -370,7 +369,7 @@ fun SetSurfaceFilterTextFields(
     onMinSurfaceChange: (Int?) -> Unit,
     onMaxSurfaceChange: (Int?) -> Unit
 ) {
-
+    val utils = Utils()
 
     Row(
         modifier = Modifier.fillMaxWidth(),

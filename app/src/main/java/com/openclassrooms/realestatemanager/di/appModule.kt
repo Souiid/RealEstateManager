@@ -9,12 +9,12 @@ import com.openclassrooms.realestatemanager.data.repositories.NewRealtyRepositor
 import com.openclassrooms.realestatemanager.data.repositories.RealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.SearchRepository
 import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
-import com.openclassrooms.realestatemanager.ui.screens.main.RealitiesViewModel
-import com.openclassrooms.realestatemanager.ui.screens.main.RealtyDescriptionViewModel
+import com.openclassrooms.realestatemanager.ui.screens.main.home.RealitiesViewModel
+import com.openclassrooms.realestatemanager.ui.screens.main.descrpition.RealtyDescriptionViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.selectagent.SelectAgentViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture.SetRealtyPictureViewModel
-import com.openclassrooms.realestatemanager.ui.screens.main.MortgageViewModel
+import com.openclassrooms.realestatemanager.ui.screens.main.mortgage.MortgageViewModel
 import com.openclassrooms.realestatemanager.ui.screens.search.SearchViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel

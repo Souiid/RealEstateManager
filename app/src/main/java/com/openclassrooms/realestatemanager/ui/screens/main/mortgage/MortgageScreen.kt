@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui.screens.main
+package com.openclassrooms.realestatemanager.ui.screens.main.mortgage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

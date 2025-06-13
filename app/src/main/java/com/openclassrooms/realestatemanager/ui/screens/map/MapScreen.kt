@@ -26,7 +26,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import com.openclassrooms.realestatemanager.data.SearchCriteria
-import com.openclassrooms.realestatemanager.ui.screens.main.RealitiesViewModel
+import com.openclassrooms.realestatemanager.ui.screens.main.home.RealitiesViewModel
 import org.koin.androidx.compose.koinViewModel
 
 

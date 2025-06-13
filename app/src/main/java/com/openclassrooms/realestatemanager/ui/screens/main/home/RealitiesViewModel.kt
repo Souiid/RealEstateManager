@@ -1,9 +1,7 @@
-package com.openclassrooms.realestatemanager.ui.screens.main
+package com.openclassrooms.realestatemanager.ui.screens.main.home
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.R
@@ -12,9 +10,7 @@ import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.launch
 
 class RealitiesViewModel(
     private val realtyRepository: IRealtyRepository,

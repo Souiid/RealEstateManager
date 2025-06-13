@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui.screens.main
+package com.openclassrooms.realestatemanager.ui.screens.main.descrpition
 
 import android.content.Context
 import android.graphics.Bitmap

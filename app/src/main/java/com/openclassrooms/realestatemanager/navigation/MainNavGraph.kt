@@ -44,13 +44,13 @@ import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.SearchCriteria
-import com.openclassrooms.realestatemanager.ui.screens.main.HomeTabletScreen
+import com.openclassrooms.realestatemanager.ui.screens.main.home.HomeTabletScreen
 import com.openclassrooms.realestatemanager.ui.screens.main.MainActivity
 import com.openclassrooms.realestatemanager.ui.screens.map.MapScreen
-import com.openclassrooms.realestatemanager.ui.screens.main.RealitiesScreen
-import com.openclassrooms.realestatemanager.ui.screens.main.RealtyDescriptionScreen
+import com.openclassrooms.realestatemanager.ui.screens.main.home.RealitiesScreen
+import com.openclassrooms.realestatemanager.ui.screens.main.descrpition.RealtyDescriptionScreen
 import com.openclassrooms.realestatemanager.ui.screens.form.FormActivity
-import com.openclassrooms.realestatemanager.ui.screens.main.MortgageScreen
+import com.openclassrooms.realestatemanager.ui.screens.main.mortgage.MortgageScreen
 import com.openclassrooms.realestatemanager.ui.screens.search.SearchScreen
 import com.openclassrooms.realestatemanager.ui.screens.settings.SettingsActivity
 import kotlinx.coroutines.launch

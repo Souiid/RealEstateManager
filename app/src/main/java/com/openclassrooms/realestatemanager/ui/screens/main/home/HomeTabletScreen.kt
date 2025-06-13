@@ -1,11 +1,9 @@
-package com.openclassrooms.realestatemanager.ui.screens.main
+package com.openclassrooms.realestatemanager.ui.screens.main.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,9 +18,10 @@ import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.SearchCriteria
-import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
+import com.openclassrooms.realestatemanager.ui.screens.main.descrpition.DetailScreen
+import com.openclassrooms.realestatemanager.ui.screens.main.descrpition.RealtyDescriptionViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

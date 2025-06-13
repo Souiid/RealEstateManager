@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.ui.screens.main
+package com.openclassrooms.realestatemanager.ui.screens.main.mortgage
 
 import androidx.lifecycle.ViewModel
 import com.openclassrooms.realestatemanager.data.MortgageResult
