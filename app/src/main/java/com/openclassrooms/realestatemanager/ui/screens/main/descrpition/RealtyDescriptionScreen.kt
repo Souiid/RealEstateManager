@@ -66,6 +66,7 @@ import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
+import com.openclassrooms.realestatemanager.ui.composable.ExpandableSection
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
@@ -339,42 +340,6 @@ fun DescriptionSection(realty: Realty) {
             text = realty.primaryInfo.description,
             style = ThemeTextStyle.NORMAL
         )
-    }
-}
-
-@Composable
-fun ExpandableSection(
-    title: String,
-    expandedP: Boolean = false,
-    content: @Composable () -> Unit,
-
-    ) {
-    var expanded by remember { mutableStateOf(expandedP) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { expanded = !expanded }
-            .padding(8.dp),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            ThemeText(
-                text = title,
-                style = ThemeTextStyle.SECTION_TITLE
-            )
-            Icon(
-                imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                contentDescription = null
-            )
-        }
-
-        AnimatedVisibility(visible = expanded) {
-            Column(modifier = Modifier.padding(top = 8.dp)) {
-                content()
-            }
-        }
     }
 }
 

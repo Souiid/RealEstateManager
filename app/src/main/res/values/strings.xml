@@ -8,6 +8,8 @@
     <string name="max_surface">Max surface</string>
     <string name="entry_date">Entry date</string>
     <string name="number_of_rooms">Number of rooms</string>
+    <string name="min_number_of_rooms">Min number of rooms</string>
+    <string name="max_number_of_rooms">Max number of rooms</string>
     <string name="number_of_bathrooms">Number of bathrooms</string>
     <string name="number_of_bedrooms">Number of bedrooms</string>
     <string name="surface">Surface</string>
@@ -69,6 +71,7 @@
     <string name="specification">Specification</string>
     <string name="status">Status</string>
     <string name="sold">Sold</string>
+    <string name="sold_date">Sold date</string>
     <string name="min_entry_date">Min entry date</string>
     <string name="max_entry_date">Max entry date</string>
     <string name="min_sold_date">Min sold date</string>

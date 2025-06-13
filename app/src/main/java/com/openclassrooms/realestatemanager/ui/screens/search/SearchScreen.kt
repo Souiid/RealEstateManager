@@ -46,6 +46,7 @@ import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.AgentDropdown
+import com.openclassrooms.realestatemanager.ui.composable.ExpandableSection
 import com.openclassrooms.realestatemanager.ui.composable.SelectableChipsGroup
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTFForDPD
@@ -187,110 +188,131 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
-                StatusSegmentedButton(
-                    selectedStatus = selectedStatus,
-                    onStatusSelected = { selectedStatus = it }
-                )
-                HorizontalDivider()
+                ExpandableSection(title = stringResource(R.string.realty_status), expandedP = true) {
+                    StatusSegmentedButton(
+                        selectedStatus = selectedStatus,
+                        onStatusSelected = { selectedStatus = it }
+                    )
+                }
             }
 
             item {
-                RealtyTypeSelection(
-                    selectedTypes = selectedRealtyTypes,
-                    onSelectionChanged = { selectedRealtyTypes = it }
-                )
-                HorizontalDivider()
+                ExpandableSection(stringResource(R.string.realty_type)) {
+                    RealtyTypeSelection(
+                        selectedTypes = selectedRealtyTypes,
+                        onSelectionChanged = { selectedRealtyTypes = it }
+                    )
+                }
             }
 
             item {
-                SetPriceFilterTextFields(
-                    minPriceValue = minPriceValue,
-                    maxPriceValue = maxPriceValue,
-                    onMinPriceChange = { minPriceValue = it },
-                    onMaxPriceChange = { maxPriceValue = it },
-                    isEuro = isEuro
-                )
-                HorizontalDivider()
+                ExpandableSection(stringResource(R.string.price)) {
+                    SetPriceFilterTextFields(
+                        minPriceValue = minPriceValue,
+                        maxPriceValue = maxPriceValue,
+                        onMinPriceChange = { minPriceValue = it },
+                        onMaxPriceChange = { maxPriceValue = it },
+                        isEuro = isEuro
+                    )
+                }
             }
 
             item {
-                SetSurfaceFilterTextFields(
-                    minSurfaceValue = minSurfaceValue,
-                    maxSurfaceValue = maxSurfaceValue,
-                    onMinSurfaceChange = { minSurfaceValue = it },
-                    onMaxSurfaceChange = { maxSurfaceValue = it }
-                )
-                HorizontalDivider()
+                ExpandableSection(stringResource(R.string.surface)) {
+                    SetSurfaceFilterTextFields(
+                        minSurfaceValue = minSurfaceValue,
+                        maxSurfaceValue = maxSurfaceValue,
+                        onMinSurfaceChange = { minSurfaceValue = it },
+                        onMaxSurfaceChange = { maxSurfaceValue = it }
+                    )
+                }
             }
 
 
             item {
-                DatePickerDialog(
-                    labelID = R.string.min_entry_date,
-                    datePickerState = datePickerState,
-                    onDateSelected = {
-                        minEntryDateValue = it
-                    }
-                )
-                Spacer(modifier = Modifier.height(5.dp))
+                ExpandableSection(stringResource(R.string.entry_date)) {
+                    DatePickerDialog(
+                        labelID = R.string.min_entry_date,
+                        datePickerState = datePickerState,
+                        onDateSelected = {
+                            minEntryDateValue = it
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
 
-                DatePickerDialog(
-                    labelID = R.string.max_entry_date,
-                    datePickerState = datePickerState,
-                    onDateSelected = {
-                        maxEntryDateValue = it
-                    }
-                )
-            }
-
-            item {
-                DatePickerDialog(
-                    labelID = R.string.min_sold_date,
-                    datePickerState = datePickerState,
-                    onDateSelected = {
-                        minSoldDateValue = it
-                    }
-                )
-
-                DatePickerDialog(
-                    labelID = R.string.max_sold_date,
-                    datePickerState = datePickerState,
-                    onDateSelected = {
-                        maxSoldDateValue = it
-                    }
-                )
-            }
-
-            item {
-                ThemeText(
-                    text = stringResource(R.string.amenities),
-                    style = ThemeTextStyle.NORMAL
-                )
-                SelectableChipsGroup(
-                    selectedOptions = selectedAmenities,
-                    onSelectionChanged = { selectedAmenities = it }
-                )
-            }
-
-            item {
-                AgentDropdown(
-                    agents = agents,
-                    selectedAgent = selectedAgent,
-                    onAgentSelected = { selectedAgent = it },
-                    isForSearch = true
-                )
-            }
-
-            item {
-                NumberOfRooms(value = minNumberOfRooms.toString()) {
-                    minNumberOfRooms = it.toIntOrNull() ?: 0
+                    DatePickerDialog(
+                        labelID = R.string.max_entry_date,
+                        datePickerState = datePickerState,
+                        onDateSelected = {
+                            maxEntryDateValue = it
+                        }
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(5.dp))
+            }
 
-                NumberOfRooms(value = minNumberOfRooms.toString()) {
-                    minNumberOfRooms = it.toIntOrNull() ?: 0
+            item {
+                ExpandableSection(stringResource(R.string.sold_date)) {
+                    DatePickerDialog(
+                        labelID = R.string.min_sold_date,
+                        datePickerState = datePickerState,
+                        onDateSelected = {
+                            minSoldDateValue = it
+                        }
+                    )
+
+                    DatePickerDialog(
+                        labelID = R.string.max_sold_date,
+                        datePickerState = datePickerState,
+                        onDateSelected = {
+                            maxSoldDateValue = it
+                        }
+                    )
                 }
+
+            }
+
+            item {
+                ExpandableSection(
+                  stringResource(R.string.amenities)
+                ) {
+                    SelectableChipsGroup(
+                        selectedOptions = selectedAmenities,
+                        onSelectionChanged = { selectedAmenities = it }
+                    )
+                }
+
+            }
+
+            item {
+                ExpandableSection(stringResource(R.string.agent)) {
+                    AgentDropdown(
+                        agents = agents,
+                        selectedAgent = selectedAgent,
+                        onAgentSelected = { selectedAgent = it },
+                        isForSearch = true
+                    )
+                }
+
+            }
+
+            item {
+                ExpandableSection(title = stringResource(R.string.number_of_rooms)) {
+                    NumberOfRooms(
+                        labelID = R.string.min_number_of_rooms,
+                        value = minNumberOfRooms?.toString() ?: "") {
+                        minNumberOfRooms = it.toIntOrNull()
+                    }
+
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    NumberOfRooms(
+                        labelID = R.string.max_number_of_rooms,
+                        value = maxNumberOfRooms?.toString() ?: "") {
+                        maxNumberOfRooms = it.toIntOrNull()
+                    }
+                }
+
             }
 
         }
@@ -298,15 +320,14 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
 }
 
 @Composable
-fun NumberOfRooms(value: String, onValueChanged: (String) -> Unit) {
+fun NumberOfRooms(labelID: Int, value: String, onValueChanged: (String) -> Unit) {
 
-    Text(stringResource(R.string.number_of_rooms))
     ThemeOutlinedTextField(
         value = value,
         onValueChanged = { onValueChanged(it) },
         imeAction = ImeAction.Done,
         keyboardType = KeyboardType.Number,
-        labelID = R.string.number_of_rooms,
+        labelID = labelID,
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -414,7 +435,7 @@ fun SetPriceFilterTextFields(
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         ThemeOutlinedTextField(
-            value = minPriceValue.toString(),
+            value = minPriceValue?.toString() ?: "",
             onValueChanged = { onMinPriceChange(it.toIntOrNull())},
             labelID = R.string.min_price,
             imeAction = ImeAction.Next,
@@ -424,7 +445,7 @@ fun SetPriceFilterTextFields(
         )
 
         ThemeOutlinedTextField(
-            value = maxPriceValue.toString(),
+            value = maxPriceValue?.toString() ?: "",
             onValueChanged = { onMaxPriceChange(it.toIntOrNull())},
             labelID = R.string.max_price,
             imeAction = ImeAction.Next,
