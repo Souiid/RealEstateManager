@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens.search
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
@@ -8,6 +9,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
@@ -87,6 +89,37 @@ class SearchViewModel(
             }
     }
 
+    fun validateCriteria(
+        context: Context,
+        minPrice: Int?, maxPrice: Int?,
+        minSurface: Int?, maxSurface: Int?,
+        minRooms: Int?, maxRooms: Int?,
+        minEntryDate: Date?, maxEntryDate: Date?,
+        minSoldDate: Date?, maxSoldDate: Date?
+    ): String? {
+        if (minPrice != null && maxPrice != null && minPrice > maxPrice) {
+            return context.getString(R.string.error_price_range)
+        }
+
+        if (minSurface != null && maxSurface != null && minSurface > maxSurface) {
+            return context.getString(R.string.error_surface_range)
+        }
+
+        if (minRooms != null && maxRooms != null && minRooms > maxRooms) {
+            return context.getString(R.string.error_room_range)
+        }
+
+        if (minEntryDate != null && maxEntryDate != null && minEntryDate.after(maxEntryDate)) {
+            return context.getString(R.string.error_entry_date_range)
+        }
+
+        if (minSoldDate != null && maxSoldDate != null && minSoldDate.after(maxSoldDate)) {
+            return context.getString(R.string.error_sold_date_range)
+        }
+
+        return null
+    }
+
     fun setCriteria(criteria: SearchCriteria) {
         searchRepository.saveCriteria(criteria)
         _criteriaFlow.value = criteria
@@ -121,39 +154,4 @@ class SearchViewModel(
         }
     }
 
-   // fun setFilteredSearch(
-   //     isAvailable: Boolean? = null,
-   //     minPrice: Double? = null,
-   //     maxPrice: Double? = null,
-   //     minSurface: Double? = null,
-   //     maxSurface: Double? = null,
-   //     minRooms: Int? = null,
-   //     maxRooms: Int? = null,
-   //     minEntryDate: Date? = null,
-   //     maxEntryDate: Date? = null,
-   //     minSoldDate: Date? = null,
-   //     maxSoldDate: Date? = null,
-   //     realtyTypes: List<String>? = null,
-   //     amenity: String? = null,
-   //     isReset: Boolean = false
-   // ) {
-   //     viewModelScope.launch {
-   //         realtyRepository.setFilteredRealties(
-   //             isAvailable,
-   //             minPrice,
-   //             maxPrice,
-   //             minSurface,
-   //             maxSurface,
-   //             minRooms,
-   //             maxRooms,
-   //             minEntryDate,
-   //             maxEntryDate,
-   //             minSoldDate,
-   //             maxSoldDate,
-   //             realtyTypes,
-   //             amenity,
-   //             isReset
-   //         )
-   //     }
-   // }
 }

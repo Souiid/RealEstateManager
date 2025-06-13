@@ -1,7 +1,12 @@
 package com.openclassrooms.realestatemanager.ui.composable
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -10,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,38 +31,51 @@ fun ThemeOutlinedTFForDPD(
     singleLine: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null,
     height: Dp = 56.dp,
+    isClearable: Boolean = false,
+    onClick: () -> Unit,
+    onClear: (() -> Unit)? = null,
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .height(height),
+        .height(height)
 ) {
     OutlinedTextField(
-        modifier = modifier,
         value = value,
-        onValueChange = {},
+        onValueChange = {}, // champ en lecture seule
         enabled = false,
         readOnly = true,
+        singleLine = singleLine,
+        modifier = modifier.clickable { onClick() },
         label = {
             ThemeText(
                 text = stringResource(labelID),
                 style = ThemeTextStyle.NORMAL
             )
         },
-        singleLine = singleLine,
         textStyle = TextStyle(
             color = DarkGray,
             fontSize = 16.sp
         ),
         trailingIcon = {
-            if (iconText != null) {
-                Text(text = iconText)
-            } else {
-                trailingIcon?.invoke()
-
+            when {
+                isClearable && onClear != null -> {
+                    IconButton(onClick = { onClear() }) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = null
+                        )
+                    }
+                }
+                iconText != null -> {
+                    Text(text = iconText)
+                }
+                else -> {
+                    trailingIcon?.invoke()
+                }
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
             disabledBorderColor = Black,
             unfocusedLabelColor = Black
-        ),
+        )
     )
 }

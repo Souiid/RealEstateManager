@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens.search
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -98,6 +100,8 @@ fun SearchScreen(
 
     val isEuro by currencyViewModel.isEuroFlow.collectAsState()
 
+    val context = LocalContext.current
+
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         bottomBar = {
@@ -152,6 +156,21 @@ fun SearchScreen(
 
                 ThemeButton(
                     onClick = {
+                        val errorMessage = searchViewModel.validateCriteria(
+                            context,
+                            minPriceValue, maxPriceValue,
+                            minSurfaceValue, maxSurfaceValue,
+                            minNumberOfRooms, maxNumberOfRooms,
+                            minEntryDateValue, maxEntryDateValue,
+                            minSoldDateValue, maxSoldDateValue
+                        )
+
+                        if (errorMessage != null) {
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                            return@ThemeButton
+                        }
+
+
                         var minPrice: Int? = null
                         minPriceValue?.let {
 
@@ -253,6 +272,7 @@ fun SearchScreen(
                     expandedP = minEntryDateValue != null || maxEntryDateValue != null) {
                     DatePickerDialog(
                         labelID = R.string.min_entry_date,
+                        date = minEntryDateValue,
                         datePickerState = datePickerState,
                         onDateSelected = {
                             minEntryDateValue = it
@@ -262,6 +282,7 @@ fun SearchScreen(
 
                     DatePickerDialog(
                         labelID = R.string.max_entry_date,
+                        date = maxEntryDateValue,
                         datePickerState = datePickerState,
                         onDateSelected = {
                             maxEntryDateValue = it
@@ -276,6 +297,7 @@ fun SearchScreen(
                     expandedP = minSoldDateValue != null || maxSoldDateValue != null) {
                     DatePickerDialog(
                         labelID = R.string.min_sold_date,
+                        date = minSoldDateValue,
                         datePickerState = datePickerState,
                         onDateSelected = {
                             minSoldDateValue = it
@@ -284,6 +306,7 @@ fun SearchScreen(
 
                     DatePickerDialog(
                         labelID = R.string.max_sold_date,
+                        date = maxSoldDateValue,
                         datePickerState = datePickerState,
                         onDateSelected = {
                             maxSoldDateValue = it
@@ -363,35 +386,34 @@ fun NumberOfRooms(labelID: Int, value: String, onValueChanged: (String) -> Unit)
 @Composable
 fun DatePickerDialog(
     labelID: Int,
+    date: Date?,
     datePickerState: DatePickerState,
-    onDateSelected: (Date) -> Unit
+    onDateSelected: (Date?) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    var selectedDateText by remember { mutableStateOf("") }
+
+    val selectedDateText = date?.let {
+        val localDate = it.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+        "${localDate.dayOfMonth}/${localDate.monthValue}/${localDate.year}"
+    } ?: ""
+
     if (showDialog) {
         DatePickerDialog(
             onDismissRequest = { showDialog = false },
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let {
-                        val localDate = Instant.ofEpochMilli(it)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        selectedDateText =
-                            "${localDate.dayOfMonth}/${localDate.monthValue}/${localDate.year}"
-                        onDateSelected(Date(it))
+                        val selectedDate = Date(it)
+                        onDateSelected(selectedDate)
                     }
                     showDialog = false
                 }) {
-                    ThemeText(
-                        text = stringResource(R.string.ok),
-                        style = ThemeTextStyle.NORMAL
-                    )
+                    ThemeText(text = stringResource(R.string.ok), style = ThemeTextStyle.NORMAL)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDialog = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(text = stringResource(R.string.cancel))
                 }
             }
         ) {
@@ -404,8 +426,10 @@ fun DatePickerDialog(
         labelID = labelID,
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
-            .clickable { showDialog = true }
+            .height(56.dp),
+        onClick = { showDialog = true },
+        onClear = { onDateSelected(null) }, // nouvelle action de suppression
+        isClearable = date != null
     )
 }
 

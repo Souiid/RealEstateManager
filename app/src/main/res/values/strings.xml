@@ -107,4 +107,9 @@
     <string name="error_place_required">Place is required, click on a suggestion</string>
     <string name="error_rooms_logic">The number of rooms must be greater than or equal to the sum of bedrooms and bathrooms + one room (living room)</string>
     <string name="agent_must_have_two_characters">An agent name must have at least two characters</string>
+    <string name="error_price_range">Minimum price cannot be greater than maximum price.</string>
+    <string name="error_surface_range">Minimum surface cannot be greater than maximum surface.</string>
+    <string name="error_room_range">Minimum number of rooms cannot be greater than maximum number.</string>
+    <string name="error_entry_date_range">Minimum entry date cannot be after maximum entry date.</string>
+    <string name="error_sold_date_range">Minimum sold date cannot be after maximum sold date.</string>
 </resources>
