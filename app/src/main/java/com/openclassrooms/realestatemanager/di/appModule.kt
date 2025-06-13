@@ -15,7 +15,6 @@ import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFor
 import com.openclassrooms.realestatemanager.ui.screens.form.selectagent.SelectAgentViewModel
 import com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture.SetRealtyPictureViewModel
 import com.openclassrooms.realestatemanager.ui.screens.main.MortgageViewModel
-import com.openclassrooms.realestatemanager.ui.screens.map.MapViewModel
 import com.openclassrooms.realestatemanager.ui.screens.search.SearchViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -25,9 +24,8 @@ val appModule = module {
     viewModel { RealtyFormViewModel(get(), get()) }
     viewModel { SetRealtyPictureViewModel(get(), get()) }
     viewModel { SelectAgentViewModel(get(), get(), get()) }
-    viewModel { RealitiesViewModel(get()) }
+    viewModel { RealitiesViewModel(get(), androidContext()) }
     viewModel { RealtyDescriptionViewModel(androidContext(), get(), get()) }
-    viewModel { MapViewModel(androidContext(), get()) }
     viewModel { SearchViewModel(get(), get(), get()) }
     viewModel { MortgageViewModel() }
     viewModel { CurrencyViewModel(androidContext()) }
