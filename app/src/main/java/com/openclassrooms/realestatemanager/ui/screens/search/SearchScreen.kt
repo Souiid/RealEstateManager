@@ -60,31 +60,41 @@ import java.util.Date
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
-                 currencyViewModel: CurrencyViewModel = koinViewModel(),
-                 onNewSearchCriteria: (SearchCriteria)-> Unit) {
+fun SearchScreen(
+    searchViewModel: SearchViewModel = koinViewModel(),
+    currencyViewModel: CurrencyViewModel = koinViewModel(),
+    onNewSearchCriteria: (SearchCriteria) -> Unit
+) {
     val criteria by searchViewModel.criteriaFlow.collectAsState()
 
-    var selectedRealtyTypes by remember(criteria) { mutableStateOf(criteria?.realtyTypes ?: emptyList()) }
-    var selectedStatus by remember(criteria) { mutableStateOf<Boolean?>(criteria?.isAvailable) }
-    var minPriceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.minPrice) }
-    var maxPriceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.maxPrice) }
+    var selectedRealtyTypes by remember(criteria) {
+        mutableStateOf(
+            criteria?.realtyTypes ?: emptyList()
+        )
+    }
+    var selectedStatus by remember(criteria) { mutableStateOf(criteria?.isAvailable) }
+    var minPriceValue by remember(criteria) { mutableStateOf(criteria?.minPrice) }
+    var maxPriceValue by remember(criteria) { mutableStateOf(criteria?.maxPrice) }
 
-    var minSurfaceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.minSurface) }
-    var maxSurfaceValue by remember(criteria) { mutableStateOf<Int?>(criteria?.maxSurface) }
+    var minSurfaceValue by remember(criteria) { mutableStateOf(criteria?.minSurface) }
+    var maxSurfaceValue by remember(criteria) { mutableStateOf(criteria?.maxSurface) }
 
     val datePickerState = rememberDatePickerState()
-    var minEntryDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.minEntryDate) }
-    var maxEntryDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.maxEntryDate) }
-    var minSoldDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.minSoldDate) }
-    var maxSoldDateValue by remember(criteria) { mutableStateOf<Date?>(criteria?.maxSoldDate) }
-    var selectedAmenities by remember(criteria) { mutableStateOf(criteria?.amenities ?: emptyList()) }
+    var minEntryDateValue by remember(criteria) { mutableStateOf(criteria?.minEntryDate) }
+    var maxEntryDateValue by remember(criteria) { mutableStateOf(criteria?.maxEntryDate) }
+    var minSoldDateValue by remember(criteria) { mutableStateOf(criteria?.minSoldDate) }
+    var maxSoldDateValue by remember(criteria) { mutableStateOf(criteria?.maxSoldDate) }
+    var selectedAmenities by remember(criteria) {
+        mutableStateOf(
+            criteria?.amenities ?: emptyList()
+        )
+    }
 
     val agents by searchViewModel.agentsFlow.collectAsState(initial = emptyList())
-    var selectedAgent by remember(criteria) { mutableStateOf<RealtyAgent?>(criteria?.selectedAgent) }
+    var selectedAgent by remember(criteria) { mutableStateOf(criteria?.selectedAgent) }
 
-    var minNumberOfRooms by remember(criteria) { mutableStateOf<Int?>(criteria?.minRooms) }
-    var maxNumberOfRooms by remember(criteria) { mutableStateOf<Int?>(criteria?.maxRooms) }
+    var minNumberOfRooms by remember(criteria) { mutableStateOf(criteria?.minRooms) }
+    var maxNumberOfRooms by remember(criteria) { mutableStateOf(criteria?.maxRooms) }
 
     val isEuro by currencyViewModel.isEuroFlow.collectAsState()
 
@@ -188,7 +198,10 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
-                ExpandableSection(title = stringResource(R.string.realty_status), expandedP = true) {
+                ExpandableSection(
+                    title = stringResource(R.string.realty_status),
+                    expandedP = true
+                ) {
                     StatusSegmentedButton(
                         selectedStatus = selectedStatus,
                         onStatusSelected = { selectedStatus = it }
@@ -197,7 +210,10 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             }
 
             item {
-                ExpandableSection(stringResource(R.string.realty_type)) {
+                ExpandableSection(
+                    stringResource(R.string.realty_type),
+                    expandedP = selectedRealtyTypes.isNotEmpty()
+                ) {
                     RealtyTypeSelection(
                         selectedTypes = selectedRealtyTypes,
                         onSelectionChanged = { selectedRealtyTypes = it }
@@ -206,7 +222,9 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             }
 
             item {
-                ExpandableSection(stringResource(R.string.price)) {
+                ExpandableSection(stringResource(R.string.price),
+                    expandedP = minPriceValue != null || maxPriceValue != null
+                ) {
                     SetPriceFilterTextFields(
                         minPriceValue = minPriceValue,
                         maxPriceValue = maxPriceValue,
@@ -218,7 +236,8 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             }
 
             item {
-                ExpandableSection(stringResource(R.string.surface)) {
+                ExpandableSection(stringResource(R.string.surface),
+                    expandedP = minSurfaceValue != null || maxSurfaceValue != null) {
                     SetSurfaceFilterTextFields(
                         minSurfaceValue = minSurfaceValue,
                         maxSurfaceValue = maxSurfaceValue,
@@ -230,7 +249,8 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
 
 
             item {
-                ExpandableSection(stringResource(R.string.entry_date)) {
+                ExpandableSection(stringResource(R.string.entry_date),
+                    expandedP = minEntryDateValue != null || maxEntryDateValue != null) {
                     DatePickerDialog(
                         labelID = R.string.min_entry_date,
                         datePickerState = datePickerState,
@@ -252,7 +272,8 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             }
 
             item {
-                ExpandableSection(stringResource(R.string.sold_date)) {
+                ExpandableSection(stringResource(R.string.sold_date),
+                    expandedP = minSoldDateValue != null || maxSoldDateValue != null) {
                     DatePickerDialog(
                         labelID = R.string.min_sold_date,
                         datePickerState = datePickerState,
@@ -274,7 +295,8 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
 
             item {
                 ExpandableSection(
-                  stringResource(R.string.amenities)
+                    stringResource(R.string.amenities),
+                    expandedP = selectedAmenities.isNotEmpty()
                 ) {
                     SelectableChipsGroup(
                         selectedOptions = selectedAmenities,
@@ -285,7 +307,8 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             }
 
             item {
-                ExpandableSection(stringResource(R.string.agent)) {
+                ExpandableSection(stringResource(R.string.agent),
+                    expandedP = selectedAgent != null) {
                     AgentDropdown(
                         agents = agents,
                         selectedAgent = selectedAgent,
@@ -297,10 +320,12 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
             }
 
             item {
-                ExpandableSection(title = stringResource(R.string.number_of_rooms)) {
+                ExpandableSection(title = stringResource(R.string.number_of_rooms),
+                    expandedP = minNumberOfRooms != null || maxNumberOfRooms != null) {
                     NumberOfRooms(
                         labelID = R.string.min_number_of_rooms,
-                        value = minNumberOfRooms?.toString() ?: "") {
+                        value = minNumberOfRooms?.toString() ?: ""
+                    ) {
                         minNumberOfRooms = it.toIntOrNull()
                     }
 
@@ -308,7 +333,8 @@ fun SearchScreen(searchViewModel: SearchViewModel = koinViewModel(),
 
                     NumberOfRooms(
                         labelID = R.string.max_number_of_rooms,
-                        value = maxNumberOfRooms?.toString() ?: "") {
+                        value = maxNumberOfRooms?.toString() ?: ""
+                    ) {
                         maxNumberOfRooms = it.toIntOrNull()
                     }
                 }
@@ -390,7 +416,6 @@ fun SetSurfaceFilterTextFields(
     onMinSurfaceChange: (Int?) -> Unit,
     onMaxSurfaceChange: (Int?) -> Unit
 ) {
-    val utils = Utils()
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -436,7 +461,7 @@ fun SetPriceFilterTextFields(
     ) {
         ThemeOutlinedTextField(
             value = minPriceValue?.toString() ?: "",
-            onValueChanged = { onMinPriceChange(it.toIntOrNull())},
+            onValueChanged = { onMinPriceChange(it.toIntOrNull()) },
             labelID = R.string.min_price,
             imeAction = ImeAction.Next,
             iconText = currencyString,
@@ -446,7 +471,7 @@ fun SetPriceFilterTextFields(
 
         ThemeOutlinedTextField(
             value = maxPriceValue?.toString() ?: "",
-            onValueChanged = { onMaxPriceChange(it.toIntOrNull())},
+            onValueChanged = { onMaxPriceChange(it.toIntOrNull()) },
             labelID = R.string.max_price,
             imeAction = ImeAction.Next,
             iconText = currencyString,
@@ -468,11 +493,6 @@ fun StatusSegmentedButton(
     )
 
     val selectedIndex = statusList.indexOfFirst { it.second == selectedStatus }
-
-    ThemeText(
-        text = stringResource(R.string.realty_status),
-        style = ThemeTextStyle.NORMAL
-    )
 
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
         statusList.forEachIndexed { index, label ->
