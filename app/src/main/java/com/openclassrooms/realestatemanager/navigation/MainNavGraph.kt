@@ -72,6 +72,7 @@ fun MainNavGraph(
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = currentDestination != NavigationScreen.Map.route,
         drawerContent = {
             ModalDrawerSheet {
                 ListItem(
@@ -150,10 +151,6 @@ fun MainNavGraph(
                                 activity.startActivity(intent)
                             }) {
                                 Icon(Icons.Filled.Create, contentDescription = null, tint = Color.White)
-                            }
-                        } else if (currentDestination == NavigationScreen.Map.route) {
-                            IconButton(onClick = { showSheet = true }) {
-                                Icon(Icons.Filled.Search, contentDescription = null, tint = Color.White)
                             }
                         }
                     }
@@ -243,8 +240,9 @@ fun MainNavGraph(
 
                 composable(NavigationScreen.Map.route) {
                     MapScreen(
-                        onMarkerClick = {
-                            navController.navigate(NavigationScreen.RealtyDescription.route)
+                        criteria = criterias,
+                        onMarkerClick = { realtyID ->
+                            navController.navigate(NavigationScreen.RealtyDescription.createRoute(realtyID))
                         }
                     )
                 }

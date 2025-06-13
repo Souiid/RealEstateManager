@@ -25,17 +25,26 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.ui.screens.main.RealitiesViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun MapScreen(realitiesViewModel: RealitiesViewModel = koinViewModel(), onMarkerClick: ()->Unit) {
+fun MapScreen(
+    realitiesViewModel: RealitiesViewModel = koinViewModel(),
+    onMarkerClick: (Int) -> Unit,
+    criteria: SearchCriteria? = null,
+) {
     val context = LocalContext.current
     val realities by realitiesViewModel.realties.collectAsState(initial = emptyList())
 
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    LaunchedEffect(criteria) {
+        realitiesViewModel.setCriteria(criteria)
     }
 
     var userLocation by remember { mutableStateOf<LatLng?>(null) }
@@ -48,7 +57,7 @@ fun MapScreen(realitiesViewModel: RealitiesViewModel = koinViewModel(), onMarker
             getLastKnownLocation(context, fusedLocationClient) { latLng ->
                 userLocation = latLng
                 latLng?.let {
-                    cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 15f)
+                    cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 12f)
                 }
             }
         }
@@ -73,26 +82,25 @@ fun MapScreen(realitiesViewModel: RealitiesViewModel = koinViewModel(), onMarker
         }
     }
 
-  GoogleMap(
-      modifier = Modifier.fillMaxSize(),
-      cameraPositionState = cameraPositionState,
-      properties = MapProperties(
-          isMyLocationEnabled = userLocation != null
-      )
-  ) {
-      realities.forEach {realty->
-          val latitude = realty.primaryInfo.realtyPlace.positionLatLng.latitude
-          val longitude = realty.primaryInfo.realtyPlace.positionLatLng.longitude
-          Marker(
-              state = rememberMarkerState(position = LatLng(latitude, longitude)),
-              onClick = { _ ->
-
-                  onMarkerClick()
-                  true
-              }
-          )
-      }
-  }
+    GoogleMap(
+        modifier = Modifier.fillMaxSize(),
+        cameraPositionState = cameraPositionState,
+        properties = MapProperties(
+            isMyLocationEnabled = userLocation != null
+        )
+    ) {
+        realities.forEach { realty ->
+            val latitude = realty.primaryInfo.realtyPlace.positionLatLng.latitude
+            val longitude = realty.primaryInfo.realtyPlace.positionLatLng.longitude
+            Marker(
+                state = rememberMarkerState(position = LatLng(latitude, longitude)),
+                onClick = { _ ->
+                    onMarkerClick(realty.id)
+                    true
+                }
+            )
+        }
+    }
 }
 
 private fun getLastKnownLocation(
