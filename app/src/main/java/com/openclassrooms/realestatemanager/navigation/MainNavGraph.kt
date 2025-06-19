@@ -233,9 +233,8 @@ fun MainNavGraph(
                     )
                 ) { backStackEntry ->
                     val priceString = backStackEntry.arguments?.getString(NavigationScreen.Mortgage.ARG_PRICE)
-                    val isSavedInDollar = backStackEntry.arguments?.getBoolean(NavigationScreen.Mortgage.ARG_IS_SAVED_IN_DOLLAR) ?: false
                     val price = priceString?.toIntOrNull() ?: 0
-                    MortgageScreen(price = price, isSavedInDollar = isSavedInDollar)
+                    MortgageScreen(price = price)
                 }
 
                 composable(NavigationScreen.Map.route) {

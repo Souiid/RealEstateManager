@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.data
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -48,6 +49,7 @@ class Utils {
         return PriceComponent(finalPrice, currencySymbol)
     }
 
+    @SuppressLint("SimpleDateFormat")
     fun getTodayDate(date: Date): String {
         val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
         return dateFormat.format(date)
@@ -59,11 +61,6 @@ class Utils {
         val network = connectivityManager.activeNetwork ?: return false
         val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-
-    companion object {
-        val TITLE_SIZE = 30.dp
-        val DESCRIPTION_SIZE = 20.dp
     }
 
     fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
@@ -79,5 +76,20 @@ class Utils {
 
     fun filterOnlyDigits(input: String): String {
         return input.filter { it.isDigit() }
+    }
+
+    fun filterNumericInput(input: String, allowDecimal: Boolean = true): String {
+        val allowed = if (allowDecimal) "0123456789.," else "0123456789"
+        var filtered = input.filter { it in allowed }
+
+        filtered = filtered.replace(',', '.')
+
+        if (allowDecimal && filtered.count { it == '.' } > 1) {
+            val first = filtered.indexOf('.')
+            filtered =
+                filtered.substring(0, first + 1) + filtered.substring(first + 1).replace(".", "")
+        }
+
+        return filtered
     }
 }

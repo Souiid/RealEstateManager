@@ -114,5 +114,6 @@
     <string name="error_sold_date_range">Minimum sold date cannot be after maximum sold date.</string>
     <string name="criteria_applied">Criteria are applied</string>
     <string name="criteria_removed">Criteria are removed</string>
+    <string name="one_field_empty">One of field is empty or incorrect</string>
 
 </resources>

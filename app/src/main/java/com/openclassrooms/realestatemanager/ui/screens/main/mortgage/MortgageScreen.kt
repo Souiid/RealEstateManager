@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens.main.mortgage
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,10 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
@@ -35,16 +38,18 @@ import org.koin.androidx.compose.koinViewModel
 fun MortgageScreen(
     mortgageViewModel: MortgageViewModel = koinViewModel(),
     currencyViewModel: CurrencyViewModel = koinViewModel(),
-    price: Int,
-    isSavedInDollar: Boolean
+    price: Int
 ) {
-
-    var downPayment by remember { mutableStateOf("0") }
-    var interestRate by remember { mutableStateOf("1") }
+    val utils = Utils()
+    var downPayment by remember { mutableStateOf("0.0") }
+    var interestRate by remember { mutableStateOf("1.0") }
     var durationYears by remember { mutableStateOf("10") }
     var mortgageResult by remember { mutableStateOf<MortgageResult?>(null) }
     val isEuro by currencyViewModel.isEuroFlow.collectAsState()
-    val priceComponent = Utils().getCorrectPriceComponent(price, isEuro)
+    val priceComponent = utils.getCorrectPriceComponent(price, isEuro)
+
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +73,7 @@ fun MortgageScreen(
 
         ThemeOutlinedTextField(
             onValueChanged = { value ->
-                downPayment = value
+                downPayment = utils.filterNumericInput(value)
             },
             value = downPayment,
             labelID = R.string.down_payment,
@@ -80,19 +85,19 @@ fun MortgageScreen(
 
         ThemeOutlinedTextField(
             onValueChanged = { value ->
-                interestRate = value
+                interestRate = utils.filterNumericInput(value)
             },
             value = interestRate,
             labelID = R.string.interest_rate,
             imeAction = ImeAction.Next,
             iconText = "%",
-            keyboardType = KeyboardType.Number,
+            keyboardType = KeyboardType.Decimal,
         )
         Spacer(modifier = Modifier.height(5.dp))
 
         ThemeOutlinedTextField(
             onValueChanged = { value ->
-                durationYears = value
+                durationYears = utils.filterNumericInput(value, allowDecimal = false)
             },
             value = durationYears,
             labelID = R.string.duration_years,
@@ -105,6 +110,12 @@ fun MortgageScreen(
 
         ThemeButton(
             onClick = {
+
+                if (!mortgageViewModel.isInputValid(downPayment, interestRate, durationYears)) {
+                    Toast.makeText(context, context.getString(R.string.one_field_empty), Toast.LENGTH_SHORT).show()
+                    return@ThemeButton
+                }
+
                 mortgageResult = mortgageViewModel.calculateMortgage(
                     propertyPrice = priceComponent.price.toDouble(),
                     downPayment = downPayment.toDouble(),
@@ -156,7 +167,8 @@ fun MortgageResultSection(mortgageResult: MortgageResult, isEuro: Boolean) {
 fun MortgageResultRow(
     titleText: String,
     resultString: String,
-    isEuro: Boolean
+    isEuro: Boolean,
+    utils: Utils = Utils()
 ) {
 
     Row(
@@ -170,7 +182,7 @@ fun MortgageResultRow(
         )
 
         ThemeText(
-            text = "$resultString ${Utils().getCorrectPriceComponent(0, isEuro).currency}",
+            text = "$resultString ${utils.getCorrectPriceComponent(0, isEuro).currency}",
             style = ThemeTextStyle.NORMAL,
         )
     }
