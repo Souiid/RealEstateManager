@@ -5,10 +5,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.net.Uri
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -17,6 +21,8 @@ class Utils {
 
     private val euroToDollarRate = 1.15
     private val dollarToEuroRate = 1 / euroToDollarRate
+    private val _internetStatus = MutableStateFlow(true)
+    val internetStatus: StateFlow<Boolean> = _internetStatus
 
     //Méthode imprecise pour convertir les devises, lorsque l'utilisateur choisi euro ou dollar
   // fun convertDollarToEuro(dollars: Int): Int {
@@ -98,5 +104,24 @@ class Utils {
     fun isTablet(context: Context): Boolean {
         val configuration = context.resources.configuration
         return configuration.smallestScreenWidthDp >= 600
+    }
+
+    fun startInternetMonitoring(context: Context) {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val request = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+
+        connectivityManager.registerNetworkCallback(request, object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                _internetStatus.value = true
+            }
+
+            override fun onLost(network: Network) {
+                _internetStatus.value = false
+            }
+        })
     }
 }

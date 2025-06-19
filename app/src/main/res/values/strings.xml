@@ -115,5 +115,8 @@
     <string name="criteria_applied">Criteria are applied</string>
     <string name="criteria_removed">Criteria are removed</string>
     <string name="one_field_empty">One of field is empty or incorrect</string>
+    <string name="network">Network</string>
+    <string name="internet_available">You are correctly connected to internet</string>
+    <string name="not_internet">You are not connected to internet</string>
 
 </resources>
