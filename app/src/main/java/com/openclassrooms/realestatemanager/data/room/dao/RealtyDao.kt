@@ -42,7 +42,7 @@ AND (:maxEntryDate IS NULL OR entryDate <= :maxEntryDate)
 AND (:minSoldDate IS NULL OR (saleDate IS NOT NULL AND saleDate >= :minSoldDate))
 AND (:maxSoldDate IS NULL OR (saleDate IS NOT NULL AND saleDate <= :maxSoldDate))
 AND (COALESCE(:realtyTypesSize, 0) = 0 OR realtyType IN (:realtyTypes))
-AND (:amenity IS NULL OR amenities LIKE '%' || :amenity || '%')
+AND (:agentId IS NULL OR agentId = :agentId)
 """
     )
     fun getFilteredRealties(
@@ -59,7 +59,7 @@ AND (:amenity IS NULL OR amenities LIKE '%' || :amenity || '%')
         maxSoldDate: Date?,
         realtyTypes: List<String>? = null,
         realtyTypesSize: Int? = null,
-        amenity: String? = null
+        agentId: Int? = null
     ): List<Realty>
 
 }

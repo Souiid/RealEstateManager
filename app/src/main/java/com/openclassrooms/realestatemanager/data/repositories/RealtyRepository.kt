@@ -41,25 +41,34 @@ class RealtyRepository(context: Context): IRealtyRepository {
     }
 
     override fun getFilteredRealtiesFlow(criteria: SearchCriteria?): Flow<List<Realty>> = flow {
-        emit(
-            dao.getFilteredRealties(
-                criteria?.isAvailable,
-                criteria?.minPrice?.toDouble(),
-                criteria?.maxPrice?.toDouble(),
-                criteria?.minSurface?.toDouble(),
-                criteria?.maxSurface?.toDouble(),
-                criteria?.minRooms,
-                criteria?.maxRooms,
-                criteria?.minEntryDate,
-                criteria?.maxEntryDate,
-                criteria?.minSoldDate,
-                criteria?.maxSoldDate,
-                criteria?.realtyTypes?.map { it.name },
-                criteria?.realtyTypes?.size ?: 0,
-            )
+        val results = dao.getFilteredRealties(
+            criteria?.isAvailable,
+            criteria?.minPrice?.toDouble(),
+            criteria?.maxPrice?.toDouble(),
+            criteria?.minSurface?.toDouble(),
+            criteria?.maxSurface?.toDouble(),
+            criteria?.minRooms,
+            criteria?.maxRooms,
+            criteria?.minEntryDate,
+            criteria?.maxEntryDate,
+            criteria?.minSoldDate,
+            criteria?.maxSoldDate,
+            criteria?.realtyTypes?.map { it.name },
+            criteria?.realtyTypes?.size ?: 0,
+            criteria?.selectedAgent?.id
         )
-    }.flowOn(Dispatchers.IO)
 
+        val filtered = if (!criteria?.amenities.isNullOrEmpty()) {
+            val requiredAmenities = criteria!!.amenities
+            results.filter { realty ->
+                requiredAmenities.all { it in realty.primaryInfo.amenities }
+            }
+        } else {
+            results
+        }
+
+        emit(filtered)
+    }.flowOn(Dispatchers.IO)
 
 
 }
