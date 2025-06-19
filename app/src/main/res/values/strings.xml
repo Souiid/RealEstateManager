@@ -112,4 +112,7 @@
     <string name="error_room_range">Minimum number of rooms cannot be greater than maximum number.</string>
     <string name="error_entry_date_range">Minimum entry date cannot be after maximum entry date.</string>
     <string name="error_sold_date_range">Minimum sold date cannot be after maximum sold date.</string>
+    <string name="criteria_applied">Criteria are applied</string>
+    <string name="criteria_removed">Criteria are removed</string>
+
 </resources>

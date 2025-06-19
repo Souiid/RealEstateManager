@@ -145,6 +145,8 @@ fun SearchScreen(
 
                         searchViewModel.setCriteria(resetCriteria)
                         onNewSearchCriteria(resetCriteria)
+                        Toast.makeText(context, context.getString(R.string.criteria_removed), Toast.LENGTH_SHORT).show()
+
                     },
                     text = stringResource(R.string.reset),
                     modifier = Modifier
@@ -201,6 +203,7 @@ fun SearchScreen(
 
                         searchViewModel.setCriteria(newCriteria)
                         onNewSearchCriteria(newCriteria)
+                        Toast.makeText(context, context.getString(R.string.criteria_applied), Toast.LENGTH_SHORT).show()
                     },
                     text = stringResource(R.string.apply),
                     modifier = Modifier
