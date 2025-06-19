@@ -25,7 +25,7 @@ class Utils {
   //     return Math.round(euros * 1.15).toInt()
   // }
 
-    fun convertEuroToDollar(euros: Int): Int {
+    infix fun convertEuroToDollar(euros: Int): Int {
         return Math.round(euros * euroToDollarRate).toInt()
     }
 

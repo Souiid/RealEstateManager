@@ -15,6 +15,6 @@ interface IRealtyRepository {
     fun getAllRealties(): Flow<List<Realty>>
     suspend fun getRealtyFromID(realtyID: Int): Realty?
     suspend fun updateRealty(realty: Realty)
-    fun getFilteredRealtiesFlow(criteria: SearchCriteria?): Flow<List<Realty>>
+    fun getFilteredRealtiesFlow(criteria: SearchCriteria?, isEuro: Boolean): Flow<List<Realty>>
 
 }

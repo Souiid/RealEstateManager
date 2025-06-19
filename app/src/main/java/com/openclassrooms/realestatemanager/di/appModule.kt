@@ -24,7 +24,7 @@ val appModule = module {
     viewModel { RealtyFormViewModel(get(), get()) }
     viewModel { SetRealtyPictureViewModel(get(), get()) }
     viewModel { SelectAgentViewModel(get(), get(), get()) }
-    viewModel { RealitiesViewModel(get(), androidContext()) }
+    viewModel { RealitiesViewModel(get(), get(), androidContext()) }
     viewModel { RealtyDescriptionViewModel(androidContext(), get(), get()) }
     viewModel { SearchViewModel(get(), get(), get()) }
     viewModel { MortgageViewModel() }

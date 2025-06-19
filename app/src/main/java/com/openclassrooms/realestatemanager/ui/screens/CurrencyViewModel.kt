@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CurrencyViewModel(
-    private val context: Context
+    private val context: Context,
 ): ViewModel() {
     val isEuroFlow: StateFlow<Boolean> = DataStoreManager.getIsEuro(context)
         .stateIn(

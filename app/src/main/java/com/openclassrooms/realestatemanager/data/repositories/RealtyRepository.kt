@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.data.repositories
 
 import android.content.Context
 import com.openclassrooms.realestatemanager.data.SearchCriteria
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.DatabaseProvider
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import kotlinx.coroutines.Dispatchers
@@ -40,31 +41,43 @@ class RealtyRepository(context: Context): IRealtyRepository {
         dao.updateRealty(realty)
     }
 
-    override fun getFilteredRealtiesFlow(criteria: SearchCriteria?): Flow<List<Realty>> = flow {
+    override fun getFilteredRealtiesFlow(criteria: SearchCriteria?, isEuro: Boolean): Flow<List<Realty>> = flow {
         val results = dao.getFilteredRealties(
-            criteria?.isAvailable,
-            criteria?.minPrice?.toDouble(),
-            criteria?.maxPrice?.toDouble(),
-            criteria?.minSurface?.toDouble(),
-            criteria?.maxSurface?.toDouble(),
-            criteria?.minRooms,
-            criteria?.maxRooms,
-            criteria?.minEntryDate,
-            criteria?.maxEntryDate,
-            criteria?.minSoldDate,
-            criteria?.maxSoldDate,
-            criteria?.realtyTypes?.map { it.name },
-            criteria?.realtyTypes?.size ?: 0,
-            criteria?.selectedAgent?.id
+            isAvailable = criteria?.isAvailable,
+            minPrice = null,
+            maxPrice = null,
+            minSurface = criteria?.minSurface?.toDouble(),
+            maxSurface = criteria?.maxSurface?.toDouble(),
+            minRooms = criteria?.minRooms,
+            maxRooms = criteria?.maxRooms,
+            minEntryDate = criteria?.minEntryDate,
+            maxEntryDate = criteria?.maxEntryDate,
+            minSoldDate = criteria?.minSoldDate,
+            maxSoldDate = criteria?.maxSoldDate,
+            realtyTypes = criteria?.realtyTypes?.map { it.name },
+            realtyTypesSize = criteria?.realtyTypes?.size ?: 0,
+            agentId = criteria?.selectedAgent?.id
         )
 
-        val filtered = if (!criteria?.amenities.isNullOrEmpty()) {
-            val requiredAmenities = criteria!!.amenities
-            results.filter { realty ->
-                requiredAmenities.all { it in realty.primaryInfo.amenities }
+        val filtered = results.filter { realty ->
+            val realtyPriceInUserCurrency = if (realty.primaryInfo.isEuro == (isEuro)) {
+                realty.primaryInfo.price
+            } else {
+                if (isEuro) {
+                    Utils().convertDollarToEuro(realty.primaryInfo.price)
+                } else {
+                    Utils() convertEuroToDollar(realty.primaryInfo.price)
+                }
             }
-        } else {
-            results
+
+            val priceOk =
+                (criteria?.minPrice == null || realtyPriceInUserCurrency >= criteria.minPrice) &&
+                        (criteria?.maxPrice == null || realtyPriceInUserCurrency <= criteria.maxPrice)
+
+            val amenitiesOk = criteria?.amenities.isNullOrEmpty() ||
+                    criteria!!.amenities.all { it in realty.primaryInfo.amenities }
+
+            priceOk && amenitiesOk
         }
 
         emit(filtered)
