@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -91,5 +92,11 @@ class Utils {
         }
 
         return filtered
+    }
+
+
+    fun isTablet(context: Context): Boolean {
+        val configuration = context.resources.configuration
+        return configuration.smallestScreenWidthDp >= 600
     }
 }

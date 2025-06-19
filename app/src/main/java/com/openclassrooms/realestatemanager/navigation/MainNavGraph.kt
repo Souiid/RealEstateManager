@@ -44,6 +44,7 @@ import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.SearchCriteria
+import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.ui.screens.main.home.HomeTabletScreen
 import com.openclassrooms.realestatemanager.ui.screens.main.MainActivity
 import com.openclassrooms.realestatemanager.ui.screens.map.MapScreen
@@ -69,6 +70,8 @@ fun MainNavGraph(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+
+    val startRoute = if (Utils().isTablet(activity)) NavigationScreen.HomeTablet.route else NavigationScreen.Realties.route
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -188,7 +191,7 @@ fun MainNavGraph(
                 }
             }
 
-            NavHost(navController, NavigationScreen.Realties.route, modifier.padding(innerPadding)) {
+            NavHost(navController, startRoute, modifier.padding(innerPadding)) {
                 composable(NavigationScreen.HomeTablet.route,
 
                     ) {
@@ -246,7 +249,6 @@ fun MainNavGraph(
                     )
                 }
             }
-
         }
     }
 }
