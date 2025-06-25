@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -111,118 +112,7 @@ fun SearchScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
-        bottomBar = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                ThemeButton(
-                    onClick = {
-                        selectedRealtyTypes = emptyList()
-                        selectedStatus = null
-                        minPriceValue = null
-                        maxPriceValue = null
-                        minSurfaceValue = null
-                        maxSurfaceValue = null
-                        minEntryDateValue = null
-                        maxEntryDateValue = null
-                        minSoldDateValue = null
-                        maxSoldDateValue = null
-                        selectedAmenities = emptyList()
-                        selectedAgent = null
-                        minNumberOfRooms = 0
-                        maxNumberOfRooms = 0
 
-                        val resetCriteria = SearchCriteria(
-                            realtyTypes = emptyList(),
-                            isAvailable = null,
-                            minPrice = null,
-                            maxPrice = null,
-                            minSurface = null,
-                            maxSurface = null,
-                            minEntryDate = null,
-                            maxEntryDate = null,
-                            minSoldDate = null,
-                            maxSoldDate = null,
-                            amenities = emptyList(),
-                            selectedAgent = null,
-                            minRooms = null,
-                            maxRooms = null,
-                        )
-
-                        searchViewModel.setCriteria(resetCriteria)
-                        onNewSearchCriteria(resetCriteria)
-                        Toast.makeText(context, context.getString(R.string.criteria_removed), Toast.LENGTH_SHORT).show()
-
-                    },
-                    text = stringResource(R.string.reset),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                ThemeButton(
-                    onClick = {
-                        val errorMessage = searchViewModel.validateCriteria(
-                            context,
-                            minPriceValue, maxPriceValue,
-                            minSurfaceValue, maxSurfaceValue,
-                            minNumberOfRooms, maxNumberOfRooms,
-                            minEntryDateValue, maxEntryDateValue,
-                            minSoldDateValue, maxSoldDateValue
-                        )
-
-                        if (errorMessage != null) {
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
-                            return@ThemeButton
-                        }
-
-
-                        var minPrice: Int? = null
-                        minPriceValue?.let {
-
-                            minPrice = Utils().getCorrectPriceComponent(it).price
-                        }
-
-                        var maxPrice: Int? = null
-                        maxPriceValue?.let {
-                            maxPrice = Utils().getCorrectPriceComponent(it).price
-                        }
-
-                        Log.d("locationDebugAAA", "SearchCriteria créé : centerPlace=${realtyPlaceValue}")
-
-                        val newCriteria = SearchCriteria(
-                            realtyTypes = selectedRealtyTypes,
-                            isAvailable = selectedStatus,
-                            minPrice = minPrice,
-                            maxPrice = maxPrice,
-                            minSurface = minSurfaceValue,
-                            maxSurface = maxSurfaceValue,
-                            minEntryDate = minEntryDateValue,
-                            maxEntryDate = maxEntryDateValue,
-                            minSoldDate = minSoldDateValue,
-                            maxSoldDate = maxSoldDateValue,
-                            amenities = selectedAmenities,
-                            selectedAgent = selectedAgent,
-                            minRooms = minNumberOfRooms,
-                            maxRooms = maxNumberOfRooms,
-                            centerPlace = realtyPlaceValue,
-                            radiusKm = 10.0
-                        )
-
-                        searchViewModel.setCriteria(newCriteria)
-                        onNewSearchCriteria(newCriteria)
-                        Toast.makeText(context, context.getString(R.string.criteria_applied), Toast.LENGTH_SHORT).show()
-                    },
-                    text = stringResource(R.string.apply),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-        }
     ) {
         LazyColumn(
             modifier = Modifier
@@ -395,6 +285,121 @@ fun SearchScreen(
                     )
                 }
 
+            }
+
+            item {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Bottom
+
+                ) {
+                    ThemeButton(
+                        onClick = {
+                            selectedRealtyTypes = emptyList()
+                            selectedStatus = null
+                            minPriceValue = null
+                            maxPriceValue = null
+                            minSurfaceValue = null
+                            maxSurfaceValue = null
+                            minEntryDateValue = null
+                            maxEntryDateValue = null
+                            minSoldDateValue = null
+                            maxSoldDateValue = null
+                            selectedAmenities = emptyList()
+                            selectedAgent = null
+                            minNumberOfRooms = 0
+                            maxNumberOfRooms = 0
+
+                            val resetCriteria = SearchCriteria(
+                                realtyTypes = emptyList(),
+                                isAvailable = null,
+                                minPrice = null,
+                                maxPrice = null,
+                                minSurface = null,
+                                maxSurface = null,
+                                minEntryDate = null,
+                                maxEntryDate = null,
+                                minSoldDate = null,
+                                maxSoldDate = null,
+                                amenities = emptyList(),
+                                selectedAgent = null,
+                                minRooms = null,
+                                maxRooms = null,
+                            )
+
+                            searchViewModel.setCriteria(resetCriteria)
+                            onNewSearchCriteria(resetCriteria)
+                            Toast.makeText(context, context.getString(R.string.criteria_removed), Toast.LENGTH_SHORT).show()
+
+                        },
+                        text = stringResource(R.string.reset),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    ThemeButton(
+                        onClick = {
+                            val errorMessage = searchViewModel.validateCriteria(
+                                context,
+                                minPriceValue, maxPriceValue,
+                                minSurfaceValue, maxSurfaceValue,
+                                minNumberOfRooms, maxNumberOfRooms,
+                                minEntryDateValue, maxEntryDateValue,
+                                minSoldDateValue, maxSoldDateValue
+                            )
+
+                            if (errorMessage != null) {
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                                return@ThemeButton
+                            }
+
+
+                            var minPrice: Int? = null
+                            minPriceValue?.let {
+
+                                minPrice = Utils().getCorrectPriceComponent(it).price
+                            }
+
+                            var maxPrice: Int? = null
+                            maxPriceValue?.let {
+                                maxPrice = Utils().getCorrectPriceComponent(it).price
+                            }
+
+                            Log.d("locationDebugAAA", "SearchCriteria créé : centerPlace=${realtyPlaceValue}")
+
+                            val newCriteria = SearchCriteria(
+                                realtyTypes = selectedRealtyTypes,
+                                isAvailable = selectedStatus,
+                                minPrice = minPrice,
+                                maxPrice = maxPrice,
+                                minSurface = minSurfaceValue,
+                                maxSurface = maxSurfaceValue,
+                                minEntryDate = minEntryDateValue,
+                                maxEntryDate = maxEntryDateValue,
+                                minSoldDate = minSoldDateValue,
+                                maxSoldDate = maxSoldDateValue,
+                                amenities = selectedAmenities,
+                                selectedAgent = selectedAgent,
+                                minRooms = minNumberOfRooms,
+                                maxRooms = maxNumberOfRooms,
+                                centerPlace = realtyPlaceValue,
+                                radiusKm = 10.0
+                            )
+
+                            searchViewModel.setCriteria(newCriteria)
+                            onNewSearchCriteria(newCriteria)
+                            Toast.makeText(context, context.getString(R.string.criteria_applied), Toast.LENGTH_SHORT).show()
+                        },
+                        text = stringResource(R.string.apply),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
             }
 
         }
