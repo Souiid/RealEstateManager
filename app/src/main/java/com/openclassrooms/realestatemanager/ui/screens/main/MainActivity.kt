@@ -44,11 +44,13 @@ class MainActivity : ComponentActivity() {
                     activity = this@MainActivity
                 )
 
-                if (isOnline) {
-                   Toast.makeText(this, this.getString(R.string.internet_available), Toast.LENGTH_SHORT).show()
-               }else {
-                   Toast.makeText(this, this.getString(R.string.not_internet), Toast.LENGTH_SHORT).show()
-               }
+                LaunchedEffect(isOnline) {
+                    if (isOnline) {
+                        Toast.makeText(this@MainActivity, getString(R.string.internet_available), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@MainActivity, getString(R.string.not_internet), Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
