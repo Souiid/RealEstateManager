@@ -47,15 +47,6 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromLatLng(position: LatLng): String = Gson().toJson(position)
-
-    @TypeConverter
-    fun toLatLng(value: String): LatLng {
-        val type = object : TypeToken<LatLng>() {}.type
-        return Gson().fromJson(value, type)
-    }
-
-    @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return value?.let { Date(it) }
     }

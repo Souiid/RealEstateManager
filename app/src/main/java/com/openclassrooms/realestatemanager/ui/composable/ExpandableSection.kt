@@ -18,8 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.idrisssouissi.smartbait.presentation.components.ThemeText
-import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 
 @Composable
 fun ExpandableSection(

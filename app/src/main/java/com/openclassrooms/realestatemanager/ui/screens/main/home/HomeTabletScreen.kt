@@ -14,8 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.idrisssouissi.smartbait.presentation.components.ThemeText
-import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.ui.composable.ThemeText
+import com.openclassrooms.realestatemanager.ui.composable.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent

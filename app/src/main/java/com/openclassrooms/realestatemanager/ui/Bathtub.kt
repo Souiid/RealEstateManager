@@ -1,4 +1,4 @@
-package com.famoco.projet9
+package com.openclassrooms.realestatemanager.ui
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType

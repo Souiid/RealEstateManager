@@ -1,4 +1,4 @@
-package com.idrisssouissi.smartbait.presentation.components
+package com.openclassrooms.realestatemanager.ui.composable
 
 enum class ThemeTextStyle {
     TITLE,

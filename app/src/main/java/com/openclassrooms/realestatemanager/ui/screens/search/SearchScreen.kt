@@ -1,9 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens.search
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +19,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -42,15 +39,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.idrisssouissi.smartbait.presentation.components.ThemeText
-import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.ui.composable.ThemeText
+import com.openclassrooms.realestatemanager.ui.composable.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
-import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.AgentDropdown
 import com.openclassrooms.realestatemanager.ui.composable.ExpandableSection
 import com.openclassrooms.realestatemanager.ui.composable.PlaceAutocomplete
@@ -60,7 +55,6 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTFForDPD
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
 import org.koin.androidx.compose.koinViewModel
-import java.time.Instant
 import java.time.ZoneId
 import java.util.Date
 
@@ -278,8 +272,6 @@ fun SearchScreen(
                             searchViewModel.fetchPlaceLatLng(placesClient, placeId)
                         },
                         callback = { selectedPlace ->
-                            Log.d("locationDebugAAA", "PlaceAutocomplete sélectionné : $selectedPlace")
-
                             realtyPlaceValue = selectedPlace
                         }
                     )
@@ -368,8 +360,6 @@ fun SearchScreen(
                             maxPriceValue?.let {
                                 maxPrice = Utils().getCorrectPriceComponent(it).price
                             }
-
-                            Log.d("locationDebugAAA", "SearchCriteria créé : centerPlace=${realtyPlaceValue}")
 
                             val newCriteria = SearchCriteria(
                                 realtyTypes = selectedRealtyTypes,

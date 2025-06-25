@@ -28,8 +28,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.idrisssouissi.smartbait.presentation.components.ThemeText
-import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.ui.composable.ThemeText
+import com.openclassrooms.realestatemanager.ui.composable.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
@@ -38,7 +38,6 @@ import com.openclassrooms.realestatemanager.ui.composable.CheckAnimation
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
-import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel

@@ -18,11 +18,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.idrisssouissi.smartbait.presentation.components.ThemeText
-import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.ui.theme.Black
 
-//For datePickerDialog
+//Dialog date picker
 @Composable
 fun ThemeOutlinedTFForDPD(
     value: String,
@@ -40,7 +38,7 @@ fun ThemeOutlinedTFForDPD(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = {}, // champ en lecture seule
+        onValueChange = {},
         enabled = false,
         readOnly = true,
         singleLine = singleLine,

@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.ui.screens.form.realtyform
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction

@@ -34,7 +34,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,13 +52,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import coil.compose.rememberAsyncImagePainter
-import com.idrisssouissi.smartbait.presentation.components.ThemeText
-import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.ui.composable.ThemeText
+import com.openclassrooms.realestatemanager.ui.composable.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
@@ -294,7 +292,6 @@ fun ImageDescriptionDialog(
                     .padding(16.dp)
                     .width(IntrinsicSize.Min)
             ) {
-                // Image
                 Image(
                     painter = image,
                     contentDescription = "Selected Image",
@@ -305,7 +302,6 @@ fun ImageDescriptionDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // TextField for description
                 ThemeOutlinedTextField(
                     value = description,
                     onValueChanged = { description = it },
@@ -318,7 +314,6 @@ fun ImageDescriptionDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Buttons
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()

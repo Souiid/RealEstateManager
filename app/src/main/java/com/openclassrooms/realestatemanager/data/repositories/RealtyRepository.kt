@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.data.repositories
 
 import android.content.Context
-import android.util.Log
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.DatabaseProvider
@@ -60,7 +59,6 @@ class RealtyRepository(context: Context): IRealtyRepository {
             agentId = criteria?.selectedAgent?.id
         )
 
-        Log.d("locationDebugAAA", "Rayon demandé : ${criteria?.radiusKm} km autour de ${criteria?.centerPlace?.positionLatLng}")
 
         val filtered = results.filter { realty ->
             val realtyPriceInUserCurrency = if (realty.primaryInfo.isEuro == (isEuro)) {
@@ -83,17 +81,8 @@ class RealtyRepository(context: Context): IRealtyRepository {
             val centerLatLng = criteria?.centerPlace?.positionLatLng
             val realtyLatLng = realty.primaryInfo.realtyPlace.positionLatLng
 
-            Log.d("locationDebugAAA", "Center: $centerLatLng | Realty: $realtyLatLng")
-
             val distanceOk = if (centerLatLng != null && criteria.radiusKm != null) {
                 val distance = Utils().calculateDistanceInKm(centerLatLng, realtyLatLng)
-
-                Log.d("locationDebugAAA", "Realty ID: ${realty.id} | Distance: $distance km")
-
-                if (distance > criteria.radiusKm) {
-                    Log.d("locationDebugAAA", "Realty ID: ${realty.id} excluded by distance filter.")
-                }
-
                 distance <= criteria.radiusKm
             } else {
                 true
@@ -101,9 +90,6 @@ class RealtyRepository(context: Context): IRealtyRepository {
 
             priceOk && amenitiesOk && distanceOk
         }
-
-        Log.d("locationDebugAAA", "Nombre de realties après filtrage distance : ${filtered.size}")
-
         emit(filtered)
     }.flowOn(Dispatchers.IO)
 

@@ -1,12 +1,8 @@
 package com.openclassrooms.realestatemanager.ui.screens.main.descrpition
 
 import android.net.Uri
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,13 +19,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,16 +44,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.famoco.projet9.Aspect_ratio
-import com.famoco.projet9.Bathtub
-import com.famoco.projet9.Bed
+import com.openclassrooms.realestatemanager.ui.Aspect_ratio
+import com.openclassrooms.realestatemanager.ui.Bathtub
+import com.openclassrooms.realestatemanager.ui.Bed
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.idrisssouissi.smartbait.presentation.components.ThemeText
-import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.ui.composable.ThemeText
+import com.openclassrooms.realestatemanager.ui.composable.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.RealtyPicture
 import com.openclassrooms.realestatemanager.data.Utils
@@ -123,7 +116,6 @@ fun DetailScreen(
     onPrimaryButtonClick: (Realty) -> Unit,
     onSimulateClick: (Int, Boolean) -> Unit
 ) {
-    Log.d("DEBUG", "DetailScreen loaded for ID=${realty.id}, isAvailable=${realty.isAvailable}")
     val amenitiesLabels = realty.primaryInfo.amenities.map { amenity ->
         stringResource(id = amenity.labelResId)
     }
@@ -220,10 +212,7 @@ fun StatusSection(
                     isAvailable = newAvailability,
                     saleDate = if (!newAvailability) Date() else null
                 )
-                Log.d(
-                    "DEBUG",
-                    "Clicked on sale status for ID=${realty.id}, new isAvailable=$newAvailability"
-                )
+
                 onPrimaryButtonClick(updatedRealty)
                 isShowDialog = false
             },

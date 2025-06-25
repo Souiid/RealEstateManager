@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.ui.screens.main.home
 
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.idrisssouissi.smartbait.presentation.components.ThemeText
-import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.ui.composable.ThemeText
+import com.openclassrooms.realestatemanager.ui.composable.ThemeTextStyle
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
@@ -80,8 +79,6 @@ fun RealtyLazyColumn(
     LazyColumn(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         items(realties.size) { index ->
             val realty = realties[index]
-            Log.d("DEBUG", "Realty item ID=${realty.id}, isAvailable=${realty.isAvailable}")
-
             val uri = Uri.parse(realty.pictures.first().uriString)
             val bitmap = Utils().uriToBitmapLegacy(context, uri) ?: return@items
             RealtyItem(
@@ -95,7 +92,6 @@ fun RealtyLazyColumn(
         }
     }
 }
-
 
 @Composable
 fun RealtyItem(

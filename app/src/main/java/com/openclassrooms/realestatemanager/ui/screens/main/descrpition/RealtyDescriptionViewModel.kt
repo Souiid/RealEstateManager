@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.ui.screens.main.descrpition
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.Places
@@ -52,7 +51,6 @@ class RealtyDescriptionViewModel(
     }
 
     fun updateRealtyStatus(realty: Realty) {
-        Log.d("DEBUG", "Updating realty ID=${realty.id}, isAvailable=${realty.isAvailable}")
         viewModelScope.launch {
             realtyRepository.updateRealty(realty)
             realtyRepository.setSelectedRealty(realty) // <- ajoute ça

@@ -26,11 +26,11 @@ val appModule = module {
     viewModel { SelectAgentViewModel(get(), get(), get()) }
     viewModel { RealitiesViewModel(get(), get(), androidContext()) }
     viewModel { RealtyDescriptionViewModel(androidContext(), get(), get()) }
-    viewModel { SearchViewModel(get(), get(), get()) }
+    viewModel { SearchViewModel(get(), get()) }
     viewModel { MortgageViewModel() }
     viewModel { CurrencyViewModel(androidContext()) }
 
-    single<INewRealtyRepository> { NewRealtyRepository(androidContext()) }
+    single<INewRealtyRepository> { NewRealtyRepository() }
     single<IAgentRepository> { AgentRepository(androidContext()) }
     single<IRealtyRepository> { RealtyRepository(androidContext()) }
     single<ISearchRepository> { SearchRepository() }

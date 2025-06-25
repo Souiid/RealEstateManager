@@ -10,6 +10,7 @@ import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,6 +31,7 @@ class RealitiesViewModel(
         initialValue = true
     )
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val realties: Flow<List<Realty>> = isEuroStateFlow.flatMapLatest { isEuro ->
         criteriaFlow.flatMapLatest { criteria ->
             if (criteria == null) {

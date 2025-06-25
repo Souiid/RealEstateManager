@@ -29,7 +29,6 @@ import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.ui.screens.main.home.RealitiesViewModel
 import org.koin.androidx.compose.koinViewModel
 
-
 @Composable
 fun MapScreen(
     realitiesViewModel: RealitiesViewModel = koinViewModel(),

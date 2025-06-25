@@ -1,4 +1,4 @@
-package com.idrisssouissi.smartbait.presentation.components
+package com.openclassrooms.realestatemanager.ui.composable
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
