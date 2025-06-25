@@ -19,4 +19,6 @@ data class SearchCriteria(
     val selectedAgent: RealtyAgent? = null,
     val minRooms: Int? = null,
     val maxRooms: Int? = null,
+    val centerPlace: RealtyPlace? = null,
+    val radiusKm: Double? = null
 )

@@ -34,7 +34,7 @@ class SearchViewModel(
     private val realtyRepository: IRealtyRepository,
     private val agentRepository: IAgentRepository,
     private val searchRepository: ISearchRepository
-    ): ViewModel() {
+) : ViewModel() {
 
     val agentsFlow: Flow<List<RealtyAgent>> = agentRepository.getAllAgents()
     private val _criteriaFlow = MutableStateFlow<SearchCriteria?>(null)
@@ -124,34 +124,4 @@ class SearchViewModel(
         searchRepository.saveCriteria(criteria)
         _criteriaFlow.value = criteria
     }
-
-
-    fun getCriteria(): SearchCriteria? = _criteriaFlow.value
-
-    fun calculateDistanceInKm(start: LatLng, end: LatLng): Double {
-        val earthRadiusKm = 6371.0
-
-        val dLat = Math.toRadians(end.latitude - start.latitude)
-        val dLon = Math.toRadians(end.longitude - start.longitude)
-
-        val lat1 = Math.toRadians(start.latitude)
-        val lat2 = Math.toRadians(end.latitude)
-
-        val a = sin(dLat / 2).pow(2.0) + sin(dLon / 2).pow(2.0) * cos(lat1) * cos(lat2)
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return earthRadiusKm * c
-    }
-
-    fun filterRealtyWithinRadius(
-        allRealty: List<RealtyPlace>,
-        center: LatLng,
-        radiusKm: Double
-    ): List<RealtyPlace> {
-        return allRealty.filter { realty ->
-            val distance = calculateDistanceInKm(center, realty.positionLatLng)
-            distance <= radiusKm
-        }
-    }
-
 }

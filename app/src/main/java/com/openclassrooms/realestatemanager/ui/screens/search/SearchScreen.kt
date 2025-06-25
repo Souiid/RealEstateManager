@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.ui.screens.search
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,15 +41,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.data.RealtyPlace
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.ui.composable.AgentDropdown
 import com.openclassrooms.realestatemanager.ui.composable.ExpandableSection
+import com.openclassrooms.realestatemanager.ui.composable.PlaceAutocomplete
 import com.openclassrooms.realestatemanager.ui.composable.SelectableChipsGroup
 import com.openclassrooms.realestatemanager.ui.composable.ThemeButton
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTFForDPD
@@ -99,6 +103,9 @@ fun SearchScreen(
     var maxNumberOfRooms by remember(criteria) { mutableStateOf(criteria?.maxRooms) }
 
     val isEuro by currencyViewModel.isEuroFlow.collectAsState()
+
+    var realtyPlaceValue by remember { mutableStateOf<RealtyPlace?>(null) }
+
 
     val context = LocalContext.current
 
@@ -184,6 +191,8 @@ fun SearchScreen(
                             maxPrice = Utils().getCorrectPriceComponent(it).price
                         }
 
+                        Log.d("locationDebugAAA", "SearchCriteria créé : centerPlace=${realtyPlaceValue}")
+
                         val newCriteria = SearchCriteria(
                             realtyTypes = selectedRealtyTypes,
                             isAvailable = selectedStatus,
@@ -198,7 +207,9 @@ fun SearchScreen(
                             amenities = selectedAmenities,
                             selectedAgent = selectedAgent,
                             minRooms = minNumberOfRooms,
-                            maxRooms = maxNumberOfRooms
+                            maxRooms = maxNumberOfRooms,
+                            centerPlace = realtyPlaceValue,
+                            radiusKm = 10.0
                         )
 
                         searchViewModel.setCriteria(newCriteria)
@@ -363,6 +374,25 @@ fun SearchScreen(
                     ) {
                         maxNumberOfRooms = it.toIntOrNull()
                     }
+                }
+
+            }
+
+            item {
+                ExpandableSection(title = stringResource(R.string.location), expandedP = realtyPlaceValue != null) {
+                    PlaceAutocomplete(
+                        onSearchPlaces = { placesClient, query, callback ->
+                            searchViewModel.searchPlaces(placesClient, query, callback)
+                        },
+                        onFetchLatLng = { placesClient, placeId ->
+                            searchViewModel.fetchPlaceLatLng(placesClient, placeId)
+                        },
+                        callback = { selectedPlace ->
+                            Log.d("locationDebugAAA", "PlaceAutocomplete sélectionné : $selectedPlace")
+
+                            realtyPlaceValue = selectedPlace
+                        }
+                    )
                 }
 
             }
