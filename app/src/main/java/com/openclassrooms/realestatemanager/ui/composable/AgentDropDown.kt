@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.ui.composable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenuItem
-import com.openclassrooms.realestatemanager.R
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -20,12 +19,12 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
-import com.openclassrooms.realestatemanager.ui.theme.Green
+import com.openclassrooms.realestatemanager.ui.theme.Blue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +57,7 @@ fun AgentDropdown(
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Green,
+                    focusedBorderColor = Blue,
                 ),
                 modifier = Modifier
                     .fillMaxWidth()

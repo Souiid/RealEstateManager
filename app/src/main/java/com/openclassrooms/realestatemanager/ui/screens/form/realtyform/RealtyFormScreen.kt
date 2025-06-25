@@ -46,6 +46,7 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 import com.openclassrooms.realestatemanager.ui.screens.CurrencyViewModel
+import com.openclassrooms.realestatemanager.ui.theme.Blue
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -221,7 +222,7 @@ fun RealtyFormScreen(
                         ),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Green,
+                            focusedBorderColor = Blue,
                         ),
                         modifier = Modifier
                             .fillMaxWidth()

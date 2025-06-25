@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.idrisssouissi.smartbait.presentation.components.ThemeText
 import com.idrisssouissi.smartbait.presentation.components.ThemeTextStyle
 import com.openclassrooms.realestatemanager.data.Utils
+import com.openclassrooms.realestatemanager.ui.theme.Blue
 
 
 @Composable
@@ -77,7 +78,7 @@ fun ThemeOutlinedTextField(
         ),
         maxLines = if (!singleLine) 5 else 1,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Green,
+            focusedBorderColor = Blue,
         ),
     )
 }
