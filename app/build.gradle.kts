@@ -62,15 +62,10 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.material)
+    implementation(libs.kotlin.reflect)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material3)
 
     //Navigation
     implementation(libs.androidx.navigation.compose)
@@ -80,29 +75,37 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
 
-    implementation(libs.androidx.material)
-
-    implementation(libs.kotlin.reflect)
-    implementation(libs.androidx.appcompat)
-
+    //Google map api
     implementation(libs.coil.compose)
     implementation(libs.places)
     implementation(libs.play.services.maps)
     runtimeOnly(libs.androidx.material.icons.extended)
     implementation(libs.maps.compose)
 
-
+    //Room db
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
+    //Lottie Animation
     implementation(libs.android.lottie.compose)
 
-    implementation(libs.material3)
-
+    //Flow
     implementation(libs.accompanist.flowlayout)
 
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    //Icons
+    implementation(libs.androidx.material.icons.extended.v178)
 
-    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    //Shared preferences
+    implementation(libs.androidx.datastore.preferences)
+
+    //Test
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
