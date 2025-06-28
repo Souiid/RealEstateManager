@@ -6,9 +6,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.openclassrooms.realestatemanager.ui.screens.form.realtyform.RealtyFormScreen
-import com.openclassrooms.realestatemanager.ui.screens.form.selectagent.SelectAgentScreen
-import com.openclassrooms.realestatemanager.ui.screens.form.setrealtypicture.SetRealtyPictureScreen
+import com.openclassrooms.realestatemanager.features.screens.form.realtyform.RealtyFormScreen
+import com.openclassrooms.realestatemanager.features.screens.form.selectagent.SelectAgentScreen
+import com.openclassrooms.realestatemanager.features.screens.form.setrealtypicture.SetRealtyPictureScreen
 
 @Composable
 fun FormNavGraph(
