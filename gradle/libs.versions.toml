@@ -8,6 +8,7 @@ coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesTest = "1.7.3"
 lifecycleRuntimeKtx = "2.8.5"
 activityCompose = "1.9.1"
 composeBom = "2024.04.01"
@@ -53,6 +54,7 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxComposeVersion" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
