@@ -23,7 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.ui.composable.ThemeText
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTextStyle
 import com.openclassrooms.realestatemanager.data.SearchCriteria
@@ -53,17 +56,28 @@ fun RealitiesScreen(
     }
     RealEstateManagerTheme {
 
-        if (realities.isNotEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (realities.isNotEmpty()) {
                 RealtyLazyColumn(
                     realties = realities,
                     isEuro = isEuro,
                     onNext = { realtyID ->
                         onNext(realtyID)
                     })
+
+            } else {
+
+                Spacer(modifier = Modifier.height(20.dp))
+                ThemeText(
+                    text = stringResource(R.string.no_realty),
+                    style = ThemeTextStyle.NORMAL,
+                    textAlign = TextAlign.Center,
+
+                    )
             }
         }
     }
@@ -76,7 +90,11 @@ fun RealtyLazyColumn(
     isEuro: Boolean
 ) {
     val context = LocalContext.current
-    LazyColumn(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
         items(realties.size) { index ->
             val realty = realties[index]
             val uri = Uri.parse(realty.pictures.first().uriString)
@@ -101,7 +119,8 @@ fun RealtyItem(
     onClick: () -> Unit
 ) {
     val isInDollar = !realty.primaryInfo.isEuro
-    val priceComponent = Utils().getCorrectPriceComponent(realty.primaryInfo.price, isEuro, isInDollar)
+    val priceComponent =
+        Utils().getCorrectPriceComponent(realty.primaryInfo.price, isEuro, isInDollar)
     Column(
         modifier = Modifier
             .fillMaxWidth()

@@ -31,7 +31,7 @@
             android:value="@string/google_maps_key"/>
 
         <activity
-            android:name=".ui.screens.main.MainActivity"
+            android:name=".features.screens.main.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.RealEstateManager">
             <intent-filter>
@@ -42,12 +42,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.screens.form.FormActivity"
+        <activity android:name=".features.screens.form.FormActivity"
             android:exported="true"
             android:theme="@style/Theme.RealEstateManager">
         </activity>
 
-        <activity android:name=".ui.screens.settings.SettingsActivity"
+        <activity android:name=".features.screens.settings.SettingsActivity"
             android:exported="true">
         </activity>
     </application>
