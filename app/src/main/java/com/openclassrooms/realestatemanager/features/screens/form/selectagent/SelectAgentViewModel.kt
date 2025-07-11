@@ -42,7 +42,7 @@ class SelectAgentViewModel(
         }
     }
 
-    fun isAgentNameValid(name: String): Boolean {
-        return name.trim().length >= 2
+    fun isAgentNameValid(name: String, agents: List<RealtyAgent>): Boolean {
+        return name.trim().length >= 2 && agents.none { it.name == name }
     }
 }

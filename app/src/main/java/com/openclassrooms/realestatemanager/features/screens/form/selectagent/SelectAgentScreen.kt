@@ -180,7 +180,7 @@ fun SelectAgentScreen(
                                 text = stringResource(R.string.add),
                                 enabled = true,
                                 onClick = {
-                                    if (selectAgentViewModel.isAgentNameValid(agentName)) {
+                                    if (selectAgentViewModel.isAgentNameValid(agentName, agents)) {
                                         scope.launch {
                                             selectAgentViewModel.insertAgent(agentName)
                                             agentName = ""

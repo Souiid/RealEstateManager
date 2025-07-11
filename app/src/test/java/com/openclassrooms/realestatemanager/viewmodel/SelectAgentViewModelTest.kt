@@ -96,13 +96,28 @@ class SelectAgentViewModelTest {
     }
 
     @Test
-    fun `isAgentNameValid returns true for valid name`() {
-        assertTrue(viewModel.isAgentNameValid("John"))
+    fun `isAgentNameValid returns true for valid name not in agent list`() {
+        val agents = listOf<RealtyAgent>()
+        val result = viewModel.isAgentNameValid("John", agents)
+        assertTrue(result)
     }
 
     @Test
-    fun `isAgentNameValid returns false for invalid name`() {
-        assertFalse(viewModel.isAgentNameValid("A"))
-        assertFalse(viewModel.isAgentNameValid(" "))
+    fun `isAgentNameValid returns false when name is shorter than 2 characters`() {
+        val agents = listOf(
+            RealtyAgent(1, "John"),
+            RealtyAgent(2, "Sarah")
+        )
+        val result = viewModel.isAgentNameValid("A", agents)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `isAgentNameValid returns false when name is already in agent list`() {
+        val agents = listOf(
+            RealtyAgent(1, "John")
+        )
+        val result = viewModel.isAgentNameValid("John", agents)
+        assertFalse(result)
     }
 }
