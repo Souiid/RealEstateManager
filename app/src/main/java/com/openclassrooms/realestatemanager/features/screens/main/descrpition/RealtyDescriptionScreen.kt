@@ -81,7 +81,12 @@ fun RealtyDescriptionScreen(
 
     LaunchedEffect(Unit) {
         realtyDescriptionViewModel.getRealtyFromID(realtyID)
-        realtyAgent = realtyDescriptionViewModel.getAgentRepository(realty?.agentId ?: 0)
+    }
+
+    LaunchedEffect(realty?.agentId) {
+        realty?.agentId?.let {
+            realtyAgent = realtyDescriptionViewModel.getAgentRepository(it)
+        }
     }
 
     val statusDateString = realty?.let {
@@ -253,7 +258,7 @@ fun StatusSection(
 
             agent?.let {
                 ThemeText(
-                    text = stringResource(R.string.agent_colon) + it.name,
+                    text = stringResource(R.string.agent_colon) + " ${it.name}",
                     style = ThemeTextStyle.NORMAL
                 )
             }
