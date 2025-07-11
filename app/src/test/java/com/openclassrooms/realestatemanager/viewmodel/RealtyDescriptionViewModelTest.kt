@@ -45,49 +45,59 @@ class RealtyDescriptionViewModelTest {
 
     @Test
     fun `getRealtyFromID fetches and sets selected realty`() = runTest {
+        // Arrange
         val realty = utils.createRealty()
         coEvery { realtyRepository.getRealtyFromID(1) } returns realty
         coEvery { realtyRepository.setSelectedRealty(realty) } just Runs
 
+        // Act
         viewModel.getRealtyFromID(1)
-
         testDispatcher.scheduler.advanceUntilIdle()
 
+        // Assert
         coVerify { realtyRepository.getRealtyFromID(1) }
         coVerify { realtyRepository.setSelectedRealty(realty) }
     }
 
     @Test
     fun `updateRealtyStatus updates and sets selected realty`() = runTest {
+        // Arrange
         val realty = utils.createRealty()
         coEvery { realtyRepository.updateRealty(realty) } just Runs
         coEvery { realtyRepository.setSelectedRealty(realty) } just Runs
 
+        // Act
         viewModel.updateRealtyStatus(realty)
-
         testDispatcher.scheduler.advanceUntilIdle()
 
+        // Assert
         coVerify { realtyRepository.updateRealty(realty) }
         coVerify { realtyRepository.setSelectedRealty(realty) }
     }
 
     @Test
     fun `getAgentRepository returns correct agent`() = runTest {
+        // Arrange
         val agent = RealtyAgent(1, "Alice")
         coEvery { agentRepository.getAgentByID(1) } returns agent
 
+        // Act
         val result = viewModel.getAgentRepository(1)
 
+        // Assert
         assertEquals(agent, result)
     }
 
     @Test
     fun `setSelectedRealty sets realty in repository`() {
+        // Arrange
         val realty = utils.createRealty()
         every { realtyRepository.setSelectedRealty(realty) } just Runs
 
+        // Act
         viewModel.setSelectedRealty(realty)
 
+        // Assert
         verify { realtyRepository.setSelectedRealty(realty) }
     }
 }

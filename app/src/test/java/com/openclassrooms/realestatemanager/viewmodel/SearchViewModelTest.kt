@@ -27,20 +27,26 @@ class SearchViewModelTest {
 
     @Test
     fun `setCriteria updates criteriaFlow and saves criteria`() {
+        // Arrange
         val criteria = SearchCriteria()
 
+        // Act
         viewModel.setCriteria(criteria)
 
+        // Assert
         assertEquals(criteria, viewModel.criteriaFlow.value)
         verify { searchRepository.saveCriteria(criteria) }
     }
 
+
     @Test
     fun `validateCriteria returns error if minPrice greater than maxPrice`() {
+        //Arrange
         val context = mockk<Context> {
             every { getString(R.string.error_price_range) } returns "Min price > max price"
         }
 
+        // Act
         val error = viewModel.validateCriteria(
             context,
             minPrice = 1000,
@@ -51,15 +57,18 @@ class SearchViewModelTest {
             minSoldDate = null, maxSoldDate = null,
         )
 
+        // Assert
         assertEquals("Min price > max price", error)
     }
 
     @Test
     fun `validateCriteria returns error if minSurface greater than maxSurface`() {
+        //Arrange
         val context = mockk<Context> {
             every { getString(R.string.error_surface_range) } returns "Min surface > max surface"
         }
 
+        // Act
         val error = viewModel.validateCriteria(
             context,
             minPrice = null, maxPrice = null,
@@ -69,15 +78,18 @@ class SearchViewModelTest {
             minSoldDate = null, maxSoldDate = null,
         )
 
+        // Assert
         assertEquals("Min surface > max surface", error)
     }
 
     @Test
     fun `validateCriteria returns error if minRooms greater than maxRooms`() {
+        //Arrange
         val context = mockk<Context> {
             every { getString(R.string.error_room_range) } returns "Min rooms > max rooms"
         }
 
+        // Act
         val error = viewModel.validateCriteria(
             context,
             null, null,
@@ -87,13 +99,16 @@ class SearchViewModelTest {
             minSoldDate = null, maxSoldDate = null,
         )
 
+        // Assert
         assertEquals("Min rooms > max rooms", error)
     }
 
     @Test
     fun `validateCriteria returns null when all ranges are valid`() {
+        // Arrange
         val context = mockk<Context>()
 
+        // Act
         val error = viewModel.validateCriteria(
             context,
             minPrice = 500, maxPrice = 1000,
@@ -103,6 +118,7 @@ class SearchViewModelTest {
             minSoldDate = Date(3000), maxSoldDate = Date(4000),
         )
 
+        // Assert
         assertNull(error)
     }
 }

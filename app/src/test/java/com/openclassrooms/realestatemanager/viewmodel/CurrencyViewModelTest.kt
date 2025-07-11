@@ -41,16 +41,22 @@ class CurrencyViewModelTest {
 
     @Test
     fun `isEuroFlow emits true initially`() = runTest {
+        // Act
         val value = viewModel.isEuroFlow.value
+
+        // Assert
         assertEquals(true, value)
     }
 
     @Test
     fun `setIsEuro calls DataStoreManager with correct value`() = runTest {
+        // Arrange
         viewModel.setIsEuro(false)
 
+        // Act
         testDispatcher.scheduler.advanceUntilIdle()
 
+        // Assert
         coVerify { DataStoreManager.setIsEuro(context, false) }
     }
 }

@@ -41,56 +41,69 @@ class SetRealtyPictureViewModelTest {
 
     @Test
     fun `setRealtyPictures sets images when updatedRealty is null`() {
+        // Arrange
         val pictures = listOf(mockk<RealtyPicture>())
         var completionCalled = false
 
+        // Act
         viewModel.setRealtyPictures(pictures, null) {
             completionCalled = true
         }
 
+        // Assert
         verify { newRealtyRepository.images = pictures }
         assert(completionCalled)
     }
 
     @Test
     fun `setRealtyPictures updates realty and resets repos when updatedRealty is not null`() = runTest {
+        // Arrange
         val pictures = listOf(mockk<RealtyPicture>())
         val realty = utils.createRealty()
         var completionCalled = false
 
+        // Act
         viewModel.setRealtyPictures(pictures, realty) {
             completionCalled = true
         }
 
         testDispatcher.scheduler.advanceUntilIdle()
 
-       coVerify {
+        // Assert
+        coVerify {
             realtyRepository.setSelectedRealty(match { it.pictures == pictures && it.id == realty.id })
             realtyRepository.updateRealty(match { it.pictures == pictures && it.id == realty.id })
             realtyRepository.updatedRealty = null
             newRealtyRepository.images = null
             newRealtyRepository.realtyPrimaryInfo = null
         }
+        // Assert
         assert(completionCalled)
     }
 
     @Test
     fun `getUpdatedRealty returns value from repository`() {
+        // Arrange
         val realty = utils.createRealty()
         every { realtyRepository.updatedRealty } returns realty
 
+        // Act
         val result = viewModel.getUpdatedRealty()
 
+        // Assert
         assertEquals(realty, result)
     }
 
     @Test
     fun `getRealtyPictures returns value from repository`() {
+        // Arrange
         val pictures = listOf(mockk<RealtyPicture>())
         every { newRealtyRepository.images } returns pictures
 
+        // Act
         val result = viewModel.getRealtyPictures()
 
+        // Assert
         assertEquals(pictures, result)
     }
 }

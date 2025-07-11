@@ -37,39 +37,52 @@ class RealtyRepositoryTest {
 
     @Test
     fun `insertRealty calls dao insertRealty`() = runTest {
+        // Arrange
         val realty = mockk<Realty>()
+
+        // Act
         repository.insertRealty(realty)
 
+        // Assert
         coVerify { mockDao.insertRealty(realty) }
     }
 
     @Test
     fun `getAllRealties returns dao flow`() {
+        // Arrange
         val expectedFlow = flowOf(emptyList<Realty>())
         every { mockDao.getAllRealties() } returns expectedFlow
 
+        // Act
         val result = repository.getAllRealties()
 
+        // Assert
         assert(result === expectedFlow)
         verify { mockDao.getAllRealties() }
     }
 
     @Test
     fun `getRealtyFromID calls dao getRealtyById`() = runTest {
+        // Arrange
         val realty = mockk<Realty>()
         coEvery { mockDao.getRealtyById("1") } returns realty
 
+        // Act
         val result = repository.getRealtyFromID(1)
 
+        // Assert
         assert(result == realty)
         coVerify { mockDao.getRealtyById("1") }
     }
 
     @Test
     fun `updateRealty calls dao updateRealty`() = runTest {
+        // Arrange
         val realty = mockk<Realty>()
+        // Act
         repository.updateRealty(realty)
 
+        // Assert
         coVerify { mockDao.updateRealty(realty) }
     }
 

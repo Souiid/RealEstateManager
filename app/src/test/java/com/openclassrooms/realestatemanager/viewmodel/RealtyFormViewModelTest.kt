@@ -30,31 +30,39 @@ class RealtyFormViewModelTest {
 
     @Test
     fun `setPrimaryInfo sets newRealtyRepository when updatedRealty is null`() {
+        // Arrange
         val primaryInfo = utils.createPrimaryInfo()
 
+        // Act
         viewModel.setPrimaryInfo(primaryInfo)
 
+        // Assert
         verify { newRealtyRepository.realtyPrimaryInfo = primaryInfo }
         verify(exactly = 0) { realtyRepository.updatedRealty = any() }
     }
 
     @Test
     fun `setPrimaryInfo updates updatedRealty when provided`() {
+        // Arrange
         val primaryInfo = utils.createPrimaryInfo()
         val updatedRealty = utils.createRealty()
 
+        // Act
         viewModel.setPrimaryInfo(primaryInfo, updatedRealty)
 
+        // Assert
         assertSame(primaryInfo, updatedRealty.primaryInfo)
         verify { realtyRepository.updatedRealty = updatedRealty }
     }
 
     @Test
     fun `getFormValidationError returns error for missing surface`() {
+        // Arrange
         val resources = mockk<Resources> {
             every { getString(R.string.error_surface_required) } returns "Surface is required"
         }
 
+        // Act
         val error = viewModel.getFormValidationError(
             surface = "",
             price = "100000",
@@ -66,37 +74,47 @@ class RealtyFormViewModelTest {
             resources = resources
         )
 
+        // Assert
         assertEquals("Surface is required", error)
     }
 
     @Test
     fun `getPrimaryInfo returns repository value`() {
+        // Arrange
         val primaryInfo = utils.createPrimaryInfo()
         every { newRealtyRepository.realtyPrimaryInfo } returns primaryInfo
 
+        // Act
         val result = viewModel.getPrimaryInfo()
 
+        // Assert
         assertEquals(primaryInfo, result)
     }
 
     @Test
     fun `getRealtyFromRealtyRepository returns updatedRealty if present`() {
+        // Arrange
         val realty = utils.createRealty()
         every { realtyRepository.updatedRealty } returns realty
 
+        // Act
         val result = viewModel.getRealtyFromRealtyRepository()
 
+        // Assert
         assertEquals(realty, result)
     }
 
     @Test
     fun `getRealtyFromRealtyRepository returns selectedRealtyFlow if updatedRealty is null`() {
+        // Arrange
         val realty = utils.createRealty()
         every { realtyRepository.updatedRealty } returns null
         every { realtyRepository.selectedRealtyFlow } returns MutableStateFlow(realty)
 
+        // Act
         val result = viewModel.getRealtyFromRealtyRepository()
 
+        // Assert
         assertEquals(realty, result)
     }
 }

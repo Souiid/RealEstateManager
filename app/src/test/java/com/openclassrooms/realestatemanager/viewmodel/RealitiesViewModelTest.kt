@@ -49,9 +49,11 @@ class RealitiesViewModelTest {
 
     @Test
     fun `setCriteria updates criteriaFlow`() = runTest {
+        //Arrange
         val criteria = SearchCriteria()
-        viewModel.setCriteria(criteria)
 
+        //Act
+        viewModel.setCriteria(criteria)
         val realties = mutableListOf<List<Realty>>()
         val job = launch {
             viewModel.realties.collect {
@@ -59,6 +61,7 @@ class RealitiesViewModelTest {
             }
         }
 
+        //Assert
         testDispatcher.scheduler.advanceUntilIdle()
 
         job.cancel()

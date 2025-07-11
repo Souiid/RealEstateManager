@@ -40,11 +40,14 @@ class SelectAgentViewModelTest {
 
     @Test
     fun `agentsFlow returns agents from repository`() = runTest {
+        // Arrange
         val agents = listOf(RealtyAgent(1, "John"))
         every { agentRepository.getAllAgents() } returns flowOf(agents)
 
+        // Act
         val result = viewModel.agentsFlow
 
+        // Assert
         result.collect {
             assertEquals(agents, it)
         }
@@ -52,33 +55,42 @@ class SelectAgentViewModelTest {
 
     @Test
     fun `getRealtyPrimaryInfo returns value from newRealtyRepository`() {
+        // Arrange
         val primaryInfo = mockk<RealtyPrimaryInfo>()
         every { newRealtyRepository.realtyPrimaryInfo } returns primaryInfo
 
+        // Act
         val result = viewModel.getRealtyPrimaryInfo()
 
+        // Assert
         assertEquals(primaryInfo, result)
     }
 
     @Test
     fun `getImages returns images from newRealtyRepository`() {
+        // Arrange
         val images = listOf(mockk<RealtyPicture>())
         every { newRealtyRepository.images } returns images
 
+        // Act
         val result = viewModel.getImages()
 
+        // Assert
         assertEquals(images, result)
     }
 
     @Test
     fun `insertRealty calls repository and resets newRealtyRepository`() = runTest {
+        // Arrange
         val realty = utils.createRealty()
         coEvery { realtyRepository.insertRealty(realty) } just Runs
 
+        // Act
         viewModel.insertRealty(realty)
 
         testDispatcher.scheduler.advanceUntilIdle()
 
+        // Assert
         coVerify { realtyRepository.insertRealty(realty) }
         verify { newRealtyRepository.images = null }
         verify { newRealtyRepository.realtyPrimaryInfo = null }
@@ -86,38 +98,50 @@ class SelectAgentViewModelTest {
 
     @Test
     fun `insertAgent calls repository`() = runTest {
+        // Arrange
         coEvery { agentRepository.insertAgent("John") } just Runs
 
+        // Act
         viewModel.insertAgent("John")
 
         testDispatcher.scheduler.advanceUntilIdle()
 
+        // Assert
         coVerify { agentRepository.insertAgent("John") }
     }
 
     @Test
     fun `isAgentNameValid returns true for valid name not in agent list`() {
+        // Arrange
         val agents = listOf<RealtyAgent>()
+        // Act
         val result = viewModel.isAgentNameValid("John", agents)
+        // Assert
         assertTrue(result)
     }
 
     @Test
     fun `isAgentNameValid returns false when name is shorter than 2 characters`() {
+        // Arrange
         val agents = listOf(
             RealtyAgent(1, "John"),
             RealtyAgent(2, "Sarah")
         )
+        // Act
         val result = viewModel.isAgentNameValid("A", agents)
+        // Assert
         assertFalse(result)
     }
 
     @Test
     fun `isAgentNameValid returns false when name is already in agent list`() {
         val agents = listOf(
+            // Arrange
             RealtyAgent(1, "John")
         )
+        // Act
         val result = viewModel.isAgentNameValid("John", agents)
+        // Assert
         assertFalse(result)
     }
 }

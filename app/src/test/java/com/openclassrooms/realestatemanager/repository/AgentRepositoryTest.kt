@@ -30,32 +30,45 @@ class AgentRepositoryTest {
 
     @Test
     fun `insertAgent calls dao insertAgent`() = runTest {
+
+        // Act
         repository.insertAgent("John Doe")
 
+        // Assert
         coVerify {
             mockDao.insertAgent(match { it.name == "John Doe" })
         }
     }
 
     @Test
-    fun `getAllAgents returns dao flow`() {
+    fun `getAllAgents returns dao flow`() = runTest {
+        // Arrange
         val expectedFlow = mockk<Flow<List<RealtyAgent>>>()
         every { mockDao.getAllAgents() } returns expectedFlow
 
+        // Act
         val result = repository.getAllAgents()
 
+        // Assert
         assert(result === expectedFlow)
         verify { mockDao.getAllAgents() }
     }
 
     @Test
     fun `getAgentByID calls dao getAgentById`() = runTest {
+        // Arrange
         val agent = RealtyAgent(id = 1, name = "John")
         coEvery { mockDao.getAgentById(1) } returns agent
 
+        // Act
         val result = repository.getAgentByID(1)
 
+        // Assert
         assert(result == agent)
         coVerify { mockDao.getAgentById(1) }
     }
 }
+
+
+
+

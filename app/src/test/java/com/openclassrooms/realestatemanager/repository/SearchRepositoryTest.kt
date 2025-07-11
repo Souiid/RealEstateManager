@@ -11,19 +11,24 @@ class SearchRepositoryTest {
 
     @Test
     fun `criteriaFlow emits null initially`() = runTest {
+        // Arrange
         val repository = SearchRepository()
 
+        // Act
         val value = repository.criteriaFlow.first()
 
+        // Assert
         assertEquals(null, value)
     }
 
     @Test
     fun `saveCriteria updates criteriaFlow`() = runTest {
+        // Arrange
         val repository = SearchRepository()
         val criteria = SearchCriteria(
             minPrice = 100000,
             maxPrice = 300000,
+            // Arrange
             minSurface = 50,
             maxSurface = 200,
             minRooms = 2,
@@ -40,8 +45,10 @@ class SearchRepositoryTest {
             radiusKm = null
         )
 
+        // Act
         repository.saveCriteria(criteria)
 
+        // Assert
         val value = repository.criteriaFlow.first()
 
         assertEquals(criteria, value)
