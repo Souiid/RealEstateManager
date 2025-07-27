@@ -35,9 +35,6 @@ class RealtyDescriptionViewModel(
     suspend fun getAgentRepository(agentId: Int): RealtyAgent? {
         return agentRepository.getAgentByID(agentId)
     }
-    fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
-       return Utils().uriToBitmapLegacy(context, uri)
-    }
 
     fun getTodayDate(date: Date): String {
         return Utils().getTodayDate(date)
