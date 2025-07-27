@@ -541,7 +541,7 @@ fun StatusSegmentedButton(
     val statusList = listOf(
         stringResource(R.string.all) to null,
         stringResource(R.string.available) to true,
-        stringResource(R.string.for_sale) to false
+        stringResource(R.string.sold) to false
     )
 
     val selectedIndex = statusList.indexOfFirst { it.second == selectedStatus }
