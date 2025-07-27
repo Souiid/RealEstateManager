@@ -28,7 +28,6 @@ class SearchRepositoryTest {
         val criteria = SearchCriteria(
             minPrice = 100000,
             maxPrice = 300000,
-            // Arrange
             minSurface = 50,
             maxSurface = 200,
             minRooms = 2,
