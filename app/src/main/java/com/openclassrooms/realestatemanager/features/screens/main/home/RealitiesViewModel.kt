@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.features.screens.main.home
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.R
@@ -13,9 +12,7 @@ import com.openclassrooms.realestatemanager.features.screens.CurrencyViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
 
 class RealitiesViewModel(
     private val realtyRepository: IRealtyRepository,
@@ -25,11 +22,7 @@ class RealitiesViewModel(
 
     private val criteriaFlow: MutableStateFlow<SearchCriteria?> = MutableStateFlow(null)
 
-    private val isEuroStateFlow = currencyViewModel.isEuroFlow.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = true
-    )
+    private val isEuroStateFlow = currencyViewModel.isEuroFlow
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val realties: Flow<List<Realty>> = isEuroStateFlow.flatMapLatest { isEuro ->
