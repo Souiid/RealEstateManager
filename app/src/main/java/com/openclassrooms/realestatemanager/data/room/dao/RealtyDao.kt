@@ -16,6 +16,9 @@ interface RealtyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRealty(realty: Realty)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRealtyAndReturnId(realty: Realty): Long
+
     @Query("SELECT * FROM realties")
     fun getAllRealties(): Flow<List<Realty>>
 

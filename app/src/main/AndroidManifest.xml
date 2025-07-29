@@ -26,6 +26,12 @@
         android:name=".RealEstateManager"
         tools:targetApi="31">
 
+        <provider
+            android:name=".data.room.RealtyContentProvider"
+            android:authorities="com.openclassrooms.realestatemanager.provider"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
