@@ -25,7 +25,7 @@ class Utils {
 
     private val euroToDollarRate = 1.15
     private val dollarToEuroRate = 1 / euroToDollarRate
-    private val _internetStatus = MutableStateFlow(true)
+    private val _internetStatus = MutableStateFlow(false)
     val internetStatus: StateFlow<Boolean> = _internetStatus
 
     //Méthode imprecise pour convertir les devises, lorsque l'utilisateur choisi euro ou dollar
@@ -105,6 +105,11 @@ class Utils {
     fun startInternetMonitoring(context: Context) {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val activeNetwork = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+        val isConnected = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+        _internetStatus.value = isConnected
 
         val request = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)

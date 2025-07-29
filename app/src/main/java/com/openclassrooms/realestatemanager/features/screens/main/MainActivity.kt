@@ -28,11 +28,12 @@ class MainActivity : ComponentActivity() {
         val utils = Utils()
         setContent {
             val navController = rememberNavController()
-            val isOnline by utils.internetStatus.collectAsState()
 
             LaunchedEffect(Unit) {
                 utils.startInternetMonitoring(applicationContext)
             }
+
+            val isOnline by utils.internetStatus.collectAsState()
 
             RealEstateManagerTheme {
                 MainNavGraph(
