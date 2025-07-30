@@ -1,8 +1,6 @@
 package com.openclassrooms.realestatemanager.features.screens.main.descrpition
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.places.api.Places

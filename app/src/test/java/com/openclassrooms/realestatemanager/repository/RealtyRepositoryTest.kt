@@ -1,26 +1,24 @@
 package com.openclassrooms.realestatemanager.repository
 
 import android.content.Context
-import com.google.android.gms.maps.model.LatLng
-import com.openclassrooms.realestatemanager.data.RealtyPlace
-import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
-import com.openclassrooms.realestatemanager.data.RealtyType
-import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.repositories.RealtyRepository
-import com.openclassrooms.realestatemanager.data.room.Amenity
 import com.openclassrooms.realestatemanager.data.room.AppDatabase
 import com.openclassrooms.realestatemanager.data.room.DatabaseProvider
 import com.openclassrooms.realestatemanager.data.room.dao.RealtyDao
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
 import com.openclassrooms.realestatemanager.viewmodel.Utils
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import java.util.*
 
 class RealtyRepositoryTest {
 
@@ -109,7 +107,7 @@ class RealtyRepositoryTest {
                 maxEntryDate = null,
                 minSoldDate = null,
                 maxSoldDate = null,
-                realtyTypes = match { it == null || it.isEmpty() },
+                realtyTypes = match { it.isEmpty() },
                 realtyTypesSize = 0,
                 agentId = null
             )
@@ -140,7 +138,7 @@ class RealtyRepositoryTest {
                 maxEntryDate = null,
                 minSoldDate = null,
                 maxSoldDate = null,
-                realtyTypes = match { it == null || it.isEmpty() },
+                realtyTypes = match { it.isEmpty() },
                 realtyTypesSize = 0,
                 agentId = null
             )
@@ -171,7 +169,7 @@ class RealtyRepositoryTest {
                 maxEntryDate = null,
                 minSoldDate = null,
                 maxSoldDate = null,
-                realtyTypes = match { it == null || it.isEmpty() },
+                realtyTypes = match { it.isEmpty() },
                 realtyTypesSize = 0,
                 agentId = null
             )
@@ -203,7 +201,7 @@ class RealtyRepositoryTest {
                 maxEntryDate = null,
                 minSoldDate = null,
                 maxSoldDate = null,
-                realtyTypes = match { it == null || it.isEmpty() },
+                realtyTypes = match { it.isEmpty() },
                 realtyTypesSize = 0,
                 agentId = 42
             )

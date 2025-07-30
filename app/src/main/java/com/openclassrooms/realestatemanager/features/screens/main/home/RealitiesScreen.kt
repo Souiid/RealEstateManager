@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.features.screens.main.home
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -110,6 +112,7 @@ fun RealtyLazyColumn(
         }
     }
 }
+
 
 @Composable
 fun RealtyItem(

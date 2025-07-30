@@ -15,13 +15,14 @@ import com.openclassrooms.realestatemanager.data.RealtyPrimaryInfo
 import com.openclassrooms.realestatemanager.data.RealtyType
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
 import kotlinx.coroutines.runBlocking
+import androidx.core.net.toUri
 
 class RealtyContentProvider : ContentProvider() {
 
     companion object {
         const val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
         const val TABLE_NAME = "realties"
-        val URI_REALTY: Uri = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
+        val URI_REALTY: Uri = "content://$AUTHORITY/$TABLE_NAME".toUri()
 
         private const val CODE_REALTY_DIR = 1
         private const val CODE_REALTY_ITEM = 2
@@ -51,8 +52,9 @@ class RealtyContentProvider : ContentProvider() {
                 val id = ContentUris.parseId(uri)
                 db.query("SELECT * FROM $TABLE_NAME WHERE id = $id", null)
             }
+
             else -> throw IllegalArgumentException("Unknown URI $uri")
-        }?.apply {
+        }.apply {
             setNotificationUri(context?.contentResolver, uri)
         }
     }
@@ -83,7 +85,8 @@ class RealtyContentProvider : ContentProvider() {
                         values.getAsDouble("lat") ?: 0.0,
                         values.getAsDouble("lng") ?: 0.0
                     )
-                ),                amenities = parseAmenities(values.getAsString("amenities") ?: ""),
+                ),
+                amenities = parseAmenities(values.getAsString("amenities") ?: ""),
                 isEuro = values.getAsInteger("isEuro") == 1
             ),
             pictures = parsePictures(values.getAsString("pictures") ?: "[]")
@@ -101,7 +104,7 @@ class RealtyContentProvider : ContentProvider() {
         return try {
             val type = object : TypeToken<List<RealtyPicture>>() {}.type
             Gson().fromJson(json, type)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             emptyList()
         }
     }
@@ -121,7 +124,7 @@ class RealtyContentProvider : ContentProvider() {
             .mapNotNull { name ->
                 try {
                     Amenity.valueOf(name.trim().uppercase())
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     null
                 }
             }

@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val Bed: ImageVector
+val Bed: ImageVector
 	get() {
 		if (_Bed != null) {
 			return _Bed!!

@@ -18,6 +18,7 @@ import java.util.Date
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.math.sqrt
 
@@ -28,7 +29,7 @@ class Utils {
     private val _internetStatus = MutableStateFlow(false)
     val internetStatus: StateFlow<Boolean> = _internetStatus
 
-    //Méthode imprecise pour convertir les devises, lorsque l'utilisateur choisi euro ou dollar
+    //Imprecise method for converting currencies when the user selects euro or dollar
   // fun convertDollarToEuro(dollars: Int): Int {
   //     return Math.round(dollars * 0.812).toInt()
   // }
@@ -38,15 +39,15 @@ class Utils {
   // }
 
     infix fun convertEuroToDollar(euros: Int): Int {
-        return Math.round(euros * euroToDollarRate).toInt()
+        return (euros * euroToDollarRate).roundToInt()
     }
 
     fun convertDollarToEuro(dollars: Int): Int {
-        return Math.round(dollars * dollarToEuroRate).toInt()
+        return (dollars * dollarToEuroRate).roundToInt()
     }
 
     fun convertEuroToDollarDouble(euros: Double): Double {
-        return Math.round(euros * 1.15).toDouble()
+        return (euros * 1.15).roundToInt().toDouble()
     }
 
     fun getCorrectPriceComponent(price: Int = 0, isEuro: Boolean = true, isSaveInDollar: Boolean = false): PriceComponent {

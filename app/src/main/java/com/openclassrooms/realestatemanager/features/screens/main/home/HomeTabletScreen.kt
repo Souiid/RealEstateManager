@@ -1,9 +1,13 @@
 package com.openclassrooms.realestatemanager.features.screens.main.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.SearchCriteria
 import com.openclassrooms.realestatemanager.data.room.entities.RealtyAgent
@@ -60,7 +65,8 @@ fun HomeTabletScreen(
     if (realities.isNotEmpty()) {
 
         Row(modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
+            horizontalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
@@ -99,10 +105,14 @@ fun HomeTabletScreen(
         }
 
     } else {
-        ThemeText(
-            text = stringResource(R.string.no_realty),
-            style = ThemeTextStyle.NORMAL
-        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Spacer(Modifier.height(20.dp))
+
+            ThemeText(
+                text = stringResource(R.string.no_realty),
+                style = ThemeTextStyle.NORMAL
+            )
+        }
     }
 }
 

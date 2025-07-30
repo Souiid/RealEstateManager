@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.RealtyPicture
-import com.openclassrooms.realestatemanager.data.Utils
 import com.openclassrooms.realestatemanager.data.repositories.INewRealtyRepository
 import com.openclassrooms.realestatemanager.data.repositories.IRealtyRepository
 import com.openclassrooms.realestatemanager.data.room.entities.Realty
@@ -77,7 +76,4 @@ class SetRealtyPictureViewModel(
         return uri
     }
 
-    fun uriToBitmapLegacy(context: Context, uri: Uri): Bitmap? {
-        return Utils().uriToBitmapLegacy(context, uri)
-    }
 }

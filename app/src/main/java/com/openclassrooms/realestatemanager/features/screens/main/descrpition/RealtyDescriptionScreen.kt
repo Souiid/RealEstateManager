@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.features.screens.main.descrpition
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -66,6 +65,7 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.theme.White
 import org.koin.androidx.compose.koinViewModel
 import java.util.Date
+import androidx.core.net.toUri
 
 @Composable
 fun RealtyDescriptionScreen(
@@ -345,7 +345,7 @@ fun RealtyPictureUI(realtyPicture: RealtyPicture) {
         modifier = Modifier.size(150.dp)
     ) {
         Image(
-            bitmap = Utils().uriToBitmapLegacy(context, Uri.parse(realtyPicture.uriString))
+            bitmap = Utils().uriToBitmapLegacy(context, realtyPicture.uriString.toUri())
                 ?.asImageBitmap() ?: return,
             contentDescription = null,
             modifier = Modifier.fillMaxSize()

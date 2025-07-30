@@ -29,8 +29,9 @@
         <provider
             android:name=".data.room.RealtyContentProvider"
             android:authorities="com.openclassrooms.realestatemanager.provider"
-            android:exported="false"
-            android:grantUriPermissions="true" />
+            android:exported="true"
+            android:grantUriPermissions="true"
+            tools:ignore="ExportedContentProvider" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

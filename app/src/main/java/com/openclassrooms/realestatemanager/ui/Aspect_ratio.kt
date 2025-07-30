@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val Aspect_ratio: ImageVector
+val Aspect_ratio: ImageVector
 	get() {
 		if (_Aspect_ratio != null) {
 			return _Aspect_ratio!!

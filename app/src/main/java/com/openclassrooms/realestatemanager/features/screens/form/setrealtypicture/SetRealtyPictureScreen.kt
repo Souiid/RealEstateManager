@@ -65,6 +65,7 @@ import com.openclassrooms.realestatemanager.ui.composable.ThemeDialog
 import com.openclassrooms.realestatemanager.ui.composable.ThemeOutlinedTextField
 import com.openclassrooms.realestatemanager.ui.composable.ThemeTopBar
 import org.koin.androidx.compose.koinViewModel
+import androidx.core.net.toUri
 
 @Composable
 fun SetRealtyPictureScreen(
@@ -76,7 +77,6 @@ fun SetRealtyPictureScreen(
     val context = LocalContext.current
 
     val photos = remember { mutableStateListOf<RealtyPicture>() }
-    var enabled by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     val selectedImage = remember { mutableStateOf<Bitmap?>(null) }
     val selectedUri = remember { mutableStateOf<String?>(null) }
@@ -89,7 +89,7 @@ fun SetRealtyPictureScreen(
     LaunchedEffect(Unit) {
         if (updatedRealty != null) {
             for (picture in updatedRealty.pictures) {
-               val bitmap = viewModel.getBitmapFromUri(context, Uri.parse(picture.uriString))
+               val bitmap = viewModel.getBitmapFromUri(context, picture.uriString.toUri())
                 val newRealtyPicture = RealtyPicture(bitmap, picture.description, picture.uriString)
                 photos.add(newRealtyPicture)
             }
@@ -190,7 +190,6 @@ fun SetRealtyPictureScreen(
                         style = ThemeTextStyle.NORMAL,
                         textAlign = TextAlign.Center
                     )
-                    enabled = false
                 } else {
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(minSize = 128.dp),
@@ -224,7 +223,6 @@ fun SetRealtyPictureScreen(
                             }
                         }
                     }
-                    enabled = true
                 }
             }
         }

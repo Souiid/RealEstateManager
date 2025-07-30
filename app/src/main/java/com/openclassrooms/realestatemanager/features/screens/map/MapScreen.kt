@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.features.screens.map
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -53,7 +52,7 @@ fun MapScreen(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
-            getLastKnownLocation(context, fusedLocationClient) { latLng ->
+            getLastKnownLocation(fusedLocationClient) { latLng ->
                 userLocation = latLng
                 latLng?.let {
                     cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 12f)
@@ -72,7 +71,7 @@ fun MapScreen(
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            getLastKnownLocation(context, fusedLocationClient) { latLng ->
+            getLastKnownLocation(fusedLocationClient) { latLng ->
                 userLocation = latLng
                 latLng?.let {
                     cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 15f)
@@ -103,7 +102,6 @@ fun MapScreen(
 }
 
 private fun getLastKnownLocation(
-    context: Context,
     fusedLocationClient: FusedLocationProviderClient,
     onLocationFound: (LatLng?) -> Unit
 ) {
